@@ -31,6 +31,18 @@ const columnFields: Field[] = [
         label: 'Full',
         value: 'full',
       },
+      { label: 'One Quarter', 
+        value: 'oneQuarter', 
+      }
+    ],
+  },
+  {
+    name: 'style',
+    type: 'select',
+    defaultValue: 'default',
+    options: [
+      { label: 'Default', value: 'default' },
+      { label: 'Stat', value: 'stat' },
     ],
   },
   {
@@ -47,7 +59,21 @@ const columnFields: Field[] = [
       },
     }),
     label: false,
+    admin: { condition: (_, s) => s?.style !== 'stat' },
   },
+  {
+    name: 'stat',
+    type: 'text',
+    label: 'Stat Value',
+    admin: { condition: (_, s) => s?.style === 'stat' },
+  },
+   {
+    name: 'label',
+    type: 'text',
+    label: 'Stat Label',
+    admin: { condition: (_, s) => s?.style === 'stat' },
+  },
+  
   {
     name: 'enableLink',
     type: 'checkbox',

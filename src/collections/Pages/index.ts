@@ -12,6 +12,8 @@ import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { revalidateDelete, revalidatePage } from './hooks/revalidatePage'
+import { Product } from '@/blocks/product/config'
+import { PricingCards } from '@/blocks/PricingCards/config'
 
 import {
   MetaDescriptionField,
@@ -72,7 +74,7 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock],
+              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock,Product,PricingCards],
               required: true,
               admin: {
                 initCollapsed: true,

@@ -67,6 +67,28 @@ export const hero: Field = {
       relationTo: 'media',
       required: true,
     },
+    {
+      name:'stats',
+      type:'array',
+      admin:{
+        condition:(_,{type}={})=>type==='highImpact',
+        initCollapsed:true
+      },
+      fields:[
+        {
+          name:'value',
+          type:'text',
+          required:true,
+        },
+        {
+          name:'label',
+          type:'text',
+          required:true,
+        },
+      ],
+      maxRows:4,
+      label:'stats',
+    },
   ],
   label: false,
 }

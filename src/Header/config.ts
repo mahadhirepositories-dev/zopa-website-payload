@@ -10,6 +10,13 @@ export const Header: GlobalConfig = {
   },
   fields: [
     {
+      name:'logo',
+      type:'upload',
+      relationTo:'media',
+      
+    } 
+    ,
+    {
       name: 'navItems',
       type: 'array',
       fields: [
@@ -17,7 +24,7 @@ export const Header: GlobalConfig = {
           appearances: false,
         }),
       ],
-      maxRows: 6,
+      maxRows: 10,
       admin: {
         initCollapsed: true,
         components: {
@@ -25,6 +32,25 @@ export const Header: GlobalConfig = {
         },
       },
     },
+    {
+      name:'phone',
+      type:'text',
+      admin:{description:"Phone number",
+
+      },
+    },
+    link({
+      appearances:false,
+      disableLabel:false,
+      overrides:{
+        name:'ctalink',
+        admin:{
+          description:'Go to Optimize procurement page',
+          
+        }
+      }
+
+    })
   ],
   hooks: {
     afterChange: [revalidateHeader],

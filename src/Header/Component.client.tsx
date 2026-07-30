@@ -8,6 +8,8 @@ import type { Header } from '@/payload-types'
 
 import { Logo } from '@/components/Logo/Logo'
 import { HeaderNav } from './Nav'
+import { CMSLink } from '@/components/Link'
+import { ArrowRight } from "lucide-react"
 
 interface HeaderClientProps {
   data: Header
@@ -29,13 +31,24 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [headerTheme])
 
+
   return (
-    <header className="container relative z-20   " {...(theme ? { 'data-theme': theme } : {})}>
-      <div className="py-8 flex justify-between">
-        <Link href="/">
-          <Logo loading="eager" priority="high" className="invert dark:invert-0" />
-        </Link>
+    <header className="sticky top-0 z-50 border-b border-border bg-white " {...(theme ? { 'data-theme': theme } : {})}>
+      <div className="container flex h-20 items-center justify-between">
+
+        {/* Nav+phone */}
+    
         <HeaderNav data={data} />
+        
+
+        {/* cta button */}
+        {data?.ctalink && (
+          <div className="shrink-0 bg-[#dbac2b] rounded-md w-48 h-10 flex justify-center items-center text-black">
+             <CMSLink {...data.ctalink}  size="lg"/>
+             <ArrowRight className="h-4 w-4"/>
+          </div>
+
+        )}
       </div>
     </header>
   )

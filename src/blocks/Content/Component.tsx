@@ -9,35 +9,44 @@ import { CMSLink } from '../../components/Link'
 export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
   const { columns } = props
 
-  const colsSpanClasses = {
-    full: '12',
-    half: '6',
-    oneThird: '4',
-    twoThirds: '8',
+  const sizeClasses: Record<string, string> = {
+    full: 'w-full',
+    half: 'w-full sm:w-[calc(50%-1rem)]',
+    oneThird: 'w-full sm:w-[calc(33.333%-1rem)]',
+    twoThirds: 'w-full sm:w-[calc(66.666%-1rem)]',
+    oneQuarter: 'w-full sm:w-[calc(25%-1.5rem)]',
   }
 
   return (
     <div className="container my-16">
-      <div className="grid grid-cols-4 lg:grid-cols-12 gap-y-8 gap-x-16">
+      
+      <div className="flex flex-wrap justify-center gap-8">
         {columns &&
           columns.length > 0 &&
           columns.map((col, index) => {
-            const { enableLink, link, richText, size } = col
+            const { enableLink, link, richText, size,style,stat,label  } = col
 
             return (
               <div
-                className={cn(`col-span-4 lg:col-span-${colsSpanClasses[size!]}`, {
-                  'md:col-span-2': size !== 'full',
-                })}
+                className={cn(sizeClasses[size!], 'flex-shrink-0')}
                 key={index}
               >
+                {style==='stat' ?(
+                  <div className="text-center">
+                       {stat && <p className="text-5xl text-[#dbac2b] mb-2">{stat}</p>}
+                       {label && <p className="text-sm text-white">{label}</p>}
+                       {enableLink && <div className="mt-4"><CMSLink {...link} /></div>}
+                  </div>
+                ):(
+                  <>
                 {richText && <RichText data={richText} enableGutter={false} />}
-
                 {enableLink && <CMSLink {...link} />}
+                </>)}
               </div>
             )
           })}
       </div>
+      
     </div>
   )
 }
