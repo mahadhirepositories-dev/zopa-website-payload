@@ -843,9 +843,11 @@ export interface PricingCardsBlock {
   description?: string | null;
   cards?:
     | {
+        cardType?: ('pricing' | 'services') | null;
         name: string;
         tagline?: string | null;
         description?: string | null;
+        backgroundImage?: (number | null) | Media;
         features?:
           | {
               feature: string;
@@ -1347,9 +1349,11 @@ export interface PricingCardsBlockSelect<T extends boolean = true> {
   cards?:
     | T
     | {
+        cardType?: T;
         name?: T;
         tagline?: T;
         description?: T;
+        backgroundImage?: T;
         features?:
           | T
           | {
