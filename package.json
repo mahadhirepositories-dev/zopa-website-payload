@@ -87,7 +87,11 @@
     "onlyBuiltDependencies": [
       "sharp",
       "esbuild",
-      "unrs-resolver"
+      "unrs-resolver",
+      "esbuild",
+      "sharp",
+      "@esbuild/linux-x64"
     ]
   }
+ 
 }

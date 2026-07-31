@@ -8,7 +8,7 @@ export const RecentClientsBlockComponent: React.FC<RecentClientsBlock> = (props)
   const { heading, clients } = props
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 px-10 bg-white">
     <div className="container mx-auto">
         <div className="flex justify-center">
         <div className="border rounded-xs bg-[#dbac2b] w-23 h-6 flex items-center justify-center">

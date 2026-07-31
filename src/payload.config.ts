@@ -57,16 +57,28 @@ export default buildConfig({
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
+
+  secret: process.env.PAYLOAD_SECRET || '',
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL || '',
+      connectionString: process.env.DATABASE_URL || process.env.DATABASE_URI || '',
+      ssl:
+        process.env.DATABASE_URL?.includes('127.0.0.1') ||
+        process.env.DATABASE_URL?.includes('localhost') ||
+        process.env.DATABASE_URI?.includes('127.0.0.1') ||
+        process.env.DATABASE_URI?.includes('localhost')
+          ? false
+          : {
+              rejectUnauthorized: false, // Required for Supabase in production/build environments
+            },
     },
   }),
+  
   collections: [Pages, Posts, Media, Categories, Users],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins,
-  secret: process.env.PAYLOAD_SECRET,
+  // secret: process.env.PAYLOAD_SECRET,
   sharp,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
