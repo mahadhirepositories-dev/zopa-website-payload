@@ -9,6 +9,7 @@ import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { Product_Block } from './product/Component'
 import { PricingCardsBlockComponent } from './PricingCards/component'
+import { RecentClientsBlockComponent } from './RecentClients/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -18,6 +19,7 @@ const blockComponents = {
   mediaBlock: MediaBlock,
   product:Product_Block,
   pricingCards:PricingCardsBlockComponent,
+  recentClients:RecentClientsBlockComponent,
 }
 
 export const RenderBlocks: React.FC<{

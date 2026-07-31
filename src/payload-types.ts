@@ -209,7 +209,14 @@ export interface Page {
       | null;
   };
   layout: (
-    CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | ProductFlux | PricingCardsBlock
+    | CallToActionBlock
+    | ContentBlock
+    | MediaBlock
+    | ArchiveBlock
+    | FormBlock
+    | ProductFlux
+    | PricingCardsBlock
+    | RecentClientsBlock
   )[];
   meta?: {
     title?: string | null;
@@ -882,6 +889,22 @@ export interface PricingCardsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RecentClientsBlock".
+ */
+export interface RecentClientsBlock {
+  heading?: string | null;
+  clients?:
+    | {
+        logo: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'recentClients';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1197,6 +1220,7 @@ export interface PagesSelect<T extends boolean = true> {
         formBlock?: T | FormBlockSelect<T>;
         product?: T | ProductFluxSelect<T>;
         pricingCards?: T | PricingCardsBlockSelect<T>;
+        recentClients?: T | RecentClientsBlockSelect<T>;
       };
   meta?:
     | T
@@ -1370,6 +1394,21 @@ export interface PricingCardsBlockSelect<T extends boolean = true> {
               label?: T;
               appearance?: T;
             };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RecentClientsBlock_select".
+ */
+export interface RecentClientsBlockSelect<T extends boolean = true> {
+  heading?: T;
+  clients?:
+    | T
+    | {
+        logo?: T;
         id?: T;
       };
   id?: T;

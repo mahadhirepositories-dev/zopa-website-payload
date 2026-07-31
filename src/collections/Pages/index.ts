@@ -14,6 +14,7 @@ import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { revalidateDelete, revalidatePage } from './hooks/revalidatePage'
 import { Product } from '@/blocks/product/config'
 import { PricingCards } from '@/blocks/PricingCards/config'
+import { RecentClients } from '@/blocks/RecentClients/config'
 
 import {
   MetaDescriptionField,
@@ -74,7 +75,7 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock,Product,PricingCards],
+              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock,Product,PricingCards,RecentClients],
               required: true,
               admin: {
                 initCollapsed: true,
