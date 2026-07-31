@@ -217,6 +217,7 @@ export interface Page {
     | ProductFlux
     | PricingCardsBlock
     | RecentClientsBlock
+    | BlogSectionBlock
   )[];
   meta?: {
     title?: string | null;
@@ -905,6 +906,37 @@ export interface RecentClientsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BlogSectionBlock".
+ */
+export interface BlogSectionBlock {
+  heading?: string | null;
+  title?: string | null;
+  limit?: number | null;
+  viewMoreLink: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null);
+    url?: string | null;
+    label: string;
+    /**
+     * Choose how the link should be rendered.
+     */
+    appearance?: ('default' | 'outline') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'blogSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1221,6 +1253,7 @@ export interface PagesSelect<T extends boolean = true> {
         product?: T | ProductFluxSelect<T>;
         pricingCards?: T | PricingCardsBlockSelect<T>;
         recentClients?: T | RecentClientsBlockSelect<T>;
+        blogSection?: T | BlogSectionBlockSelect<T>;
       };
   meta?:
     | T
@@ -1410,6 +1443,27 @@ export interface RecentClientsBlockSelect<T extends boolean = true> {
     | {
         logo?: T;
         id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BlogSectionBlock_select".
+ */
+export interface BlogSectionBlockSelect<T extends boolean = true> {
+  heading?: T;
+  title?: T;
+  limit?: T;
+  viewMoreLink?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+        appearance?: T;
       };
   id?: T;
   blockName?: T;

@@ -15,6 +15,7 @@ import { revalidateDelete, revalidatePage } from './hooks/revalidatePage'
 import { Product } from '@/blocks/product/config'
 import { PricingCards } from '@/blocks/PricingCards/config'
 import { RecentClients } from '@/blocks/RecentClients/config'
+import { BlogSection } from '@/blocks/BlogSection/config'
 
 import {
   MetaDescriptionField,
@@ -75,7 +76,7 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock,Product,PricingCards,RecentClients],
+              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock,Product,PricingCards,RecentClients,BlogSection],
               required: true,
               admin: {
                 initCollapsed: true,

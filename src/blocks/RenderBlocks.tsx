@@ -10,6 +10,7 @@ import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { Product_Block } from './product/Component'
 import { PricingCardsBlockComponent } from './PricingCards/component'
 import { RecentClientsBlockComponent } from './RecentClients/Component'
+import {BlogSectionBlockComponent} from './BlogSection/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -20,6 +21,7 @@ const blockComponents = {
   product:Product_Block,
   pricingCards:PricingCardsBlockComponent,
   recentClients:RecentClientsBlockComponent,
+  blogSection:BlogSectionBlockComponent,
 }
 
 export const RenderBlocks: React.FC<{
