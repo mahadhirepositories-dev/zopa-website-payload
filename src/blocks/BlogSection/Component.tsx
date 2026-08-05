@@ -2,9 +2,11 @@ import configPromise from '@payload-config'
 import {getPayload} from 'payload'
 import React from 'react'
 import type {Post,BlogSectionBlock} from '@/payload-types'
-import {Media} from '@/components/Media'
 import {CMSLink} from '@/components/Link'
 import {ArrowRight} from 'lucide-react'
+import NextImage from 'next/image'
+import {getMediaUrl} from '@/utilities/getMediaUrl'
+
 
 const formatDate = (timestamp: string): string =>
   new Date(timestamp).toLocaleDateString('en-US', {
@@ -16,11 +18,15 @@ const formatDate = (timestamp: string): string =>
 const BlogCard: React.FC<{ post: Post }> = ({ post }) => {
   const { categories, heroImage, publishedAt, slug, title } = post
   const href = `/posts/${slug}`
+  const imageObj = heroImage && typeof heroImage === 'object' ? heroImage : null
+  const imgSrc = imageObj?.url ? getMediaUrl(imageObj.url, imageObj.updatedAt) : ''
 
   return (
     <article className="border border-border rounded-lg overflow-hidden bg-card flex flex-col">
-      <div className="relative aspect-[16/9] w-full overflow=hidden">
-        {heroImage && typeof heroImage !== 'string' && <Media resource={heroImage} fill imgClassName="object-cover" />}
+      <div className="relative aspect-[16/9] w-full bg-muted">
+         {imgSrc && (
+           <NextImage src={imgSrc} alt={imageObj?.alt || title || ''} fill className="object-cover" sizes="50vw" />
+         )}
       </div>
       <div className="p-3">
         <div className="flex items-center gap-4 mb-2">
@@ -35,12 +41,12 @@ const BlogCard: React.FC<{ post: Post }> = ({ post }) => {
             return null
           })}
           {publishedAt && (
-            <time dateTime={publishedAt} className="text-xs text-white/60">
+            <time dateTime={publishedAt} className="text-xs text-muted-foreground">
               {formatDate(publishedAt)}
             </time>
           )}
         </div>
-        <h3 className="text-base font-medium leading-snug">
+        <h3 className="text-base font-medium leading-snug text-foreground">
           <a href={href}>{title}</a>
         </h3>
       </div>
@@ -55,7 +61,7 @@ export const BlogSectionBlockComponent: React.FC<BlogSectionBlock> = async (prop
 
   const fetchedPosts = await payload.find({
     collection: 'posts',
-    depth: 1,
+    depth: 2,
     limit: limit || 2,
     sort: '-publishedAt',
   })
@@ -81,7 +87,7 @@ export const BlogSectionBlockComponent: React.FC<BlogSectionBlock> = async (prop
       </div>
 
       {viewMoreLink && (
-        <div className="flex justify-start mt-42">
+        <div className="flex justify-start mt-30">
           <CMSLink {...viewMoreLink} className="bg-[#dbac2b]">
              <ArrowRight className="w-4 h-4" />
           </CMSLink>

@@ -10,20 +10,99 @@ export const Footer: GlobalConfig = {
   },
   fields: [
     {
-      name: 'navItems',
-      type: 'array',
-      fields: [
-        link({
-          appearances: false,
-        }),
-      ],
-      maxRows: 6,
-      admin: {
-        initCollapsed: true,
-        components: {
-          RowLabel: '@/Footer/RowLabel#RowLabel',
-        },
+      name: 'ctaHeading',
+      type: 'text',
+      label: 'CTA Heading',
+      defaultValue: 'Ready to Save 20% on Procurement Costs?',
+    },
+    {
+      name: 'ctaDescription',
+      type: 'textarea',
+      label: 'CTA Description',
+      defaultValue:
+        'Speak with our procurement specialists to explore tailored strategies that drive measurable savings and operational excellence. Book your session today and start benefiting from personalized procurement insights.',
+    },
+    link({
+      appearances: false,
+      overrides: {
+        name: 'ctaButton',
+        label: 'CTA Button',
       },
+    }),
+    {
+      name: 'ctaLogo',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'CTA Logo',
+    },
+    {
+      name: 'columns',
+      type: 'array',
+      label: 'Footer Columns',
+      maxRows: 4,
+      fields: [
+        {
+          name: 'title',
+          type: 'text',
+          label: 'Column Title',
+          required: true,
+        },
+        {
+          name: 'links',
+          type: 'array',
+          label: 'Links',
+          maxRows: 6,
+          fields: [
+          link({
+              appearances: false,
+            }),
+          ],
+        },
+      ],
+    },
+    {
+      name: 'contactAddress',
+      type: 'textarea',
+      label: 'Address',
+      defaultValue: 'Hyderabad,\nIndia',
+    },
+    {
+      name: 'contactPhone',
+      type: 'text',
+      label: 'Phone',
+      defaultValue: '+917075452105',
+    },
+    {
+      name: 'contactEmail',
+      type: 'email',
+      label: 'Email',
+      defaultValue: 'grow@zopapro.com',
+    },
+    {
+      name: 'socialLinks',
+      type: 'array',
+      label: 'Social Links',
+      maxRows: 5,
+      fields: [
+        {
+          name: 'platform',
+          type: 'text',
+          label: 'Platform (e.g. LinkedIn, Facebook, Instagram)',
+          required: true,
+        },
+        {
+          name: 'url',
+          type: 'text',
+          label: 'URL',
+          required: true,
+        },
+      ],
+    },
+    {
+      name: 'copyright',
+      type: 'text',
+      label: 'Copyright Text',
+      defaultValue: '2026 © ZOPA. All rights reserved.',
     },
   ],
   hooks: {

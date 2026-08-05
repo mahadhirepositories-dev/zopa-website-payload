@@ -18,9 +18,10 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
   }
 
   return (
-    <div className="container my-16">
+    <section className='bg-black min-h-[250px] flex items-center justify-center'>
+    <div className="container my-10">
       
-      <div className="flex flex-wrap justify-center gap-8">
+      <div className="flex flex-wrap items-center justify-center gap-8">
         {columns &&
           columns.length > 0 &&
           columns.map((col, index) => {
@@ -48,5 +49,6 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
       </div>
       
     </div>
+    </section>
   )
 }

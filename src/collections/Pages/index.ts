@@ -16,6 +16,13 @@ import { Product } from '@/blocks/product/config'
 import { PricingCards } from '@/blocks/PricingCards/config'
 import { RecentClients } from '@/blocks/RecentClients/config'
 import { BlogSection } from '@/blocks/BlogSection/config'
+import { FullWidthBanner } from '@/blocks/FullWidthBanner/config'
+import { AboutSection } from '@/blocks/AboutSection/config'
+import { AboutUs } from '@/blocks/AboutUs/config'
+import { VisionMission } from '@/blocks/Vission&Mission/config'
+import { ProcurementSolutions } from '@/blocks/ProcurementSolutions/config'
+import { ServicesSection } from '@/blocks/ServicesSection/config'
+import { ServiceDetailSection } from '@/blocks/Services/config'
 
 import {
   MetaDescriptionField,
@@ -76,7 +83,8 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock,Product,PricingCards,RecentClients,BlogSection],
+              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock,Product,PricingCards,RecentClients,
+                BlogSection,FullWidthBanner,AboutSection,AboutUs,VisionMission,ProcurementSolutions,ServicesSection,ServiceDetailSection],
               required: true,
               admin: {
                 initCollapsed: true,

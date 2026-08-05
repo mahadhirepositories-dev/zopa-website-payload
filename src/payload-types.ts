@@ -158,8 +158,8 @@ export interface UserAuthOperations {
 export interface Page {
   id: number;
   title: string;
-  hero: {
-    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
+  hero?: {
+    type?: ('none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'fullwidth') | null;
     richText?: {
       root: {
         type: string;
@@ -200,6 +200,8 @@ export interface Page {
         }[]
       | null;
     media?: (number | null) | Media;
+    logo?: (number | null) | Media;
+    heading?: string | null;
     stats?:
       | {
           value: string;
@@ -218,6 +220,13 @@ export interface Page {
     | PricingCardsBlock
     | RecentClientsBlock
     | BlogSectionBlock
+    | FullWidthBannerBlock
+    | AboutSectionBlock
+    | AboutUsBlock
+    | VisionMissionBlock
+    | ProcurementSolutionsBlock
+    | ServicesSectionBlock
+    | ServiceDetailSectionBlock
   )[];
   meta?: {
     title?: string | null;
@@ -937,6 +946,243 @@ export interface BlogSectionBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FullWidthBannerBlock".
+ */
+export interface FullWidthBannerBlock {
+  media: number | Media;
+  logo?: (number | null) | Media;
+  heading: string;
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'fullWidthBanner';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutSectionBlock".
+ */
+export interface AboutSectionBlock {
+  breadcrumb?: string | null;
+  heading: string;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'aboutSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutUsBlock".
+ */
+export interface AboutUsBlock {
+  image: number | Media;
+  label: string;
+  heading: string;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  features?:
+    | {
+        feature: string;
+        id?: string | null;
+      }[]
+    | null;
+  cardTitle?: string | null;
+  cardPoints?:
+    | {
+        point: string;
+        id?: string | null;
+      }[]
+    | null;
+  ctaLink: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null);
+    url?: string | null;
+    label: string;
+    /**
+     * Choose how the link should be rendered.
+     */
+    appearance?: ('default' | 'outline') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'aboutUs';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VisionMissionBlock".
+ */
+export interface VisionMissionBlock {
+  vision: {
+    title: string;
+    description: string;
+  };
+  mission: {
+    title: string;
+    description: string;
+  };
+  values?:
+    | {
+        icon?: ('Bot' | 'ShieldCheck' | 'Shield' | 'PiggyBank' | 'HandCoins') | null;
+        title: string;
+        description: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'visionMission';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProcurementSolutionsBlock".
+ */
+export interface ProcurementSolutionsBlock {
+  title: string;
+  subtitle?: string | null;
+  description: string;
+  media: number | Media;
+  ctaLink: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null);
+    url?: string | null;
+    label: string;
+    /**
+     * Choose how the link should be rendered.
+     */
+    appearance?: ('default' | 'outline') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'procurementSolutions';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ServicesSectionBlock".
+ */
+export interface ServicesSectionBlock {
+  services?:
+    | {
+        title: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'servicesSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ServiceDetailSectionBlock".
+ */
+export interface ServiceDetailSectionBlock {
+  services?:
+    | {
+        layout?: ('imageLeft' | 'imageRight') | null;
+        badge?: string | null;
+        title: string;
+        description: string;
+        features?:
+          | {
+              item: string;
+              id?: string | null;
+            }[]
+          | null;
+        media: number | Media;
+        ctaLink: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'serviceDetailSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1234,6 +1480,8 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
             };
         media?: T;
+        logo?: T;
+        heading?: T;
         stats?:
           | T
           | {
@@ -1254,6 +1502,13 @@ export interface PagesSelect<T extends boolean = true> {
         pricingCards?: T | PricingCardsBlockSelect<T>;
         recentClients?: T | RecentClientsBlockSelect<T>;
         blogSection?: T | BlogSectionBlockSelect<T>;
+        fullWidthBanner?: T | FullWidthBannerBlockSelect<T>;
+        aboutSection?: T | AboutSectionBlockSelect<T>;
+        aboutUs?: T | AboutUsBlockSelect<T>;
+        visionMission?: T | VisionMissionBlockSelect<T>;
+        procurementSolutions?: T | ProcurementSolutionsBlockSelect<T>;
+        servicesSection?: T | ServicesSectionBlockSelect<T>;
+        serviceDetailSection?: T | ServiceDetailSectionBlockSelect<T>;
       };
   meta?:
     | T
@@ -1464,6 +1719,176 @@ export interface BlogSectionBlockSelect<T extends boolean = true> {
         url?: T;
         label?: T;
         appearance?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FullWidthBannerBlock_select".
+ */
+export interface FullWidthBannerBlockSelect<T extends boolean = true> {
+  media?: T;
+  logo?: T;
+  heading?: T;
+  links?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutSectionBlock_select".
+ */
+export interface AboutSectionBlockSelect<T extends boolean = true> {
+  breadcrumb?: T;
+  heading?: T;
+  content?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutUsBlock_select".
+ */
+export interface AboutUsBlockSelect<T extends boolean = true> {
+  image?: T;
+  label?: T;
+  heading?: T;
+  content?: T;
+  features?:
+    | T
+    | {
+        feature?: T;
+        id?: T;
+      };
+  cardTitle?: T;
+  cardPoints?:
+    | T
+    | {
+        point?: T;
+        id?: T;
+      };
+  ctaLink?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+        appearance?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VisionMissionBlock_select".
+ */
+export interface VisionMissionBlockSelect<T extends boolean = true> {
+  vision?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  mission?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  values?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProcurementSolutionsBlock_select".
+ */
+export interface ProcurementSolutionsBlockSelect<T extends boolean = true> {
+  title?: T;
+  subtitle?: T;
+  description?: T;
+  media?: T;
+  ctaLink?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+        appearance?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ServicesSectionBlock_select".
+ */
+export interface ServicesSectionBlockSelect<T extends boolean = true> {
+  services?:
+    | T
+    | {
+        title?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ServiceDetailSectionBlock_select".
+ */
+export interface ServiceDetailSectionBlockSelect<T extends boolean = true> {
+  services?:
+    | T
+    | {
+        layout?: T;
+        badge?: T;
+        title?: T;
+        description?: T;
+        features?:
+          | T
+          | {
+              item?: T;
+              id?: T;
+            };
+        media?: T;
+        ctaLink?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
       };
   id?: T;
   blockName?: T;
@@ -1969,26 +2394,61 @@ export interface Header {
  */
 export interface Footer {
   id: number;
-  navItems?:
+  ctaHeading?: string | null;
+  ctaDescription?: string | null;
+  ctaButton: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null);
+    url?: string | null;
+    label: string;
+  };
+  ctaLogo?: (number | null) | Media;
+  columns?:
     | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: number | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: number | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-        };
+        title: string;
+        links?:
+          | {
+              link: {
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: number | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: number | Post;
+                    } | null);
+                url?: string | null;
+                label: string;
+              };
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
+  contactAddress?: string | null;
+  contactPhone?: string | null;
+  contactEmail?: string | null;
+  socialLinks?:
+    | {
+        platform: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  copyright?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2031,20 +2491,49 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
-  navItems?:
+  ctaHeading?: T;
+  ctaDescription?: T;
+  ctaButton?:
     | T
     | {
-        link?:
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+      };
+  ctaLogo?: T;
+  columns?:
+    | T
+    | {
+        title?: T;
+        links?:
           | T
           | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    label?: T;
+                  };
+              id?: T;
             };
         id?: T;
       };
+  contactAddress?: T;
+  contactPhone?: T;
+  contactEmail?: T;
+  socialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  copyright?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

@@ -10,6 +10,7 @@ import { Logo } from '@/components/Logo/Logo'
 import { HeaderNav } from './Nav'
 import { CMSLink } from '@/components/Link'
 import { ArrowRight } from "lucide-react"
+import { ThemeSelector } from '@/providers/Theme/ThemeSelector'
 
 interface HeaderClientProps {
   data: Header
@@ -42,13 +43,15 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
         
 
         {/* cta button */}
-        {data?.ctalink && (
-          <div className="shrink-0 bg-[#dbac2b] rounded-md w-48 h-10 flex justify-center items-center text-black">
-             <CMSLink {...data.ctalink}  size="lg"/>
-             <ArrowRight className="h-4 w-4"/>
-          </div>
-
-        )}
+        <div className="flex items-center gap-4">
+            <ThemeSelector />
+            {data?.ctalink && (
+            <div className="shrink-0 bg-[#dbac2b] rounded-md w-48 h-10 flex justify-center items-center text-black">
+                <CMSLink {...data.ctalink} size="lg" />
+                <ArrowRight className="h-4 w-4" />
+            </div>
+             )}
+        </div>
       </div>
     </header>
   )

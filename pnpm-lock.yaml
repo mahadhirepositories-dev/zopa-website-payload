@@ -98,9 +98,15 @@ importers:
       react-hook-form:
         specifier: 7.71.1
         version: 7.71.1(react@19.2.6)
+      react-icons:
+        specifier: ^5.7.0
+        version: 5.7.0(react@19.2.6)
       sharp:
         specifier: 0.34.2
         version: 0.34.2
+      simple-icons:
+        specifier: ^16.27.1
+        version: 16.27.1
       tailwind-merge:
         specifier: ^3.4.0
         version: 3.6.0
@@ -4290,6 +4296,11 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
 
+  react-icons@5.7.0:
+    resolution: {integrity: sha512-LBLy340Rzqy6+/yVhZKT3B/QpP1BZaesGqasf09HPOBzRarcDIFH0WwXlXQfE7q7ipxK4MSiC5DIBWURCny6fw==}
+    peerDependencies:
+      react: '*'
+
   react-image-crop@10.1.8:
     resolution: {integrity: sha512-4rb8XtXNx7ZaOZarKKnckgz4xLMvds/YrU6mpJfGhGAsy2Mg4mIw1x+DCCGngVGq2soTBVVOxx2s/C6mTX9+pA==}
     peerDependencies:
@@ -4492,6 +4503,10 @@ packages:
 
   siginfo@2.0.0:
     resolution: {integrity: sha512-ybx0WO1/8bSBLEWXZvEd7gMW3Sn3JFlW3TvX1nREbDLRNQNaeNN8WK0meBwPdAaOI7TtRRRJn/Es1zhrrCHu7g==}
+
+  simple-icons@16.27.1:
+    resolution: {integrity: sha512-slZF8iKxkv7Lb9SF3L1AcIl5iYLNvDrKKm8yV69cG66XvxJ12SX+bYTgxRwCY4bXSmklGXoXaKEyVmEypOCeqw==}
+    engines: {node: '>=0.12.18'}
 
   simple-swizzle@0.2.4:
     resolution: {integrity: sha512-nAu1WFPQSMNr2Zn9PGSZK9AGn4t/y97lEm+MXTtUDwfP0ksAIX4nO+6ruD9Jwut4C49SB1Ws+fbXsm/yScWOHw==}
@@ -9325,6 +9340,10 @@ snapshots:
     dependencies:
       react: 19.2.6
 
+  react-icons@5.7.0(react@19.2.6):
+    dependencies:
+      react: 19.2.6
+
   react-image-crop@10.1.8(react@19.2.6):
     dependencies:
       react: 19.2.6
@@ -9637,6 +9656,8 @@ snapshots:
       side-channel-weakmap: 1.0.2
 
   siginfo@2.0.0: {}
+
+  simple-icons@16.27.1: {}
 
   simple-swizzle@0.2.4:
     dependencies:

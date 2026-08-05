@@ -35,8 +35,12 @@ export const hero: Field = {
           label: 'Low Impact',
           value: 'lowImpact',
         },
+        {
+          label:'Full Width',
+          value:'fullwidth',
+        }
       ],
-      required: true,
+      required: false,
     },
     {
       name: 'richText',
@@ -62,10 +66,25 @@ export const hero: Field = {
       name: 'media',
       type: 'upload',
       admin: {
-        condition: (_, { type } = {}) => ['highImpact', 'mediumImpact'].includes(type),
+        condition: (_, { type } = {}) => ['highImpact', 'mediumImpact','fullwidth'].includes(type),
       },
       relationTo: 'media',
       required: true,
+    },
+    {
+      name:'logo',
+      type:'upload',
+      relationTo:'media',
+      admin:{
+        condition:(_,{type}={})=>type==='fullwidth',
+      },
+    },
+    {
+      name:'heading',
+      type:'text',
+      admin:{
+        condition:(_,{type}={})=>type==='fullwidth',
+      },
     },
     {
       name:'stats',

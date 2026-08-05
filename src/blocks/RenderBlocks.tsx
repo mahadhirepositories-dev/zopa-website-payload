@@ -11,6 +11,13 @@ import { Product_Block } from './product/Component'
 import { PricingCardsBlockComponent } from './PricingCards/component'
 import { RecentClientsBlockComponent } from './RecentClients/Component'
 import {BlogSectionBlockComponent} from './BlogSection/Component'
+import {FullWidthBannerBlockComponent} from './FullWidthBanner/Component'
+import {AboutSectionBlockComponent} from './AboutSection/Component'
+import {AboutUsBlockComponent} from './AboutUs/Component'
+import {VisionMissionBlockComponent} from './Vission&Mission/Component'
+import {ProcurementSolutionsBlockComponent} from './ProcurementSolutions/Component'
+import {ServicesSectionBlockComponent} from './ServicesSection/Component'
+import {ServiceDetailSectionBlockComponent} from './Services/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -22,6 +29,13 @@ const blockComponents = {
   pricingCards:PricingCardsBlockComponent,
   recentClients:RecentClientsBlockComponent,
   blogSection:BlogSectionBlockComponent,
+  fullWidthBanner:FullWidthBannerBlockComponent,
+  aboutSection:AboutSectionBlockComponent,
+  aboutUs:AboutUsBlockComponent,
+  visionMission:VisionMissionBlockComponent,
+  procurementSolutions:ProcurementSolutionsBlockComponent,
+  servicesSection:ServicesSectionBlockComponent,
+  serviceDetailSection:ServiceDetailSectionBlockComponent,
 }
 
 export const RenderBlocks: React.FC<{
