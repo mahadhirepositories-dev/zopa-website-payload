@@ -23,6 +23,7 @@ import { VisionMission } from '@/blocks/Vission&Mission/config'
 import { ProcurementSolutions } from '@/blocks/ProcurementSolutions/config'
 import { ServicesSection } from '@/blocks/ServicesSection/config'
 import { ServiceDetailSection } from '@/blocks/Services/config'
+import { HowWeWork } from '@/blocks/Howwework/config'
 
 import {
   MetaDescriptionField,
@@ -84,7 +85,8 @@ export const Pages: CollectionConfig<'pages'> = {
               name: 'layout',
               type: 'blocks',
               blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock,Product,PricingCards,RecentClients,
-                BlogSection,FullWidthBanner,AboutSection,AboutUs,VisionMission,ProcurementSolutions,ServicesSection,ServiceDetailSection],
+                BlogSection,FullWidthBanner,AboutSection,AboutUs,VisionMission,ProcurementSolutions,ServicesSection,ServiceDetailSection,
+                HowWeWork],
               required: true,
               admin: {
                 initCollapsed: true,

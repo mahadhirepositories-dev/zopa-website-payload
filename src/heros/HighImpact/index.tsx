@@ -9,7 +9,7 @@ import { Media } from '@/components/Media'
 import RichText from '@/components/RichText'
 import { ArrowRight } from 'lucide-react'
 
-export const HighImpactHero: React.FC<Page['hero']> = ({ links, media, richText,stats }) => {
+export const HighImpactHero: React.FC<NonNullable<Page['hero']>> = ({ links, media, richText,stats }) => {
   const { setHeaderTheme } = useHeaderTheme()
 
   useEffect(() => {

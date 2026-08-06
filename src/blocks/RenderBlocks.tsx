@@ -18,6 +18,7 @@ import {VisionMissionBlockComponent} from './Vission&Mission/Component'
 import {ProcurementSolutionsBlockComponent} from './ProcurementSolutions/Component'
 import {ServicesSectionBlockComponent} from './ServicesSection/Component'
 import {ServiceDetailSectionBlockComponent} from './Services/Component'
+import { HowWeWorkBlockComponent } from './Howwework/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -36,6 +37,7 @@ const blockComponents = {
   procurementSolutions:ProcurementSolutionsBlockComponent,
   servicesSection:ServicesSectionBlockComponent,
   serviceDetailSection:ServiceDetailSectionBlockComponent,
+  howWeWork:HowWeWorkBlockComponent,
 }
 
 export const RenderBlocks: React.FC<{

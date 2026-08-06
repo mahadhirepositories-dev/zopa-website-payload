@@ -159,7 +159,7 @@ export interface Page {
   id: number;
   title: string;
   hero?: {
-    type?: ('none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'fullwidth') | null;
+    type?: ('none' | 'highImpact' | 'mediumImpact' | 'lowImpact') | null;
     richText?: {
       root: {
         type: string;
@@ -227,6 +227,7 @@ export interface Page {
     | ProcurementSolutionsBlock
     | ServicesSectionBlock
     | ServiceDetailSectionBlock
+    | HowWeWorkBlock
   )[];
   meta?: {
     title?: string | null;
@@ -1183,6 +1184,28 @@ export interface ServiceDetailSectionBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HowWeWorkBlock".
+ */
+export interface HowWeWorkBlock {
+  badge?: string | null;
+  /**
+   * One line per row, e.g. Transparent. / Collaborative. / Results-Driven.
+   */
+  heading: string;
+  description?: string | null;
+  steps?:
+    | {
+        title: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'howWeWork';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1509,6 +1532,7 @@ export interface PagesSelect<T extends boolean = true> {
         procurementSolutions?: T | ProcurementSolutionsBlockSelect<T>;
         servicesSection?: T | ServicesSectionBlockSelect<T>;
         serviceDetailSection?: T | ServiceDetailSectionBlockSelect<T>;
+        howWeWork?: T | HowWeWorkBlockSelect<T>;
       };
   meta?:
     | T
@@ -1888,6 +1912,24 @@ export interface ServiceDetailSectionBlockSelect<T extends boolean = true> {
               label?: T;
               appearance?: T;
             };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HowWeWorkBlock_select".
+ */
+export interface HowWeWorkBlockSelect<T extends boolean = true> {
+  badge?: T;
+  heading?: T;
+  description?: T;
+  steps?:
+    | T
+    | {
+        title?: T;
+        description?: T;
         id?: T;
       };
   id?: T;

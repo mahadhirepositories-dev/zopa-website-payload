@@ -35,10 +35,6 @@ export const hero: Field = {
           label: 'Low Impact',
           value: 'lowImpact',
         },
-        {
-          label:'Full Width',
-          value:'fullwidth',
-        }
       ],
       required: false,
     },
