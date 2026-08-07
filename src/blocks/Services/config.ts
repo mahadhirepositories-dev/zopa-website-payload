@@ -71,6 +71,7 @@ export const ServiceDetailSection: Block = {
             name: 'ctaLink',
             label: 'CTA Button',
           },
+          
         }),
       ],
     },

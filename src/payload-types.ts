@@ -177,7 +177,7 @@ export interface Page {
     } | null;
     links?:
       | {
-          link: {
+          link?: {
             type?: ('reference' | 'custom') | null;
             newTab?: boolean | null;
             reference?:
@@ -190,7 +190,7 @@ export interface Page {
                   value: number | Post;
                 } | null);
             url?: string | null;
-            label: string;
+            label?: string | null;
             /**
              * Choose how the link should be rendered.
              */
@@ -228,6 +228,7 @@ export interface Page {
     | ServicesSectionBlock
     | ServiceDetailSectionBlock
     | HowWeWorkBlock
+    | InterestFormBlock
   )[];
   meta?: {
     title?: string | null;
@@ -488,7 +489,7 @@ export interface CallToActionBlock {
   } | null;
   links?:
     | {
-        link: {
+        link?: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
           reference?:
@@ -501,7 +502,7 @@ export interface CallToActionBlock {
                 value: number | Post;
               } | null);
           url?: string | null;
-          label: string;
+          label?: string | null;
           /**
            * Choose how the link should be rendered.
            */
@@ -554,7 +555,7 @@ export interface ContentBlock {
                 value: number | Post;
               } | null);
           url?: string | null;
-          label: string;
+          label?: string | null;
           /**
            * Choose how the link should be rendered.
            */
@@ -838,7 +839,7 @@ export interface ProductFlux {
                 value: number | Post;
               } | null);
           url?: string | null;
-          label: string;
+          label?: string | null;
           /**
            * Choose how the link should be rendered.
            */
@@ -872,7 +873,7 @@ export interface PricingCardsBlock {
               id?: string | null;
             }[]
           | null;
-        ctaLink: {
+        ctaLink?: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
           reference?:
@@ -885,7 +886,7 @@ export interface PricingCardsBlock {
                 value: number | Post;
               } | null);
           url?: string | null;
-          label: string;
+          label?: string | null;
           /**
            * Choose how the link should be rendered.
            */
@@ -922,7 +923,7 @@ export interface BlogSectionBlock {
   heading?: string | null;
   title?: string | null;
   limit?: number | null;
-  viewMoreLink: {
+  viewMoreLink?: {
     type?: ('reference' | 'custom') | null;
     newTab?: boolean | null;
     reference?:
@@ -935,7 +936,7 @@ export interface BlogSectionBlock {
           value: number | Post;
         } | null);
     url?: string | null;
-    label: string;
+    label?: string | null;
     /**
      * Choose how the link should be rendered.
      */
@@ -955,7 +956,7 @@ export interface FullWidthBannerBlock {
   heading: string;
   links?:
     | {
-        link: {
+        link?: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
           reference?:
@@ -968,7 +969,7 @@ export interface FullWidthBannerBlock {
                 value: number | Post;
               } | null);
           url?: string | null;
-          label: string;
+          label?: string | null;
           /**
            * Choose how the link should be rendered.
            */
@@ -1029,7 +1030,7 @@ export interface AboutUsBlock {
         id?: string | null;
       }[]
     | null;
-  ctaLink: {
+  ctaLink?: {
     type?: ('reference' | 'custom') | null;
     newTab?: boolean | null;
     reference?:
@@ -1042,7 +1043,7 @@ export interface AboutUsBlock {
           value: number | Post;
         } | null);
     url?: string | null;
-    label: string;
+    label?: string | null;
     /**
      * Choose how the link should be rendered.
      */
@@ -1086,7 +1087,7 @@ export interface ProcurementSolutionsBlock {
   subtitle?: string | null;
   description: string;
   media: number | Media;
-  ctaLink: {
+  ctaLink?: {
     type?: ('reference' | 'custom') | null;
     newTab?: boolean | null;
     reference?:
@@ -1099,7 +1100,7 @@ export interface ProcurementSolutionsBlock {
           value: number | Post;
         } | null);
     url?: string | null;
-    label: string;
+    label?: string | null;
     /**
      * Choose how the link should be rendered.
      */
@@ -1160,7 +1161,7 @@ export interface ServiceDetailSectionBlock {
             }[]
           | null;
         media: number | Media;
-        ctaLink: {
+        ctaLink?: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
           reference?:
@@ -1173,7 +1174,7 @@ export interface ServiceDetailSectionBlock {
                 value: number | Post;
               } | null);
           url?: string | null;
-          label: string;
+          label?: string | null;
           /**
            * Choose how the link should be rendered.
            */
@@ -1207,6 +1208,25 @@ export interface HowWeWorkBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'howWeWork';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "InterestFormBlock".
+ */
+export interface InterestFormBlock {
+  label?: string | null;
+  heading: string;
+  description?: string | null;
+  backgroundImage?: (number | null) | Media;
+  overlayHeading?: string | null;
+  overlayDescription?: string | null;
+  contactPhone?: string | null;
+  contactEmail?: string | null;
+  formHeading?: string | null;
+  form: number | Form;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'interestForm';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1537,6 +1557,7 @@ export interface PagesSelect<T extends boolean = true> {
         servicesSection?: T | ServicesSectionBlockSelect<T>;
         serviceDetailSection?: T | ServiceDetailSectionBlockSelect<T>;
         howWeWork?: T | HowWeWorkBlockSelect<T>;
+        interestForm?: T | InterestFormBlockSelect<T>;
       };
   meta?:
     | T
@@ -1945,6 +1966,24 @@ export interface HowWeWorkBlockSelect<T extends boolean = true> {
         description?: T;
         id?: T;
       };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "InterestFormBlock_select".
+ */
+export interface InterestFormBlockSelect<T extends boolean = true> {
+  label?: T;
+  heading?: T;
+  description?: T;
+  backgroundImage?: T;
+  overlayHeading?: T;
+  overlayDescription?: T;
+  contactPhone?: T;
+  contactEmail?: T;
+  formHeading?: T;
+  form?: T;
   id?: T;
   blockName?: T;
 }
@@ -2400,7 +2439,7 @@ export interface Header {
   logo?: (number | null) | Media;
   navItems?:
     | {
-        link: {
+        link?: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
           reference?:
@@ -2413,14 +2452,14 @@ export interface Header {
                 value: number | Post;
               } | null);
           url?: string | null;
-          label: string;
+          label?: string | null;
         };
         /**
          * Add links here to show a dropdown when hovering or clicking this menu item.
          */
         children?:
           | {
-              link: {
+              link?: {
                 type?: ('reference' | 'custom') | null;
                 newTab?: boolean | null;
                 reference?:
@@ -2433,7 +2472,7 @@ export interface Header {
                       value: number | Post;
                     } | null);
                 url?: string | null;
-                label: string;
+                label?: string | null;
               };
               id?: string | null;
             }[]
@@ -2448,7 +2487,7 @@ export interface Header {
   /**
    * Go to Optimize procurement page
    */
-  ctalink: {
+  ctalink?: {
     type?: ('reference' | 'custom') | null;
     newTab?: boolean | null;
     reference?:
@@ -2461,7 +2500,7 @@ export interface Header {
           value: number | Post;
         } | null);
     url?: string | null;
-    label: string;
+    label?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -2474,7 +2513,7 @@ export interface Footer {
   id: number;
   ctaHeading?: string | null;
   ctaDescription?: string | null;
-  ctaButton: {
+  ctaButton?: {
     type?: ('reference' | 'custom') | null;
     newTab?: boolean | null;
     reference?:
@@ -2487,7 +2526,7 @@ export interface Footer {
           value: number | Post;
         } | null);
     url?: string | null;
-    label: string;
+    label?: string | null;
   };
   ctaLogo?: (number | null) | Media;
   columns?:
@@ -2495,7 +2534,7 @@ export interface Footer {
         title: string;
         links?:
           | {
-              link: {
+              link?: {
                 type?: ('reference' | 'custom') | null;
                 newTab?: boolean | null;
                 reference?:
@@ -2508,7 +2547,7 @@ export interface Footer {
                       value: number | Post;
                     } | null);
                 url?: string | null;
-                label: string;
+                label?: string | null;
               };
               id?: string | null;
             }[]

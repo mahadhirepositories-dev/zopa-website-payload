@@ -76,16 +76,16 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
       },
       label: 'Document to link to',
       relationTo: ['pages', 'posts'],
-      required: true,
+      required: false,
     },
     {
       name: 'url',
       type: 'text',
       admin: {
-        condition: (_, siblingData) => siblingData?.type === 'custom',
+        condition: (_, siblingData) => siblingData?.type === 'custom' ,
       },
       label: 'Custom URL',
-      required: true,
+      required: false,
     },
   ]
 
@@ -109,7 +109,7 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
             width: '50%',
           },
           label: 'Label',
-          required: true,
+          required: false,
         },
       ],
     })

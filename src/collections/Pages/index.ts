@@ -24,6 +24,7 @@ import { ProcurementSolutions } from '@/blocks/ProcurementSolutions/config'
 import { ServicesSection } from '@/blocks/ServicesSection/config'
 import { ServiceDetailSection } from '@/blocks/Services/config'
 import { HowWeWork } from '@/blocks/Howwework/config'
+import { InterestForm } from '@/blocks/Interestblock/config'
 
 import {
   MetaDescriptionField,
@@ -86,7 +87,7 @@ export const Pages: CollectionConfig<'pages'> = {
               type: 'blocks',
               blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock,Product,PricingCards,RecentClients,
                 BlogSection,FullWidthBanner,AboutSection,AboutUs,VisionMission,ProcurementSolutions,ServicesSection,ServiceDetailSection,
-                HowWeWork],
+                HowWeWork,InterestForm],
               required: true,
               admin: {
                 initCollapsed: true,

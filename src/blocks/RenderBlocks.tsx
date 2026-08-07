@@ -19,6 +19,7 @@ import {ProcurementSolutionsBlockComponent} from './ProcurementSolutions/Compone
 import {ServicesSectionBlockComponent} from './ServicesSection/Component'
 import {ServiceDetailSectionBlockComponent} from './Services/Component'
 import { HowWeWorkBlockComponent } from './Howwework/Component'
+import { InterestFormBlockComponent } from './Interestblock/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -38,6 +39,7 @@ const blockComponents = {
   servicesSection:ServicesSectionBlockComponent,
   serviceDetailSection:ServiceDetailSectionBlockComponent,
   howWeWork:HowWeWorkBlockComponent,
+  interestForm: InterestFormBlockComponent,
 }
 
 export const RenderBlocks: React.FC<{
