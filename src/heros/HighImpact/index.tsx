@@ -18,7 +18,7 @@ export const HighImpactHero: React.FC<NonNullable<Page['hero']>> = ({ links, med
 
   return (
     <div
-      className="relative -mt-[10.4rem] flex min-h-screen items-end text-white"
+      className="relative -mt-20 flex min-h-screen items-end text-white"
       data-theme="dark"
     >
       <div className="min-h-screen absolute inset-0 select-none">

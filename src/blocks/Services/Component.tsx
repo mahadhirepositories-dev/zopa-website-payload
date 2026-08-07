@@ -15,7 +15,11 @@ export const ServiceDetailSectionBlockComponent: React.FC<ServiceDetailSectionBl
           services.map((service, index) => {
             const imageRight = service.layout === 'imageRight'
             return (
-              <div key={index} className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+               <div
+                key={index}
+                id={service.sectionId || undefined}
+                className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center scroll-mt-24"
+              > 
                 {/* Image */}
                 <div
                   className={cn(

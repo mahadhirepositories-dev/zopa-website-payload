@@ -23,6 +23,20 @@ export const Header: GlobalConfig = {
         link({
           appearances: false,
         }),
+        {
+          name: 'children',
+          type: 'array',
+          label: 'Dropdown Links',
+          admin: {
+            description:
+              'Add links here to show a dropdown when hovering or clicking this menu item.',
+          },
+          fields: [
+            link({
+              appearances: false,
+            }),
+          ],
+        },
       ],
       maxRows: 10,
       admin: {

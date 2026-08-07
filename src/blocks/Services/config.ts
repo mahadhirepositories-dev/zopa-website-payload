@@ -35,6 +35,15 @@ export const ServiceDetailSection: Block = {
           required: true,
           label: 'Title',
         },
+         {
+          name: 'sectionId',
+          type: 'text',
+          label: 'Anchor ID',
+          admin: {
+            description:
+              'Must match the Anchor ID on the corresponding Services Section item.',
+          },
+        },
         {
           name: 'description',
           type: 'textarea',

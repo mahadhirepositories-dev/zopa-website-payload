@@ -23,17 +23,9 @@ export const AboutSection: Block = {
     },
     {
       name: 'content',
-      type: 'richText',
+      type: 'textarea',
       required: true,
       label: 'Content',
-      editor: lexicalEditor({
-        features: ({ rootFeatures }) => [
-          ...rootFeatures,
-          HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
-          FixedToolbarFeature(),
-          InlineToolbarFeature(),
-        ],
-      }),
     },
   ],
   labels: { singular: 'About Section', plural: 'About Sections' },

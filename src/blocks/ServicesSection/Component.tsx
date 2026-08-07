@@ -1,5 +1,6 @@
 import React from 'react'
 import type { ServicesSectionBlock } from '@/payload-types'
+import { CMSLink } from '@/components/Link'
 
 export const ServicesSectionBlockComponent: React.FC<ServicesSectionBlock> = ({ services }) => {
   return (
@@ -10,9 +11,15 @@ export const ServicesSectionBlockComponent: React.FC<ServicesSectionBlock> = ({ 
             {services.map((item, i) => (
               <div
                 key={i}
-                className="border-b-2 border-transparent p-6 text-center bg-white hover:border-black  transition-all"
+                className="border-b-2 border-transparent p-6 text-center bg-white hover:border-black transition-all"
               >
-                <h3 className="text-base font-[350] text-black">{item.title}</h3>
+                {item.link ? (
+                  <CMSLink {...item.link} className="inline-block">
+                    <h3 className="text-base font-[350] text-black">{item.title}</h3>
+                  </CMSLink>
+                ) : (
+                  <h3 className="text-base font-[350] text-black">{item.title}</h3>
+                )}
               </div>
             ))}
           </div>

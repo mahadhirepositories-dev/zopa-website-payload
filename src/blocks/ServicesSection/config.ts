@@ -1,10 +1,11 @@
 import type { Block } from 'payload'
+import { link } from '@/fields/link'
 
 export const ServicesSection: Block = {
   slug: 'servicesSection',
   interfaceName: 'ServicesSectionBlock',
   labels: { singular: 'Services Section', plural: 'Services Sections' },
-  fields: [
+   fields: [
     {
       name: 'services',
       type: 'array',
@@ -18,6 +19,10 @@ export const ServicesSection: Block = {
           required: true,
           label: 'Service Title',
         },
+        link({
+          disableLabel: true,
+          appearances: false,
+        }),
       ],
     },
   ],

@@ -988,21 +988,7 @@ export interface FullWidthBannerBlock {
 export interface AboutSectionBlock {
   breadcrumb?: string | null;
   heading: string;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
+  content: string;
   id?: string | null;
   blockName?: string | null;
   blockType: 'aboutSection';
@@ -1131,6 +1117,20 @@ export interface ServicesSectionBlock {
   services?:
     | {
         title: string;
+        link?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+        };
         id?: string | null;
       }[]
     | null;
@@ -1148,6 +1148,10 @@ export interface ServiceDetailSectionBlock {
         layout?: ('imageLeft' | 'imageRight') | null;
         badge?: string | null;
         title: string;
+        /**
+         * Must match the Anchor ID on the corresponding Services Section item.
+         */
+        sectionId?: string | null;
         description: string;
         features?:
           | {
@@ -1878,6 +1882,14 @@ export interface ServicesSectionBlockSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+            };
         id?: T;
       };
   id?: T;
@@ -1894,6 +1906,7 @@ export interface ServiceDetailSectionBlockSelect<T extends boolean = true> {
         layout?: T;
         badge?: T;
         title?: T;
+        sectionId?: T;
         description?: T;
         features?:
           | T
@@ -2402,6 +2415,29 @@ export interface Header {
           url?: string | null;
           label: string;
         };
+        /**
+         * Add links here to show a dropdown when hovering or clicking this menu item.
+         */
+        children?:
+          | {
+              link: {
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: number | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: number | Post;
+                    } | null);
+                url?: string | null;
+                label: string;
+              };
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
@@ -2511,6 +2547,20 @@ export interface HeaderSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+            };
+        children?:
+          | T
+          | {
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    label?: T;
+                  };
+              id?: T;
             };
         id?: T;
       };
