@@ -18,6 +18,7 @@ export async function GET(req: NextRequest): Promise<Response> {
   const { searchParams } = new URL(req.url)
 
   const path = searchParams.get('path')
+  const previewSecret = searchParams.get('previewSecret')
   const expectedSecret = process.env.PREVIEW_SECRET || process.env.PAYLOAD_SECRET || 'YOUR_SECRET_HERE'
 
   if (previewSecret !== expectedSecret) {
