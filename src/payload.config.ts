@@ -62,7 +62,16 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL || process.env.DATABASE_URI || '',
+      connectionString: (() => {
+        let url = process.env.DATABASE_URL || process.env.DATABASE_URI || ''
+        if (url.includes('db.junhxesyfpnqapxaulvj.supabase.co')) {
+          url = url
+            .replace('db.junhxesyfpnqapxaulvj.supabase.co:5432', 'aws-0-ap-southeast-1.pooler.supabase.com:6543')
+            .replace('db.junhxesyfpnqapxaulvj.supabase.co', 'aws-0-ap-southeast-1.pooler.supabase.com:6543')
+            .replace('//postgres:', '//postgres.junhxesyfpnqapxaulvj:')
+        }
+        return url
+      })(),
       ssl:
         process.env.DATABASE_URL?.includes('127.0.0.1') ||
         process.env.DATABASE_URL?.includes('localhost') ||
