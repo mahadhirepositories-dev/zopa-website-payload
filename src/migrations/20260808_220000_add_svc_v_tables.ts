@@ -1,38 +1,41 @@
 import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 
 export async function up({ db }: MigrateUpArgs): Promise<void> {
-  // Create version shadow tables for svc (serviceDetailSection services array)
-  // These are required because Pages has versioning enabled and svc uses a custom dbName.
-  // Payload queries _svc_v and _svc_v_features when rendering the Pages list/edit view.
+  // Acquire advisory lock to prevent race conditions during concurrent Next.js build workers
+  await db.execute(sql`SELECT pg_advisory_xact_lock(2026080822);`)
 
   await db.execute(sql`
-    CREATE TABLE IF NOT EXISTS "_svc_v" (
-      "_order" integer NOT NULL,
-      "_parent_id" varchar NOT NULL,
-      "id" varchar PRIMARY KEY NOT NULL,
-      "layout" "enum_svc_layout" DEFAULT 'imageLeft',
-      "badge" varchar,
-      "title" varchar,
-      "section_id" varchar,
-      "description" varchar,
-      "media_id" varchar,
-      "cta_link_type" "enum_svc_cta_link_type" DEFAULT 'reference',
-      "cta_link_new_tab" boolean,
-      "cta_link_url" varchar,
-      "cta_link_label" varchar,
-      "cta_link_appearance" "enum_svc_cta_link_appearance" DEFAULT 'default',
-      "_uuid" varchar
-    );
+    DO $$ BEGIN
+      CREATE TABLE IF NOT EXISTS "_svc_v" (
+        "_order" integer NOT NULL,
+        "_parent_id" varchar NOT NULL,
+        "id" varchar PRIMARY KEY NOT NULL,
+        "layout" "enum_svc_layout" DEFAULT 'imageLeft',
+        "badge" varchar,
+        "title" varchar,
+        "section_id" varchar,
+        "description" varchar,
+        "media_id" varchar,
+        "cta_link_type" "enum_svc_cta_link_type" DEFAULT 'reference',
+        "cta_link_new_tab" boolean,
+        "cta_link_url" varchar,
+        "cta_link_label" varchar,
+        "cta_link_appearance" "enum_svc_cta_link_appearance" DEFAULT 'default',
+        "_uuid" varchar
+      );
+    EXCEPTION WHEN duplicate_table OR duplicate_object THEN NULL; END $$;
   `)
 
   await db.execute(sql`
-    CREATE TABLE IF NOT EXISTS "_svc_v_features" (
-      "_order" integer NOT NULL,
-      "_parent_id" varchar NOT NULL,
-      "id" varchar PRIMARY KEY NOT NULL,
-      "item" varchar,
-      "_uuid" varchar
-    );
+    DO $$ BEGIN
+      CREATE TABLE IF NOT EXISTS "_svc_v_features" (
+        "_order" integer NOT NULL,
+        "_parent_id" varchar NOT NULL,
+        "id" varchar PRIMARY KEY NOT NULL,
+        "item" varchar,
+        "_uuid" varchar
+      );
+    EXCEPTION WHEN duplicate_table OR duplicate_object THEN NULL; END $$;
   `)
 
   // Add indexes for performance

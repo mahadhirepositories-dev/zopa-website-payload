@@ -1,6 +1,7 @@
 import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 
 export async function up({ db }: MigrateUpArgs): Promise<void> {
+  await db.execute(sql`SELECT pg_advisory_xact_lock(202608082100);`)
   // ─── Step 1: Make NOT NULL link label columns nullable ───────────────────
   // These cause 500 when saving globals/blocks without filling every link label
   await db.execute(sql`

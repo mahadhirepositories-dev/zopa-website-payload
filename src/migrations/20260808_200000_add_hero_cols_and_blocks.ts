@@ -1,6 +1,7 @@
 import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 
 export async function up({ db }: MigrateUpArgs): Promise<void> {
+  await db.execute(sql`SELECT pg_advisory_xact_lock(202608082000);`)
   // ─── Step 1: Add 'fullwidth' to existing hero type enums ──────────────────
   // ALTER TYPE ... ADD VALUE is idempotent-safe only via DO block
   await db.execute(sql`
