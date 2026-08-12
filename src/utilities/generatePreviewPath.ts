@@ -22,7 +22,7 @@ export const generatePreviewPath = ({ collection, slug }: Props) => {
 
   const encodedParams = new URLSearchParams({
     path: `${collectionPrefixMap[collection]}/${encodedSlug}`,
-    previewSecret: process.env.PREVIEW_SECRET || '',
+    previewSecret: process.env.PREVIEW_SECRET || process.env.PAYLOAD_SECRET || 'YOUR_SECRET_HERE',
   } satisfies PreviewSearchParams)
 
   const url = `/next/preview?${encodedParams.toString()}`
