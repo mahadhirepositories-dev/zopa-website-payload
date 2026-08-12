@@ -1,4 +1,5 @@
-import type { CollectionConfig } from 'payload'
+import { CollectionConfig, CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
+import { createClient } from '@supabase/supabase-js'
 
 import {
   FixedToolbarFeature,
@@ -14,6 +15,35 @@ import { authenticated } from '../access/authenticated'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://junhxesyfpnqapxaulvj.supabase.co'
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || ''
+
+const uploadToSupabase: CollectionAfterChangeHook = async ({ doc, req }) => {
+  if (SUPABASE_KEY && req.file && req.file.data && doc.filename) {
+    try {
+      const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+      await supabase.storage.from('media').upload(doc.filename, req.file.data, {
+        contentType: req.file.mimetype,
+        upsert: true,
+      })
+    } catch (err) {
+      console.error('Supabase Storage upload error:', err)
+    }
+  }
+  return doc
+}
+
+const deleteFromSupabase: CollectionAfterDeleteHook = async ({ doc }) => {
+  if (SUPABASE_KEY && doc?.filename) {
+    try {
+      const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+      await supabase.storage.from('media').remove([doc.filename])
+    } catch (err) {
+      console.error('Supabase Storage delete error:', err)
+    }
+  }
+}
+
 export const Media: CollectionConfig = {
   slug: 'media',
   folders: true,
@@ -22,6 +52,10 @@ export const Media: CollectionConfig = {
     delete: authenticated,
     read: anyone,
     update: authenticated,
+  },
+  hooks: {
+    afterChange: [uploadToSupabase],
+    afterDelete: [deleteFromSupabase],
   },
   fields: [
     {
@@ -40,7 +74,6 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
-    // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
     staticDir: path.resolve(dirname, '../../public/media'),
     adminThumbnail: 'thumbnail',
     focalPoint: true,
