@@ -1,8 +1,6 @@
 import type { Metadata } from 'next/types'
 
 import { CollectionArchive } from '@/components/CollectionArchive'
-import { PageRange } from '@/components/PageRange'
-import { Pagination } from '@/components/Pagination'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
@@ -17,40 +15,35 @@ export default async function Page() {
   const posts = await payload.find({
     collection: 'posts',
     depth: 1,
-    limit: 12,
+    limit: 50,
     overrideAccess: false,
     select: {
       title: true,
       slug: true,
       categories: true,
       meta: true,
+      publishedAt: true,
     },
   })
 
   return (
     <div className="pt-24 pb-24">
       <PageClient />
-      <div className="container mb-16">
-        <div className="prose dark:prose-invert max-w-none">
-          <h1>Posts</h1>
-        </div>
+
+      {/* Header Section */}
+      <div className="container mb-12">
+        <h1 className="text-5xl font-bold text-black mb-4">Blog</h1>
+        <p className="text-gray-600 max-w-2xl text-sm">
+          Explore expert advice, real-world case studies, and actionable strategies to drive growth and innovation in your business.
+        </p>
       </div>
 
-      <div className="container mb-8">
-        <PageRange
-          collection="posts"
-          currentPage={posts.page}
-          limit={12}
-          totalDocs={posts.totalDocs}
-        />
-      </div>
-
+      {/* Posts Grid */}
       <CollectionArchive posts={posts.docs} />
 
-      <div className="container">
-        {posts.totalPages > 1 && posts.page && (
-          <Pagination page={posts.page} totalPages={posts.totalPages} />
-        )}
+      {/* Load More - handled by PageClient */}
+      <div className="container mt-12 text-center">
+        <PageClient totalPosts={posts.totalDocs} />
       </div>
     </div>
   )
@@ -58,6 +51,6 @@ export default async function Page() {
 
 export function generateMetadata(): Metadata {
   return {
-    title: `Payload Website Template Posts`,
+    title: 'Blog | ZOPA',
   }
 }

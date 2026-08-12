@@ -25,6 +25,9 @@ import { ServicesSection } from '@/blocks/ServicesSection/config'
 import { ServiceDetailSection } from '@/blocks/Services/config'
 import { HowWeWork } from '@/blocks/Howwework/config'
 import { InterestForm } from '@/blocks/Interestblock/config'
+import { PricingComparison } from '@/blocks/Pricing/config'
+import { WhoCanBenefit } from '@/blocks/Whocanbenefit/config'
+import { OutcomeSection } from '@/blocks/Outcomesection/config'
 
 import {
   MetaDescriptionField,
@@ -87,7 +90,7 @@ export const Pages: CollectionConfig<'pages'> = {
               type: 'blocks',
               blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock,Product,PricingCards,RecentClients,
                 BlogSection,FullWidthBanner,AboutSection,AboutUs,VisionMission,ProcurementSolutions,ServicesSection,ServiceDetailSection,
-                HowWeWork,InterestForm],
+                HowWeWork,InterestForm,PricingComparison,WhoCanBenefit,OutcomeSection],
               required: true,
               admin: {
                 initCollapsed: true,

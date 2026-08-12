@@ -51,18 +51,48 @@ export const ServiceDetailSection: Block = {
           label: 'Description',
         },
         {
+          name: 'subHeading',
+          type: 'text',
+          label: 'Sub Heading',
+        },
+        {
+          name: 'displayType',
+          type: 'select',
+          defaultValue: 'item',
+          label: 'Display Type',
+          options: [
+            { label: 'Simple Items', value: 'item' },
+            { label: 'Title + Description Features', value: 'feature' },
+          ],
+        },
+        {
+          name: 'items',
+          type: 'array',
+          label: 'Items',
+          admin: {
+            condition: (_, siblingData) => siblingData?.displayType === 'item',
+          },
+          fields: [
+            { name: 'item', type: 'text', required: true, label: 'Item' },
+          ],
+        },
+        {
           name: 'features',
           type: 'array',
-          label: 'Checklist Items',
+          label: 'Features',
+          admin: {
+            condition: (_, siblingData) => siblingData?.displayType === 'feature',
+          },
           fields: [
-            { name: 'item', type: 'text', required: true },
+            { name: 'title', type: 'text', required: true, label: 'Title' },
+            { name: 'description', type: 'textarea', required: true, label: 'Description' },
           ],
         },
         {
           name: 'media',
           type: 'upload',
           relationTo: 'media',
-          required: true,
+          required: false,
           label: 'Image',
         },
         link({

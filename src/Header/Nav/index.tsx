@@ -39,7 +39,7 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
               <CMSLink
                 {...item.link}
                 appearance="link"
-                className="text-sm font-medium text-black hover:text-foreground transition-colors"
+                className="text-sm font-medium text-black"
               />
               {hasChildren && (
                 <button

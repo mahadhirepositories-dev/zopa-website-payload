@@ -3,6 +3,7 @@ import type {PricingCardsBlock} from '@/payload-types'
 import { CMSLink } from '@/components/Link'
 import { cn } from '@/utilities/ui'
 import { Media } from '@/components/Media'
+import {ArrowRight} from 'lucide-react'
 
 export const PricingCardsBlockComponent: React.FC<PricingCardsBlock> = (props) => {
   const { heading, subtitle, description, cards } = props
@@ -39,7 +40,7 @@ export const PricingCardsBlockComponent: React.FC<PricingCardsBlock> = (props) =
               <div
                 key={index}
                 className={card.cardType==="services"? 'relative w-full sm:w-[calc(25%-1.125rem)] min-w-[240px] max-w-[320px] rounded-lg overflow-hidden flex flex-col':
-                  'w-full sm:w-[calc(33.333%-1.5rem)] min-w-[280px] max-w-[300px] border border-border rounded-lg bg-white flex flex-col hover:border-[#dbac2b]'}
+                  'group w-full sm:w-[calc(33.333%-1.5rem)] min-w-[280px] max-w-[300px] border border-border rounded-lg bg-white flex flex-col hover:border-[#dbac2b]'}
               >
                 {/* Card Header */}
                 {card.cardType === 'services' ? (
@@ -60,7 +61,7 @@ export const PricingCardsBlockComponent: React.FC<PricingCardsBlock> = (props) =
             appearance="default"
             className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-black bg-white hover:bg-black hover:text-white px-4 py-2 rounded-md"
           >
-             <span className="ml-5">→</span> 
+             <ArrowRight className="size-4" />
            {/* <span aria-hidden="true" className="text-black hover:text-white">→</span> */}
           </CMSLink>
         )}
@@ -84,7 +85,7 @@ export const PricingCardsBlockComponent: React.FC<PricingCardsBlock> = (props) =
                 </div>
 
                 {/* Features List */}
-                <div className="bg-[#DCDCDC] hover:bg-[#dbac2b] flex-1 flex flex-col p-6">
+                <div className="bg-[#DCDCDC] group-hover:bg-[#dbac2b] flex-1 flex flex-col p-6">
                 {card.features && card.features.length > 0 && (
                   <ul className="space-y-3 mb-8 mt-3 flex-1">
                     {card.features.map((item, i) => (
@@ -100,7 +101,7 @@ export const PricingCardsBlockComponent: React.FC<PricingCardsBlock> = (props) =
                 {card.ctaLink && (
                   <div className="mt-auto pt-4 border-t border-border">
                     <CMSLink {...card.ctaLink} appearance="default" className="w-full justify-center flex items-center gap-2 text-black bg-white hover:bg-black hover:text-white px-4 py-2 rounded-md text-sm font-medium">
-                     <span className="hover:text-white" aria-hidden="true">→</span>
+                     <ArrowRight className="size-4 hover:text-white" />
                     </CMSLink>
                   </div>
                 )}

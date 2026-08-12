@@ -50,17 +50,35 @@ export const ServiceDetailSectionBlockComponent: React.FC<ServiceDetailSectionBl
                     </h2>
                   )}
                   {service.description && (
-                    <p className="mt-6 text-sm text-muted-foreground leading-relaxed">
+                    <p className="mt-6 text-sm text-gray-800 leading-relaxed">
                       {service.description}
                     </p>
                   )}
 
-                  {service.features && service.features.length > 0 && (
-                    <ul className="mt-8 space-y-3">
+                  {service.subHeading && (
+                    <h3 className="mt-5 text-2xl font-[400] font-sans text-black">
+                      {service.subHeading}
+                    </h3>
+                  )}
+
+                  {/* Simple Items with rounded bullets */}
+                  {service.displayType === 'item' && service.items && service.items.length > 0 && (
+                    <ul className="mt-4 space-y-3 list-disc list-inside">
+                      {service.items.map((f, i) => (
+                        <li key={i} className="text-sm text-black marker:text-black">
+                          <ArrowRight className="inline-block w-4 h-4 mr-2" />
+                          {f.item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {/* Title + Description Features with rounded bullets */}
+                  {service.displayType === 'feature' && service.features && service.features.length > 0 && (
+                    <ul className="mt-6 space-y-4 list-disc list-inside">
                       {service.features.map((f, i) => (
-                        <li key={i} className="flex items-start gap-3">
-                          <ArrowRight className="w-6 h-6 mb-3 text-black" />
-                          <span className="text-sm text-black">{f.item}</span>
+                        <li key={i} className="text-sm text-black marker:text-black">
+                          <strong>{f.title}:</strong> {f.description}
                         </li>
                       ))}
                     </ul>

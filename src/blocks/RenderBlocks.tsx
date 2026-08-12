@@ -20,6 +20,9 @@ import {ServicesSectionBlockComponent} from './ServicesSection/Component'
 import {ServiceDetailSectionBlockComponent} from './Services/Component'
 import { HowWeWorkBlockComponent } from './Howwework/Component'
 import { InterestFormBlockComponent } from './Interestblock/Component'
+import { PricingComparisonBlockComponent } from './Pricing/Component'
+import { WhoCanBenefitBlockComponent } from './Whocanbenefit/Component'
+import { OutcomeSectionBlockComponent } from './Outcomesection/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -40,6 +43,10 @@ const blockComponents = {
   serviceDetailSection:ServiceDetailSectionBlockComponent,
   howWeWork:HowWeWorkBlockComponent,
   interestForm: InterestFormBlockComponent,
+  pricingComparison: PricingComparisonBlockComponent,
+  whoCanBenefit: WhoCanBenefitBlockComponent,
+  outcomeSection: OutcomeSectionBlockComponent,
+
 }
 
 export const RenderBlocks: React.FC<{

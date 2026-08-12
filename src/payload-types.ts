@@ -229,6 +229,9 @@ export interface Page {
     | ServiceDetailSectionBlock
     | HowWeWorkBlock
     | InterestFormBlock
+    | PricingComparisonBlock
+    | WhoCanBenefitBlock
+    | OutcomeSectionBlock
   )[];
   meta?: {
     title?: string | null;
@@ -1154,13 +1157,22 @@ export interface ServiceDetailSectionBlock {
          */
         sectionId?: string | null;
         description: string;
-        features?:
+        subHeading?: string | null;
+        displayType?: ('item' | 'feature') | null;
+        items?:
           | {
               item: string;
               id?: string | null;
             }[]
           | null;
-        media: number | Media;
+        features?:
+          | {
+              title: string;
+              description: string;
+              id?: string | null;
+            }[]
+          | null;
+        media?: (number | null) | Media;
         ctaLink?: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
@@ -1224,9 +1236,115 @@ export interface InterestFormBlock {
   contactEmail?: string | null;
   formHeading?: string | null;
   form: number | Form;
+  formLogo?: (number | null) | Media;
   id?: string | null;
   blockName?: string | null;
   blockType: 'interestForm';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PricingComparisonBlock".
+ */
+export interface PricingComparisonBlock {
+  badge?: string | null;
+  heading?: string | null;
+  description?: string | null;
+  cards?:
+    | {
+        name: string;
+        tagline?: string | null;
+        description?: string | null;
+        features?:
+          | {
+              feature: string;
+              id?: string | null;
+            }[]
+          | null;
+        ctaLink?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label?: string | null;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'pricingComparison';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WhoCanBenefitBlock".
+ */
+export interface WhoCanBenefitBlock {
+  label?: string | null;
+  items?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'whoCanBenefit';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "OutcomeSectionBlock".
+ */
+export interface OutcomeSectionBlock {
+  badge?: string | null;
+  heading: string;
+  cards?:
+    | {
+        /**
+         * Options: FaPiggyBank, FaPenToSquare, FaBoxesStacked, FaLightbulb, FaGears, FaChess
+         */
+        icon?: string | null;
+        title: string;
+        description: string;
+        id?: string | null;
+      }[]
+    | null;
+  ctaCard?: {
+    heading?: string | null;
+    ctaLink?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      label?: string | null;
+      /**
+       * Choose how the link should be rendered.
+       */
+      appearance?: 'default' | null;
+    };
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'outcomeSection';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1558,6 +1676,9 @@ export interface PagesSelect<T extends boolean = true> {
         serviceDetailSection?: T | ServiceDetailSectionBlockSelect<T>;
         howWeWork?: T | HowWeWorkBlockSelect<T>;
         interestForm?: T | InterestFormBlockSelect<T>;
+        pricingComparison?: T | PricingComparisonBlockSelect<T>;
+        whoCanBenefit?: T | WhoCanBenefitBlockSelect<T>;
+        outcomeSection?: T | OutcomeSectionBlockSelect<T>;
       };
   meta?:
     | T
@@ -1929,10 +2050,19 @@ export interface ServiceDetailSectionBlockSelect<T extends boolean = true> {
         title?: T;
         sectionId?: T;
         description?: T;
-        features?:
+        subHeading?: T;
+        displayType?: T;
+        items?:
           | T
           | {
               item?: T;
+              id?: T;
+            };
+        features?:
+          | T
+          | {
+              title?: T;
+              description?: T;
               id?: T;
             };
         media?: T;
@@ -1984,6 +2114,90 @@ export interface InterestFormBlockSelect<T extends boolean = true> {
   contactEmail?: T;
   formHeading?: T;
   form?: T;
+  formLogo?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PricingComparisonBlock_select".
+ */
+export interface PricingComparisonBlockSelect<T extends boolean = true> {
+  badge?: T;
+  heading?: T;
+  description?: T;
+  cards?:
+    | T
+    | {
+        name?: T;
+        tagline?: T;
+        description?: T;
+        features?:
+          | T
+          | {
+              feature?: T;
+              id?: T;
+            };
+        ctaLink?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WhoCanBenefitBlock_select".
+ */
+export interface WhoCanBenefitBlockSelect<T extends boolean = true> {
+  label?: T;
+  items?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "OutcomeSectionBlock_select".
+ */
+export interface OutcomeSectionBlockSelect<T extends boolean = true> {
+  badge?: T;
+  heading?: T;
+  cards?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  ctaCard?:
+    | T
+    | {
+        heading?: T;
+        ctaLink?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+      };
   id?: T;
   blockName?: T;
 }

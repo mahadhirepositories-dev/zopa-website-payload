@@ -58,6 +58,12 @@ export const InterestForm: Block = {
       required: true,
       label: 'Form',
     },
+    {
+      name: 'formLogo',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Form Logo',
+    }
   ],
   labels: {
     singular: 'Interest Form',
