@@ -3,27 +3,41 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 export async function up({ db }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`SELECT pg_advisory_xact_lock(2026081210);`)
 
-  // 1. Enums for link types if needed
   await db.execute(sql`
     DO $$ BEGIN
-      CREATE TYPE "public"."enum_pages_blocks_pricing_cards_link_cards_cta_link_type" AS ENUM('reference', 'custom');
+      CREATE TYPE "public"."enum_svc_display_type" AS ENUM('item', 'feature');
     EXCEPTION WHEN duplicate_object THEN NULL; END $$;
   `)
   await db.execute(sql`
     DO $$ BEGIN
-      CREATE TYPE "public"."enum_pages_blocks_pricing_cards_link_cards_cta_link_appearance" AS ENUM('default', 'outline');
+      CREATE TYPE "public"."enum__svc_v_display_type" AS ENUM('item', 'feature');
     EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+  `)
+  await db.execute(sql`ALTER TABLE "svc" ADD COLUMN IF NOT EXISTS "sub_heading" varchar;`)
+  await db.execute(sql`ALTER TABLE "svc" ADD COLUMN IF NOT EXISTS "display_type" "enum_svc_display_type" DEFAULT 'item';`)
+  await db.execute(sql`ALTER TABLE "_svc_v" ADD COLUMN IF NOT EXISTS "sub_heading" varchar;`)
+  await db.execute(sql`ALTER TABLE "_svc_v" ADD COLUMN IF NOT EXISTS "display_type" "enum__svc_v_display_type" DEFAULT 'item';`)
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS "svc_items" (
+      "_order" integer NOT NULL,
+      "_parent_id" varchar NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "item" varchar
+    );
   `)
   await db.execute(sql`
-    DO $$ BEGIN
-      CREATE TYPE "public"."enum_pages_blocks_outcome_cta_link_cta_card_cta_link_type" AS ENUM('reference', 'custom');
-    EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+    CREATE TABLE IF NOT EXISTS "_svc_v_items" (
+      "_order" integer NOT NULL,
+      "_parent_id" varchar NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "item" varchar,
+      "_uuid" varchar
+    );
   `)
-  await db.execute(sql`
-    DO $$ BEGIN
-      CREATE TYPE "public"."enum_pages_blocks_outcome_cta_link_cta_card_cta_link_appearance" AS ENUM('default', 'outline');
-    EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-  `)
+  await db.execute(sql`ALTER TABLE "svc_features" ADD COLUMN IF NOT EXISTS "title" varchar;`)
+  await db.execute(sql`ALTER TABLE "svc_features" ADD COLUMN IF NOT EXISTS "description" varchar;`)
+  await db.execute(sql`ALTER TABLE "_svc_v_features" ADD COLUMN IF NOT EXISTS "title" varchar;`)
+  await db.execute(sql`ALTER TABLE "_svc_v_features" ADD COLUMN IF NOT EXISTS "description" varchar;`)
 
   // 2. WhoCanBenefit main & version tables
   await db.execute(sql`
