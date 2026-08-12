@@ -1,58 +1,10 @@
 import configPromise from '@payload-config'
-import {getPayload} from 'payload'
+import { getPayload } from 'payload'
 import React from 'react'
-import type {Post,BlogSectionBlock} from '@/payload-types'
-import {CMSLink} from '@/components/Link'
-import {ArrowRight} from 'lucide-react'
-import NextImage from 'next/image'
-import {getMediaUrl} from '@/utilities/getMediaUrl'
-
-
-const formatDate = (timestamp: string): string =>
-  new Date(timestamp).toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  })
-
-const BlogCard: React.FC<{ post: Post }> = ({ post }) => {
-  const { categories, heroImage, publishedAt, slug, title } = post
-  const href = `/posts/${slug}`
-  const imageObj = heroImage && typeof heroImage === 'object' ? heroImage : null
-  const imgSrc = imageObj?.url ? getMediaUrl(imageObj.url, imageObj.updatedAt) : ''
-
-  return (
-    <article className="border border-border rounded-lg overflow-hidden bg-card flex flex-col">
-      <div className="relative aspect-[16/9] w-full bg-muted">
-         {imgSrc && (
-           <NextImage src={imgSrc} alt={imageObj?.alt || title || ''} fill className="object-cover" sizes="50vw" />
-         )}
-      </div>
-      <div className="p-3">
-        <div className="flex items-center gap-4 mb-2">
-          {categories?.map((category) => {
-            if (typeof category === 'object' && category !== null) {
-              return (
-                <span key={category.id} className="text-[#dbac2b] uppercase text-xs">
-                  {category.title || 'Untitled category'}
-                </span>
-              )
-            }
-            return null
-          })}
-          {publishedAt && (
-            <time dateTime={publishedAt} className="text-xs text-muted-foreground">
-              {formatDate(publishedAt)}
-            </time>
-          )}
-        </div>
-        <h3 className="text-base font-medium leading-snug text-foreground">
-          <a href={href}>{title}</a>
-        </h3>
-      </div>
-    </article>
-  )
-}
+import type { Post, BlogSectionBlock } from '@/payload-types'
+import { CMSLink } from '@/components/Link'
+import { ArrowRight } from 'lucide-react'
+import { Card, CardPostData } from '@/components/Card'
 
 export const BlogSectionBlockComponent: React.FC<BlogSectionBlock> = async (props) => {
   const { heading, title, limit, viewMoreLink } = props
@@ -63,25 +15,33 @@ export const BlogSectionBlockComponent: React.FC<BlogSectionBlock> = async (prop
     collection: 'posts',
     depth: 2,
     limit: limit || 2,
-    sort: '-publishedAt',
+    select: {
+      title: true,
+      slug: true,
+      categories: true,
+      meta: true,
+      publishedAt: true,
+    },
   })
 
-  const posts = fetchedPosts.docs as Post[]
+  const posts = fetchedPosts.docs as CardPostData[]
 
   return (
-    <section className=" py-16 px-10 bg-white">
-        <div className='border rounded-xs bg-[#D3D3D3] w-22 h-6 flex items-center justify-center'>
-       <h2 className="text-xs text-black">{heading}</h2>
-       </div>
+    <section className="py-16 px-10 bg-white">
+      <div className="border rounded-xs bg-[#D3D3D3] w-22 h-6 flex items-center justify-center">
+        <h2 className="text-xs text-black">{heading}</h2>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start mt-3">
         <div className="lg:sticky lg:top-8">
-          {title && <p className="text-2xl md:text-3xl lg:text-4xl font-semibold text-black">{title}</p>}
+          {title && (
+            <p className="text-2xl md:text-3xl lg:text-4xl font-semibold text-black">{title}</p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {posts.map((post) => (
-            <BlogCard key={post.id} post={post} />
+            <Card key={post.slug} doc={post} relationTo="posts" showCategories />
           ))}
         </div>
       </div>
@@ -89,7 +49,7 @@ export const BlogSectionBlockComponent: React.FC<BlogSectionBlock> = async (prop
       {viewMoreLink && (
         <div className="flex justify-start mt-30">
           <CMSLink {...viewMoreLink} className="bg-[#dbac2b]">
-             <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4" />
           </CMSLink>
         </div>
       )}

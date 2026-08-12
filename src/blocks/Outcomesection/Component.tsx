@@ -10,6 +10,7 @@ import {
   FaGears,
   FaChess,
 } from 'react-icons/fa6'
+import { ArrowRight } from 'lucide-react'
 
 const iconMap = {
   FaPiggyBank: FaPiggyBank,
@@ -31,12 +32,12 @@ export const OutcomeSectionBlockComponent: React.FC<OutcomeSectionBlock> = ({
       <div className="container mx-auto max-w-7xl px-4">
         {/* Header */}
         {badge && (
-          <span className="inline-block bg-gray-200 text-gray-800 text-sm font-medium px-4 py-1 rounded-full mb-4">
+          <span className="inline-block bg-gray-200 text-gray-800 text-sm font-medium px-4 py-1 rounded-xs mb-4">
             {badge}
           </span>
         )}
         {heading && (
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-12">
+          <h2 className="text-4xl md:text-[40px] leading-relaxed font-sans font-[400] text-gray-900 mb-12">
             {heading}
           </h2>
         )}
@@ -47,7 +48,7 @@ export const OutcomeSectionBlockComponent: React.FC<OutcomeSectionBlock> = ({
             {cards.slice(0, 4).map((card, i) => (
               <div
                 key={i}
-                className="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow"
+                className="border border-gray-200 rounded-lg p-6 hover:bg-[#dbac2b] transition-color"
               >
                 {card.icon && (() => {
                    const Icon = iconMap[card.icon as keyof typeof iconMap]
@@ -57,10 +58,10 @@ export const OutcomeSectionBlockComponent: React.FC<OutcomeSectionBlock> = ({
                    </div>
                    ) : null
                 })()}
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                <h3 className="text-[25px] font-[500] text-gray-900 mb-4">
                   {card.title}
                 </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
+                <p className="text-gray-900 text-sm leading-relaxed">
                   {card.description}
                 </p>
               </div>
@@ -76,9 +77,14 @@ export const OutcomeSectionBlockComponent: React.FC<OutcomeSectionBlock> = ({
                 key={i}
                 className="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow"
               >
-                {card.icon && (
-                  <div className="text-3xl mb-4">{card.icon}</div>
-                )}
+               {card.icon && (() => {
+                const Icon = iconMap[card.icon as keyof typeof iconMap]
+                return Icon ? (
+                <div className="mb-4">
+                   <Icon className="size-8 text-black" />
+                </div>
+                ) : null
+                })()}
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">
                   {card.title}
                 </h3>
@@ -110,7 +116,7 @@ export const OutcomeSectionBlockComponent: React.FC<OutcomeSectionBlock> = ({
                   <CMSLink
                     {...ctaCard.ctaLink}
                     className="inline-block bg-[#c8a23c] hover:bg-[#b8922c] text-white font-semibold px-6 py-3 rounded transition-colors"
-                  />
+                  ><ArrowRight className="h-4 w-4"/></CMSLink>
                 )}
               </div>
             </div>
