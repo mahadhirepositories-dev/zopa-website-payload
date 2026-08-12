@@ -4,6 +4,7 @@ import * as migration_20260808_210000_fix_header_footer_globals from './20260808
 import * as migration_20260808_215000_fix_svc_description_type from './20260808_215000_fix_svc_description_type';
 import * as migration_20260808_220000_add_svc_v_tables from './20260808_220000_add_svc_v_tables';
 import * as migration_20260808_230000_add_uuid_to_version_tables from './20260808_230000_add_uuid_to_version_tables';
+import * as migration_20260812_100000_add_new_blocks from './20260812_100000_add_new_blocks';
 
 export const migrations = [
   {
@@ -35,6 +36,11 @@ export const migrations = [
     up: migration_20260808_230000_add_uuid_to_version_tables.up,
     down: migration_20260808_230000_add_uuid_to_version_tables.down,
     name: '20260808_230000_add_uuid_to_version_tables'
+  },
+  {
+    up: migration_20260812_100000_add_new_blocks.up,
+    down: migration_20260812_100000_add_new_blocks.down,
+    name: '20260812_100000_add_new_blocks'
   },
 ];
 
