@@ -8,7 +8,13 @@ export async function GET(
   { params }: { params: Promise<{ filename: string }> }
 ) {
   const resolvedParams = await params
-  const filename = decodeURIComponent(resolvedParams.filename || '')
+  let filename = decodeURIComponent(resolvedParams.filename || '')
+  if (filename.includes('?')) {
+    filename = filename.split('?')[0]
+  }
+  if (filename.includes('#')) {
+    filename = filename.split('#')[0]
+  }
 
   if (!filename) {
     return new NextResponse('Filename missing', { status: 400 })
