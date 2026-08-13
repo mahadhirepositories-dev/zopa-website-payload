@@ -12,34 +12,53 @@ import { fileURLToPath } from 'url'
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
 
+import pg from 'pg'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://junhxesyfpnqapxaulvj.supabase.co'
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || ''
-
-const uploadToSupabase: CollectionAfterChangeHook = async ({ doc, req }) => {
-  if (SUPABASE_KEY && req.file && req.file.data && doc.filename) {
+const saveToDbStorage: CollectionAfterChangeHook = async ({ doc, req }) => {
+  if (req.file && req.file.data && doc.filename) {
     try {
-      const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
-      await supabase.storage.from('media').upload(doc.filename, req.file.data, {
-        contentType: req.file.mimetype,
-        upsert: true,
-      })
+      const dbUri = process.env.DATABASE_URI
+      if (dbUri) {
+        const client = new pg.Client({
+          connectionString: dbUri,
+          ssl: { rejectUnauthorized: false },
+        })
+        await client.connect()
+        await client.query(
+          `INSERT INTO "media_files" ("filename", "mime_type", "data")
+           VALUES ($1, $2, $3)
+           ON CONFLICT ("filename") DO UPDATE SET "data" = EXCLUDED."data", "mime_type" = EXCLUDED."mime_type";`,
+          [doc.filename, req.file.mimetype, req.file.data]
+        )
+        await client.end()
+        console.log(`Saved file binary for ${doc.filename} into DB media_files successfully!`)
+      }
     } catch (err) {
-      console.error('Supabase Storage upload error:', err)
+      console.error('Save to media_files DB error:', err)
     }
   }
   return doc
 }
 
-const deleteFromSupabase: CollectionAfterDeleteHook = async ({ doc }) => {
-  if (SUPABASE_KEY && doc?.filename) {
+const deleteFromDbStorage: CollectionAfterDeleteHook = async ({ doc }) => {
+  if (doc?.filename) {
     try {
-      const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
-      await supabase.storage.from('media').remove([doc.filename])
+      const dbUri = process.env.DATABASE_URI
+      if (dbUri) {
+        const client = new pg.Client({
+          connectionString: dbUri,
+          ssl: { rejectUnauthorized: false },
+        })
+        await client.connect()
+        await client.query(`DELETE FROM "media_files" WHERE "filename" = $1;`, [doc.filename])
+        await client.end()
+        console.log(`Deleted file binary for ${doc.filename} from DB media_files!`)
+      }
     } catch (err) {
-      console.error('Supabase Storage delete error:', err)
+      console.error('Delete from media_files DB error:', err)
     }
   }
 }
@@ -54,8 +73,8 @@ export const Media: CollectionConfig = {
     update: authenticated,
   },
   hooks: {
-    afterChange: [uploadToSupabase],
-    afterDelete: [deleteFromSupabase],
+    afterChange: [saveToDbStorage],
+    afterDelete: [deleteFromDbStorage],
   },
   fields: [
     {
