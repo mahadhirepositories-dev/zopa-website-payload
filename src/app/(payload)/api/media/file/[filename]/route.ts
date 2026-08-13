@@ -30,9 +30,12 @@ export async function GET(
       })
       await client.connect()
 
+      const baseCandidate1 = filename.replace(/-\d+x\d+(\.[a-zA-Z0-9]+)$/, '$1')
+      const baseCandidate2 = baseCandidate1.replace(/-\d+(\.[a-zA-Z0-9]+)$/, '$1')
+
       const res = await client.query(
-        'SELECT "mime_type", "data" FROM "media_files" WHERE "filename" = $1 LIMIT 1;',
-        [filename]
+        'SELECT "mime_type", "data" FROM "media_files" WHERE "filename" = $1 OR "filename" = $2 OR "filename" = $3 LIMIT 1;',
+        [filename, baseCandidate1, baseCandidate2]
       )
       await client.end()
 
