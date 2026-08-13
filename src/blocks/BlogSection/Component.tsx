@@ -45,9 +45,9 @@ export const BlogSectionBlockComponent: React.FC<BlogSectionBlock> = async (prop
       </div>
 
       {viewMoreLink && (viewMoreLink.url || viewMoreLink.reference) && (
-        <div className="flex justify-start mt-8">
+        <div className="flex items-center justify-start gap-2 mt-30">
           <CMSLink {...viewMoreLink} className="bg-[#dbac2b]">
-            <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="h-4 w-4"/>
           </CMSLink>
         </div>
       )}
