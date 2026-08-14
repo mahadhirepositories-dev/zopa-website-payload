@@ -232,6 +232,7 @@ export interface Page {
     | PricingComparisonBlock
     | WhoCanBenefitBlock
     | OutcomeSectionBlock
+    | WhoBenefitDetailBlock
   )[];
   meta?: {
     title?: string | null;
@@ -1311,10 +1312,29 @@ export interface OutcomeSectionBlock {
   heading: string;
   cards?:
     | {
-        /**
-         * Options: FaPiggyBank, FaPenToSquare, FaBoxesStacked, FaLightbulb, FaGears, FaChess
-         */
-        icon?: string | null;
+        icon?:
+          | (
+              | 'FaPiggyBank'
+              | 'FaPenToSquare'
+              | 'FaBoxesStacked'
+              | 'FaLightbulb'
+              | 'FaGears'
+              | 'FaChess'
+              | 'FaWandMagicSparkles'
+              | 'FaBox'
+              | 'FaMoneyBill'
+              | 'FaUniversalAccess'
+              | 'FaShieldHalved'
+              | 'FaClock'
+              | 'FaGavel'
+              | 'FaBullseye'
+              | 'FaChartLine'
+              | 'FaLeaf'
+              | 'FaClipboard'
+              | ' FaRegSquare'
+              | 'FaMedal'
+            )
+          | null;
         title: string;
         description: string;
         id?: string | null;
@@ -1345,6 +1365,25 @@ export interface OutcomeSectionBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'outcomeSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WhoBenefitDetailBlock".
+ */
+export interface WhoBenefitDetailBlock {
+  badge?: string | null;
+  heading: string;
+  sections?:
+    | {
+        title: string;
+        description: string;
+        id?: string | null;
+      }[]
+    | null;
+  image?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'whoBenefitDetail';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1679,6 +1718,7 @@ export interface PagesSelect<T extends boolean = true> {
         pricingComparison?: T | PricingComparisonBlockSelect<T>;
         whoCanBenefit?: T | WhoCanBenefitBlockSelect<T>;
         outcomeSection?: T | OutcomeSectionBlockSelect<T>;
+        whoBenefitDetail?: T | WhoBenefitDetailBlockSelect<T>;
       };
   meta?:
     | T
@@ -2198,6 +2238,24 @@ export interface OutcomeSectionBlockSelect<T extends boolean = true> {
               appearance?: T;
             };
       };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WhoBenefitDetailBlock_select".
+ */
+export interface WhoBenefitDetailBlockSelect<T extends boolean = true> {
+  badge?: T;
+  heading?: T;
+  sections?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  image?: T;
   id?: T;
   blockName?: T;
 }

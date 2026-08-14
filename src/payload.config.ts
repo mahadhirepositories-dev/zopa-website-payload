@@ -83,7 +83,7 @@ export default buildConfig({
             },
     },
     prodMigrations: migrations,
-    push: false,
+    push: true,
   }),
   
   collections: [Pages, Posts, Media, Categories, Users],
