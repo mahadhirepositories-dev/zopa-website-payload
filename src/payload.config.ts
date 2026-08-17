@@ -14,7 +14,7 @@ import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
-import { migrations } from './migrations'
+
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -82,8 +82,7 @@ export default buildConfig({
               rejectUnauthorized: false, // Required for Supabase in production/build environments
             },
     },
-    prodMigrations: migrations,
-    push: true,
+    push: process.env.NODE_ENV === 'development',
   }),
   
   collections: [Pages, Posts, Media, Categories, Users],

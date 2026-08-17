@@ -47,7 +47,7 @@ export const OutcomeSection: Block = {
             { label:'Chartline' , value:'FaChartLine'},
             { label:'Leaf', value:'FaLeaf'},
             { label:'Clipboard', value:'FaClipboard'},
-            { label:'Squareplay' , value:' FaRegSquare'},
+            { label:'Squareplay' , value:'FaRegSquare'},
             { label:'Medal',value:'FaMedal'},
           ],
         },

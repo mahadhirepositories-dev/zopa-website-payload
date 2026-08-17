@@ -24,6 +24,7 @@ import { PricingComparisonBlockComponent } from './Pricing/Component'
 import { WhoCanBenefitBlockComponent } from './Whocanbenefit/Component'
 import { OutcomeSectionBlockComponent } from './Outcomesection/Component'
 import { WhoBenefitDetailBlockComponent } from './Whobenefit/Component'
+import { ContactInfoBlockComponent } from './Contactinfo/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -47,7 +48,8 @@ const blockComponents = {
   pricingComparison: PricingComparisonBlockComponent,
   whoCanBenefit: WhoCanBenefitBlockComponent,
   outcomeSection: OutcomeSectionBlockComponent,
-  whoBenefitDetail: WhoBenefitDetailBlockComponent
+  whoBenefitDetail: WhoBenefitDetailBlockComponent,
+  contactInfo:ContactInfoBlockComponent,
 
 }
 

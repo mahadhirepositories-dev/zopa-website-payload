@@ -233,6 +233,7 @@ export interface Page {
     | WhoCanBenefitBlock
     | OutcomeSectionBlock
     | WhoBenefitDetailBlock
+    | ContactInfoBlock
   )[];
   meta?: {
     title?: string | null;
@@ -1331,7 +1332,7 @@ export interface OutcomeSectionBlock {
               | 'FaChartLine'
               | 'FaLeaf'
               | 'FaClipboard'
-              | ' FaRegSquare'
+              | 'FaRegSquare'
               | 'FaMedal'
             )
           | null;
@@ -1384,6 +1385,27 @@ export interface WhoBenefitDetailBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'whoBenefitDetail';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactInfoBlock".
+ */
+export interface ContactInfoBlock {
+  items?:
+    | {
+        icon: 'Phone' | 'FaWhatsapp' | 'Mail';
+        label: string;
+        value: string;
+        /**
+         * Leave empty to auto-generate from value (tel:, mailto:, https://wa.me/)
+         */
+        link?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contactInfo';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1719,6 +1741,7 @@ export interface PagesSelect<T extends boolean = true> {
         whoCanBenefit?: T | WhoCanBenefitBlockSelect<T>;
         outcomeSection?: T | OutcomeSectionBlockSelect<T>;
         whoBenefitDetail?: T | WhoBenefitDetailBlockSelect<T>;
+        contactInfo?: T | ContactInfoBlockSelect<T>;
       };
   meta?:
     | T
@@ -2256,6 +2279,23 @@ export interface WhoBenefitDetailBlockSelect<T extends boolean = true> {
         id?: T;
       };
   image?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactInfoBlock_select".
+ */
+export interface ContactInfoBlockSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        icon?: T;
+        label?: T;
+        value?: T;
+        link?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }
