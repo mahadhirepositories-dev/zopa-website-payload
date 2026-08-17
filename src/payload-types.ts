@@ -234,6 +234,7 @@ export interface Page {
     | OutcomeSectionBlock
     | WhoBenefitDetailBlock
     | ContactInfoBlock
+    | ContactUsBlock
   )[];
   meta?: {
     title?: string | null;
@@ -1409,6 +1410,29 @@ export interface ContactInfoBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactUsBlock".
+ */
+export interface ContactUsBlock {
+  heading?: string | null;
+  subheading?: string | null;
+  description?: string | null;
+  contactCards?:
+    | {
+        icon: 'FaBriefcase' | 'FaInfo' | 'FaLinkedin' | 'FaAddressBook';
+        label: string;
+        value: string;
+        link?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  form: number | Form;
+  formLogo?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contactUs';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1742,6 +1766,7 @@ export interface PagesSelect<T extends boolean = true> {
         outcomeSection?: T | OutcomeSectionBlockSelect<T>;
         whoBenefitDetail?: T | WhoBenefitDetailBlockSelect<T>;
         contactInfo?: T | ContactInfoBlockSelect<T>;
+        contactUs?: T | ContactUsBlockSelect<T>;
       };
   meta?:
     | T
@@ -2296,6 +2321,28 @@ export interface ContactInfoBlockSelect<T extends boolean = true> {
         link?: T;
         id?: T;
       };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactUsBlock_select".
+ */
+export interface ContactUsBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  description?: T;
+  contactCards?:
+    | T
+    | {
+        icon?: T;
+        label?: T;
+        value?: T;
+        link?: T;
+        id?: T;
+      };
+  form?: T;
+  formLogo?: T;
   id?: T;
   blockName?: T;
 }

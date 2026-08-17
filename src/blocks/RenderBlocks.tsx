@@ -25,6 +25,8 @@ import { WhoCanBenefitBlockComponent } from './Whocanbenefit/Component'
 import { OutcomeSectionBlockComponent } from './Outcomesection/Component'
 import { WhoBenefitDetailBlockComponent } from './Whobenefit/Component'
 import { ContactInfoBlockComponent } from './Contactinfo/Component'
+import { ContactUsBlockComponent } from './Contactus/Component'
+import { ContactUs } from './Contactus/config'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -50,7 +52,8 @@ const blockComponents = {
   outcomeSection: OutcomeSectionBlockComponent,
   whoBenefitDetail: WhoBenefitDetailBlockComponent,
   contactInfo:ContactInfoBlockComponent,
-
+  contactUs:ContactUsBlockComponent
+  
 }
 
 export const RenderBlocks: React.FC<{

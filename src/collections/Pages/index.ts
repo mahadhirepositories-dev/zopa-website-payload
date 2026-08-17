@@ -30,6 +30,7 @@ import { WhoCanBenefit } from '@/blocks/Whocanbenefit/config'
 import { OutcomeSection } from '@/blocks/Outcomesection/config'
 import { WhoBenefitDetail } from '@/blocks/Whobenefit/config'
 import { ContactInfo } from '@/blocks/Contactinfo/config'
+import { ContactUs } from '@/blocks/Contactus/config'
 
 import {
   MetaDescriptionField,
@@ -92,7 +93,7 @@ export const Pages: CollectionConfig<'pages'> = {
               type: 'blocks',
               blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock,Product,PricingCards,RecentClients,
                 BlogSection,FullWidthBanner,AboutSection,AboutUs,VisionMission,ProcurementSolutions,ServicesSection,ServiceDetailSection,
-                HowWeWork,InterestForm,PricingComparison,WhoCanBenefit,OutcomeSection,WhoBenefitDetail,ContactInfo],
+                HowWeWork,InterestForm,PricingComparison,WhoCanBenefit,OutcomeSection,WhoBenefitDetail,ContactInfo,ContactUs],
               required: true,
               admin: {
                 initCollapsed: true,
