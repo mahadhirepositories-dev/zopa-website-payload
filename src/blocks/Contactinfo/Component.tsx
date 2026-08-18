@@ -43,7 +43,7 @@ export const ContactInfoBlockComponent: React.FC<ContactInfoBlock> = (props) => 
                 href={href}
                 target={isExternal ? '_blank' : undefined}
                 rel={isExternal ? 'noopener noreferrer' : undefined}
-                className="flex items-center gap-4 p-6 rounded-lg border border-border bg-white shadow-sm hover:shadow-md transition-shadow"
+                className="flex items-center gap-4 p-6 rounded-lg border border-border bg-white shadow-sm hover:bg-[#dbac2b] transition-shadow"
               >
                 <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
                   {Icon && <Icon className="w-5 h-5 text-gray-600" />}

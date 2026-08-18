@@ -35,11 +35,11 @@ export const ContactUs: Block = {
           label: 'Icon',
           required: true,
           options: [
-              { label: 'Career', value: 'FaBriefcase' },
-              { label: 'Info', value: 'FaInfo' },
-              { label: 'LinkedIn (Brand)', value: 'FaLinkedin' },
-              { label: 'Address Book', value: 'FaAddressBook' },
-            ],
+            { label: 'Career', value: 'FaBriefcase' },
+            { label: 'Info', value: 'FaInfo' },
+            { label: 'LinkedIn (Brand)', value: 'FaLinkedin' },
+            { label: 'Address Book', value: 'FaAddressBook' },
+          ],
         },
         {
           name: 'label',
@@ -49,16 +49,26 @@ export const ContactUs: Block = {
         },
         {
           name: 'value',
-          type: 'text',
+          type: 'textarea',
           label: 'Value',
           required: true,
         },
         {
-          name: 'link',
+          name: 'linkedinUrl',
           type: 'text',
-          label: 'Custom Link (optional)',
+          label: 'LinkedIn URL',
+          admin: {
+            condition: (_data, siblingData) => siblingData?.icon === 'FaLinkedin',
+            description: 'Only applicable when icon is LinkedIn',
+          },
         },
       ],
+    },
+    {
+      name: 'formHeading',
+      type: 'text',
+      label: 'Form Heading',
+      defaultValue: 'Contact Us',
     },
     {
       name: 'form',

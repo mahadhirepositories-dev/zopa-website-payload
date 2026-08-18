@@ -6,6 +6,7 @@ import * as migration_20260808_220000_add_svc_v_tables from './20260808_220000_a
 import * as migration_20260808_230000_add_uuid_to_version_tables from './20260808_230000_add_uuid_to_version_tables';
 import * as migration_20260812_100000_add_new_blocks from './20260812_100000_add_new_blocks';
 import * as migration_20260814_064419 from './20260814_064419';
+import * as migration_20260818_064111 from './20260818_064111';
 
 export const migrations = [
   {
@@ -46,6 +47,11 @@ export const migrations = [
   {
     up: migration_20260814_064419.up,
     down: migration_20260814_064419.down,
-    name: '20260814_064419'
+    name: '20260814_064419',
+  },
+  {
+    up: migration_20260818_064111.up,
+    down: migration_20260818_064111.down,
+    name: '20260818_064111'
   },
 ];

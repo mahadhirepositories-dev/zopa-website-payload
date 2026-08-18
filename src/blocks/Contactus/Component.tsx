@@ -2,7 +2,6 @@
 
 import React, { useCallback, useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
-import { Mail, MapPin, Phone } from 'lucide-react'
 import {
   FaWhatsapp,
   FaBriefcase,
@@ -17,13 +16,8 @@ import { Button } from '@/components/ui/button'
 import { getClientSideURL } from '@/utilities/getURL'
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Mail,
-  Info: FaInfo,
-  Linkedin: FaLinkedin,
-  MapPin,
-  Phone,
-  FaWhatsapp,
   FaBriefcase,
+  FaInfo,
   FaLinkedin,
   FaAddressBook,
 }
@@ -34,9 +28,7 @@ function getAutoLink(icon: string, value: string): string {
       return `tel:${value}`
     case 'FaWhatsapp':
       return `https://wa.me/${value.replace(/[^0-9]/g, '')}`
-    case 'Mail':
     case 'FaBriefcase':
-    case 'Info':
     case 'FaInfo':
       return `mailto:${value}`
     default:
@@ -119,96 +111,128 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
           <div className="flex flex-col gap-8">
             <div>
               {heading && (
-                <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-2">
-                  {heading}
-                </h2>
-              )}
+  <span className="inline-block self-start px-3 py-1 bg-[#DCDCDC] text-[13px] border border-border rounded-xs text-black mb-2">
+    {heading}
+  </span>
+)}
               {subheading && (
-                <p className="text-lg text-gray-600 mb-4">{subheading}</p>
+                <p className="text-[50px] text-gray-800 mb-4 font-sans">{subheading}</p>
               )}
               {description && (
-                <p className="text-gray-500">{description}</p>
+                <p className="text-gray-500 text-[14px]">{description}</p>
               )}
             </div>
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-0 overflow-hidden">
               {contactCards?.map((card, index) => {
-                const Icon = card.icon ? iconMap[card.icon] || Mail : Mail
+                const Icon = card.icon ? iconMap[card.icon] || FaBriefcase : FaBriefcase
                 const isLinkedin = card.icon === 'FaLinkedin'
                 const href = isLinkedin
                   ? (card as any).linkedinUrl || '#'
-                  : card.link || getAutoLink(card.icon || '', card.value)
+                  : card.value
+                    ? getAutoLink(card.icon || '', card.value)
+                    : '#'
 
-                return (
-                  <a
-                    key={index}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-4 p-4 rounded-lg border border-border hover:shadow-md transition-shadow"
-                  >
-                    <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
-                      <Icon className="w-5 h-5 text-gray-600" />
+                const cardContent = (
+                    <div
+                    className={`flex items-start gap-4 p-5 rounded-md border border-gray-200 ${
+                    index === 1 || index === 3 ? 'bg-[#DCDCDC]' : 'bg-white'
+                       } hover:bg-[#dbac2b] transition-colors`}
+                    >
+                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shrink-0 border border-gray-200">
+                      <Icon className="w-5 h-5 text-gray-700" />
                     </div>
-                    <p className="text-sm text-gray-700 font-medium">{card.value}</p>
-                  </a>
+                    <div className="flex flex-col gap-1 min-w-0">
+                      <span className="text-sm font-semibold text-gray-900">
+                        {card.label}
+                      </span>
+                      <span className="text-sm text-gray-600 whitespace-pre-line break-words">
+                        {card.value}
+                      </span>
+                    </div>
+                  </div>
                 )
+
+                if (isLinkedin && (card as any).linkedinUrl) {
+                  return (
+                    <a
+                      key={index}
+                      href={(card as any).linkedinUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block"
+                    >
+                      {cardContent}
+                    </a>
+                  )
+                }
+
+                return <div key={index}>{cardContent}</div>
               })}
             </div>
           </div>
 
           {/* Right Column — Form Card */}
-          <div className="border border-border rounded-xl p-6 lg:p-8 shadow-sm">
-            <div className="flex items-center gap-3 mb-6">
-              {formLogo && typeof formLogo === 'object' && (
-                <Media
-                  resource={formLogo}
-                  className="w-10 h-10"
-                  imgClassName="w-10 h-10"
-                />
-              )}
-              <h3 className="text-xl font-semibold text-gray-900">Contact Us</h3>
-            </div>
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+  {/* Header — same style as InterestForm */}
+  <div className="bg-[#2a2a2a] px-8 py-2 flex items-center gap-4">
+    {formLogo && typeof formLogo === 'object' && (
+      <div className="w-25 h-25 flex-shrink-0 overflow-hidden rounded-sm">
+        <Media
+          resource={formLogo}
+          className="w-full h-full"
+          imgClassName="object-contain w-full h-full"
+        />
+      </div>
+    )}
+    <div className="w-px h-8 bg-gray-500" />
+    <h3 className="text-white text-[20px] font-[400] font-sans">
+      {props.formHeading || 'Contact Us'}
+    </h3>
+  </div>
 
-            {formFromProps && (
-              <FormProvider {...formMethods}>
-                {isLoading && !hasSubmitted && (
-                  <p className="text-gray-500">Loading, please wait...</p>
-                )}
-                {error && (
-                  <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
-                    {error.status}: {error.message}
-                  </div>
-                )}
-                {hasSubmitted ? (
-                  <div className="py-8 text-center">
-                    <p className="text-lg font-semibold text-green-600">
-                      Thank you!
-                    </p>
-                    <p className="text-gray-500 mt-2">
-                      Your message has been sent successfully.
-                    </p>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <FormFields
-                      form={formFromProps}
-                      control={control}
-                      errors={errors}
-                      register={register}
-                    />
-                    <Button
-                      type="submit"
-                      className="mt-4 w-full"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? 'Submitting...' : 'Submit'}
-                    </Button>
-                  </form>
-                )}
-              </FormProvider>
-            )}
+  {/* Form body */}
+  <div className="p-8">
+    {formFromProps && (
+      <FormProvider {...formMethods}>
+        {isLoading && !hasSubmitted && (
+          <p className="text-sm text-gray-500">Submitting, please wait...</p>
+        )}
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+            <p className="text-sm text-red-600">
+              {error.status}: {error.message}
+            </p>
           </div>
+        )}
+        {hasSubmitted ? (
+          <div className="text-center py-8">
+            <p className="text-lg font-semibold text-green-600 mb-2">Thank you!</p>
+            <p className="text-sm text-gray-500">
+              Your message has been sent successfully.
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FormFields
+              form={formFromProps}
+              control={control}
+              errors={errors}
+              register={register}
+            />
+            <Button
+              type="submit"
+              className="mt-4 w-20 bg-[#dbac2b] hover:bg-[#000] text-black hover:text-white"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Submitting...' : 'Submit'}
+            </Button>
+          </form>
+        )}
+      </FormProvider>
+    )}
+  </div>
+</div>
         </div>
       </div>
     </section>

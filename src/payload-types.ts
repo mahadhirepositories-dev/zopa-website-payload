@@ -1421,10 +1421,14 @@ export interface ContactUsBlock {
         icon: 'FaBriefcase' | 'FaInfo' | 'FaLinkedin' | 'FaAddressBook';
         label: string;
         value: string;
-        link?: string | null;
+        /**
+         * Only applicable when icon is LinkedIn
+         */
+        linkedinUrl?: string | null;
         id?: string | null;
       }[]
     | null;
+  formHeading?: string | null;
   form: number | Form;
   formLogo?: (number | null) | Media;
   id?: string | null;
@@ -2338,9 +2342,10 @@ export interface ContactUsBlockSelect<T extends boolean = true> {
         icon?: T;
         label?: T;
         value?: T;
-        link?: T;
+        linkedinUrl?: T;
         id?: T;
       };
+  formHeading?: T;
   form?: T;
   formLogo?: T;
   id?: T;
