@@ -15,6 +15,8 @@ import { draftMode } from 'next/headers'
 
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
+import { EcommerceProvider } from '@payloadcms/plugin-ecommerce/client/react'
+import { stripeAdapterClient } from '@payloadcms/plugin-ecommerce/payments/stripe'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
@@ -28,11 +30,26 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   </head>
   <body>
     <Providers>
-      <AdminBar adminBarProps={{ preview: isEnabled }} />
-      <Header />
-      {children}
-      <Footer />
-    </Providers>
+  <EcommerceProvider
+    currenciesConfig={{
+      defaultCurrency: 'INR',
+      supportedCurrencies: [
+        { code: 'INR', decimals: 2, label: 'Indian Rupee', symbol: '₹' },
+      ],
+    }}
+    paymentMethods={[
+      stripeAdapterClient({
+        publishableKey:
+          process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
+      }),
+    ]}
+  >
+    <AdminBar adminBarProps={{ preview: isEnabled }} />
+    <Header />
+    {children}
+    <Footer />
+  </EcommerceProvider>
+</Providers>
   </body>
 </html>
       )

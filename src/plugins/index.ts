@@ -9,6 +9,15 @@ import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
+import { ecommercePlugin } from '@payloadcms/plugin-ecommerce'
+import { stripeAdapter } from '@payloadcms/plugin-ecommerce/payments/stripe'
+import { isAdmin } from '@/access/isAdmin'
+import { adminOrPublishedStatus } from '@/access/AdminorPublishedStatus'
+import { isCustomer } from '@/access/isCustomer'
+import { isDocumentOwner } from '@/access/isDocumentOwner'
+import { adminOnlyFieldAccess } from '@/access/adminOnlyFieldAccess'
+import { authenticated } from '@/access/authenticated'
+import { anyone } from '@/access/anyone'
 
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
@@ -89,4 +98,80 @@ export const plugins: Plugin[] = [
       },
     },
   }),
+  ecommercePlugin({
+  access: {
+    adminOnlyFieldAccess,
+    adminOrPublishedStatus,
+    isAdmin,
+    isAuthenticated: authenticated,
+    isCustomer,
+    isDocumentOwner,
+    publicAccess: anyone,
+  },
+  customers: { slug: 'users' },
+  products: {
+  productsCollectionOverride: ({ defaultCollection }) => ({
+    ...defaultCollection,
+    admin: {
+      ...defaultCollection.admin,
+      useAsTitle: 'title',
+    },
+    fields: [
+      ...defaultCollection.fields,
+      {
+        name: 'title',
+        type: 'text',
+        required: true,
+      },
+      {
+        name: 'slug',
+        type: 'text',
+        required: true,
+        unique: true,
+      },
+      {
+        name: 'description',
+        type: 'textarea',
+      },
+      {
+        name: 'image',
+        type: 'upload',
+        relationTo: 'media',
+      },
+      {
+        name: 'images',
+        type: 'array',
+        fields: [
+          {
+            name: 'image',
+            type: 'upload',
+            relationTo: 'media',
+          },
+        ],
+      },
+      {
+        name: 'categories',
+        type: 'relationship',
+        relationTo: 'categories',
+        hasMany: true,
+      },
+    ],
+  }),
+},
+  payments: {
+    paymentMethods: [
+      stripeAdapter({
+        secretKey: process.env.STRIPE_SECRET_KEY!,
+        publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
+        webhookSecret: process.env.STRIPE_WEBHOOKS_SIGNING_SECRET!,
+      }),
+    ],
+  },
+  currencies: {
+    defaultCurrency: 'USD',
+    supportedCurrencies: [
+      { code: 'USD', decimals: 2, label: 'US Dollar', symbol: '$' },
+    ],
+  },
+}),
 ]

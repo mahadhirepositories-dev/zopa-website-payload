@@ -21,6 +21,21 @@ export const Users: CollectionConfig = {
       name: 'name',
       type: 'text',
     },
+    {
+    name: 'role',
+    type: 'select',
+    defaultValue: 'customer',
+    required: true,
+    options: [
+      { label: 'Admin', value: 'admin' },
+      { label: 'Customer', value: 'customer' },
+    ],
+    access: {
+      read: ({ req: { user } }) => Boolean(user),
+      update: ({ req: { user } }) => user?.role === 'admin',
+      create: ({ req: { user } }) => user?.role === 'admin',
+    },
+  },
   ],
   timestamps: true,
 }

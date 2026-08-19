@@ -26,6 +26,7 @@
     "@payloadcms/db-postgres": "3.86.0",
     "@payloadcms/live-preview-react": "3.86.0",
     "@payloadcms/next": "3.86.0",
+    "@payloadcms/plugin-ecommerce": "^3.86.0",
     "@payloadcms/plugin-form-builder": "3.86.0",
     "@payloadcms/plugin-nested-docs": "3.86.0",
     "@payloadcms/plugin-redirects": "3.86.0",
@@ -56,6 +57,7 @@
     "react-icons": "^5.7.0",
     "sharp": "0.34.2",
     "simple-icons": "^16.27.1",
+    "stripe": "^22.5.0",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
