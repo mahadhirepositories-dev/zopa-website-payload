@@ -6,6 +6,7 @@ import { getPayload } from 'payload'
 import { notFound } from 'next/navigation'
 
 import ProductDetailClient from './page.client'
+import { RenderBlocks } from '@/blocks/RenderBlocks'
 
 type Args = {
   params: Promise<{ slug: string }>
@@ -27,7 +28,14 @@ export default async function ProductPage({ params: paramsPromise }: Args) {
   const product = result.docs[0]
   if (!product) return notFound()
 
-  return <ProductDetailClient product={product} />
+  const layoutBlocks =
+    product.layout && product.layout.length > 0 ? (
+      <div className="mt-16">
+        <RenderBlocks blocks={product.layout} />
+      </div>
+    ) : null
+
+  return <ProductDetailClient product={product} layoutBlocks={layoutBlocks} />
 }
 
 export async function generateMetadata({

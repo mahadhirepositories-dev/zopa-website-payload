@@ -7,9 +7,10 @@ import type { Product } from '@/payload-types'
 
 type Props = {
   product: Product
+  layoutBlocks?: React.ReactNode
 }
 
-export default function ProductDetailClient({ product }: Props) {
+export default function ProductDetailClient({ product, layoutBlocks }: Props) {
   const { addItem, isLoading } = useCart()
   const [quantity, setQuantity] = useState(1)
   const [activeTab, setActiveTab] = useState<'description' | 'reviews'>(
@@ -31,25 +32,22 @@ export default function ProductDetailClient({ product }: Props) {
     await addItem({ product: product.id }, quantity)
   }
 
+  const categoryName =
+    product.categories?.[0] &&
+    typeof product.categories[0] === 'object' &&
+    product.categories[0]?.title
+      ? product.categories[0].title
+      : 'Shop'
+
+  const circledNumbers = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩']
+
   return (
     <section className="container py-16">
       {/* Title Bar */}
-      <div className="bg-muted py-4 px-6 mb-8">
-        <h1 className="text-2xl font-bold">Product: {product.title}</h1>
-      </div>
+      
 
       {/* Breadcrumb */}
-      <nav className="text-sm text-muted-foreground mb-8">
-        <Link href="/" className="hover:underline">
-          Home
-        </Link>
-        <span className="mx-2">/</span>
-        <Link href="/shop" className="hover:underline">
-          Shop
-        </Link>
-        <span className="mx-2">/</span>
-        <span>{product.title}</span>
-      </nav>
+      
 
       {/* Product Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
@@ -93,34 +91,55 @@ export default function ProductDetailClient({ product }: Props) {
 
         {/* Right: Product Info */}
         <div>
-          <h2 className="text-3xl font-bold mb-4">{product.title}</h2>
+          <h2 className="text-3xl font-bold mb-2">{product.title}</h2>
 
-          {/* Why Register bullets */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-2">Why Register?</h3>
-            <ul className="space-y-1 text-muted-foreground">
-              <li>• Show up for buyers</li>
-              <li>• Receive category/location leads</li>
-              <li>• Submit accurate quotes</li>
-              <li>• Reach buyers outside your network</li>
-            </ul>
-          </div>
+          {product.subtitle && (
+            <p className="text-xl text-muted-foreground mb-4">
+              {product.title} – {product.subtitle}
+            </p>
+          )}
 
-          {/* How it Works */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-2">How it Works:</h3>
-            <ol className="space-y-1 text-muted-foreground">
-              <li>① Purchase registration product</li>
-              <li>② Receive PDF + secure link</li>
-              <li>③ Complete registration</li>
-              <li>④ Profile goes live within 48 hrs</li>
-            </ol>
-          </div>
+          {product.description && (
+            <p className="text-muted-foreground mb-6">{product.description}</p>
+          )}
 
-          {/* Price */}
+          {product.whyRegister && product.whyRegister.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2">Why Register?</h3>
+              <ul className="space-y-1 text-muted-foreground">
+                {product.whyRegister.map((item, index) => (
+                  <li key={item.id ?? index}>• {item.text}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {product.howItWorks && product.howItWorks.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2">How it Works:</h3>
+              <ol className="space-y-1 text-muted-foreground">
+                {product.howItWorks.map((item, index) => (
+                  <li key={item.id ?? index}>
+                    {circledNumbers[index]} {item.text}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+
+          {product.afterApproval && product.afterApproval.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2">After approval:</h3>
+              <ul className="space-y-1 text-muted-foreground">
+                {product.afterApproval.map((item, index) => (
+                  <li key={item.id ?? index}>• {item.text}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <p className="text-3xl font-bold mb-6">{formattedPrice}</p>
 
-          {/* Quantity + Add to Cart */}
           <div className="flex items-center gap-4 mb-6">
             <div className="flex items-center border rounded">
               <button
@@ -146,18 +165,12 @@ export default function ProductDetailClient({ product }: Props) {
             </button>
           </div>
 
-          {/* Category */}
-          {product.categories && (
-            <p className="text-sm text-muted-foreground">
-              Category:{' '}
-              {product.categories?.[0] &&
-  typeof product.categories[0] === 'object' && (
-    <p className="text-sm text-muted-foreground">
-      Category: {product.categories[0].title}
-    </p>
-  )}
-            </p>
-          )}
+          {product.categories?.[0] &&
+            typeof product.categories[0] === 'object' && (
+              <p className="text-sm text-muted-foreground">
+                Category: {product.categories[0].title}
+              </p>
+            )}
         </div>
       </div>
 
@@ -196,6 +209,9 @@ export default function ProductDetailClient({ product }: Props) {
           <p className="text-muted-foreground">No reviews yet.</p>
         )}
       </div>
+
+      {/* Dynamic Blocks - rendered server-side, passed as prop */}
+      {layoutBlocks}
     </section>
   )
 }

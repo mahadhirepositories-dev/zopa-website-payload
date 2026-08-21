@@ -57,7 +57,7 @@ const blockComponents = {
 }
 
 export const RenderBlocks: React.FC<{
-  blocks: Page['layout'][0][]
+  blocks: any[]
 }> = (props) => {
   const { blocks } = props
 
@@ -70,12 +70,12 @@ export const RenderBlocks: React.FC<{
           const { blockType } = block
 
           if (blockType && blockType in blockComponents) {
-            const Block = blockComponents[blockType]
+            const Block = blockComponents[blockType as keyof typeof blockComponents]
 
             if (Block) {
               return (
                 <div key={index}>
-                  {/* @ts-expect-error there may be some mismatch between the expected types here */}
+
                   <Block {...block} disableInnerContainer />
                 </div>
               )

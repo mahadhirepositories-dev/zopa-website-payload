@@ -18,6 +18,30 @@ import { isDocumentOwner } from '@/access/isDocumentOwner'
 import { adminOnlyFieldAccess } from '@/access/adminOnlyFieldAccess'
 import { authenticated } from '@/access/authenticated'
 import { anyone } from '@/access/anyone'
+import { CallToAction } from '@/blocks/CallToAction/config'
+import { Content } from '@/blocks/Content/config'
+import { MediaBlock } from '@/blocks/MediaBlock/config'
+import { Archive } from '@/blocks/ArchiveBlock/config'
+import { FormBlock } from '@/blocks/Form/config'
+import { Product } from '@/blocks/product/config'
+import { PricingCards } from '@/blocks/PricingCards/config'
+import { RecentClients } from '@/blocks/RecentClients/config'
+import { BlogSection } from '@/blocks/BlogSection/config'
+import { FullWidthBanner } from '@/blocks/FullWidthBanner/config'
+import { AboutSection } from '@/blocks/AboutSection/config'
+import { AboutUs } from '@/blocks/AboutUs/config'
+import { VisionMission } from '@/blocks/Vission&Mission/config'
+import { ProcurementSolutions } from '@/blocks/ProcurementSolutions/config'
+import { ServicesSection } from '@/blocks/ServicesSection/config'
+import { ServiceDetailSection } from '@/blocks/Services/config'
+import { HowWeWork } from '@/blocks/Howwework/config'
+import { InterestForm } from '@/blocks/Interestblock/config'
+import { PricingComparison } from '@/blocks/Pricing/config'
+import { WhoCanBenefit } from '@/blocks/Whocanbenefit/config'
+import { OutcomeSection } from '@/blocks/Outcomesection/config'
+import { WhoBenefitDetail } from '@/blocks/Whobenefit/config'
+import { ContactInfo } from '@/blocks/Contactinfo/config'
+import { ContactUs } from '@/blocks/Contactus/config'
 
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
@@ -155,8 +179,90 @@ export const plugins: Plugin[] = [
         relationTo: 'categories',
         hasMany: true,
       },
+      {
+        name: 'subtitle',
+        type: 'text',
+        admin: {
+          description: 'Subtitle shown below the product title (e.g., "Get Listed on Zopa Vendor Page")',
+        },
+      },
+      {
+        name: 'whyRegister',
+        type: 'array',
+        label: 'Why Register?',
+        maxRows: 10,
+        fields: [
+          {
+            name: 'text',
+            type: 'text',
+            required: true,
+          },
+        ],
+      },
+      {
+        name: 'howItWorks',
+        type: 'array',
+        label: 'How it Works',
+        maxRows: 10,
+        fields: [
+          {
+            name: 'text',
+            type: 'text',
+            required: true,
+          },
+        ],
+      },
+      {
+        name: 'afterApproval',
+        type: 'array',
+        label: 'After Approval',
+        maxRows: 10,
+        fields: [
+          {
+            name: 'text',
+            type: 'text',
+            required: true,
+          },
+        ],
+      },
+      {
+  type: 'tabs',
+  tabs: [
+    {
+      label: 'Content',
+      fields: [
+        {
+          name: 'layout',
+          type: 'blocks',
+          blocks: [
+            Content,
+  CallToAction,
+  MediaBlock,
+  FormBlock,
+  {
+    ...ContactUs,
+    dbName: 'ctau',
+  },
+  {
+    ...ContactInfo,
+    dbName: 'ctai',
+  },
+  {
+    ...PricingCards,
+    dbName: 'pc',
+  },
+          ],
+          admin: {
+            initCollapsed: true,
+          },
+        },
+      ],
+    },
+  ],
+},
     ],
   }),
+  
 },
   payments: {
     paymentMethods: [

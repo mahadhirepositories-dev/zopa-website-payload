@@ -1661,6 +1661,39 @@ export interface Product {
       }[]
     | null;
   categories?: (number | Category)[] | null;
+  /**
+   * Subtitle shown below the product title (e.g., "Get Listed on Zopa Vendor Page")
+   */
+  subtitle?: string | null;
+  whyRegister?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  howItWorks?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  afterApproval?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  layout?:
+    | (
+        | ContentBlock
+        | CallToActionBlock
+        | MediaBlock
+        | FormBlock
+        | ContactUsBlock
+        | ContactInfoBlock
+        | PricingCardsBlock
+      )[]
+    | null;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -3119,6 +3152,36 @@ export interface ProductsSelect<T extends boolean = true> {
         id?: T;
       };
   categories?: T;
+  subtitle?: T;
+  whyRegister?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  howItWorks?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  afterApproval?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  layout?:
+    | T
+    | {
+        content?: T | ContentBlockSelect<T>;
+        cta?: T | CallToActionBlockSelect<T>;
+        mediaBlock?: T | MediaBlockSelect<T>;
+        formBlock?: T | FormBlockSelect<T>;
+        contactUs?: T | ContactUsBlockSelect<T>;
+        contactInfo?: T | ContactInfoBlockSelect<T>;
+        pricingCards?: T | PricingCardsBlockSelect<T>;
+      };
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
