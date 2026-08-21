@@ -16,6 +16,7 @@ export default async function ProductPage({ params: paramsPromise }: Args) {
   const { slug } = await paramsPromise
   const { isEnabled: draft } = await draftMode()
   const payload = await getPayload({ config: configPromise })
+  
 
   const result = await payload.find({
     collection: 'products',
@@ -28,14 +29,28 @@ export default async function ProductPage({ params: paramsPromise }: Args) {
   const product = result.docs[0]
   if (!product) return notFound()
 
-  const layoutBlocks =
-    product.layout && product.layout.length > 0 ? (
-      <div className="mt-16">
-        <RenderBlocks blocks={product.layout} />
-      </div>
-    ) : null
+   const hasDetailBlock = product.layout?.some(
+    (b) => b.blockType === 'productDetail',
+  )
 
-  return <ProductDetailClient product={product} layoutBlocks={layoutBlocks} />
+  if (hasDetailBlock) {
+    return <RenderBlocks blocks={product.layout} product={product} />
+  }
+
+  // fallback: old hardcoded template for products without the block
+  return (
+    <ProductDetailClient
+      product={product}
+      layoutBlocks={
+        product.layout && product.layout.length > 0 ? (
+          <div className="mt-16">
+            <RenderBlocks blocks={product.layout} />
+          </div>
+        ) : null
+      }
+    />
+  )
+
 }
 
 export async function generateMetadata({

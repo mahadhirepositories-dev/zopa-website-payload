@@ -45,6 +45,7 @@ import { ContactUs } from '@/blocks/Contactus/config'
 
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
+import { ProductDetail } from '@/blocks/Productdetail/config'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
   return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
@@ -251,6 +252,8 @@ export const plugins: Plugin[] = [
     ...PricingCards,
     dbName: 'pc',
   },
+  AboutSection,
+  ProductDetail,
           ],
           admin: {
             initCollapsed: true,

@@ -278,6 +278,7 @@ export interface Page {
     | WhoBenefitDetailBlock
     | ContactInfoBlock
     | ContactUsBlock
+    | ProductDetailBlock
   )[];
   meta?: {
     title?: string | null;
@@ -1038,8 +1039,8 @@ export interface FullWidthBannerBlock {
  */
 export interface AboutSectionBlock {
   breadcrumb?: string | null;
-  heading: string;
-  content: string;
+  heading?: string | null;
+  content?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'aboutSection';
@@ -1481,6 +1482,19 @@ export interface ContactUsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProductDetailBlock".
+ */
+export interface ProductDetailBlock {
+  showBreadcrumb?: boolean | null;
+  showGallery?: boolean | null;
+  headingOverride?: string | null;
+  subtitleOverride?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'productDetail';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1692,6 +1706,8 @@ export interface Product {
         | ContactUsBlock
         | ContactInfoBlock
         | PricingCardsBlock
+        | AboutSectionBlock
+        | ProductDetailBlock
       )[]
     | null;
   updatedAt: string;
@@ -2128,6 +2144,7 @@ export interface PagesSelect<T extends boolean = true> {
         whoBenefitDetail?: T | WhoBenefitDetailBlockSelect<T>;
         contactInfo?: T | ContactInfoBlockSelect<T>;
         contactUs?: T | ContactUsBlockSelect<T>;
+        productDetail?: T | ProductDetailBlockSelect<T>;
       };
   meta?:
     | T
@@ -2710,6 +2727,18 @@ export interface ContactUsBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProductDetailBlock_select".
+ */
+export interface ProductDetailBlockSelect<T extends boolean = true> {
+  showBreadcrumb?: T;
+  showGallery?: T;
+  headingOverride?: T;
+  subtitleOverride?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
@@ -3181,6 +3210,8 @@ export interface ProductsSelect<T extends boolean = true> {
         contactUs?: T | ContactUsBlockSelect<T>;
         contactInfo?: T | ContactInfoBlockSelect<T>;
         pricingCards?: T | PricingCardsBlockSelect<T>;
+        aboutSection?: T | AboutSectionBlockSelect<T>;
+        productDetail?: T | ProductDetailBlockSelect<T>;
       };
   updatedAt?: T;
   createdAt?: T;

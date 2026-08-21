@@ -26,7 +26,7 @@ import { OutcomeSectionBlockComponent } from './Outcomesection/Component'
 import { WhoBenefitDetailBlockComponent } from './Whobenefit/Component'
 import { ContactInfoBlockComponent } from './Contactinfo/Component'
 import { ContactUsBlockComponent } from './Contactus/Component'
-import { ContactUs } from './Contactus/config'
+import { ProductDetailBlockComponent } from './Productdetail/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -52,14 +52,16 @@ const blockComponents = {
   outcomeSection: OutcomeSectionBlockComponent,
   whoBenefitDetail: WhoBenefitDetailBlockComponent,
   contactInfo:ContactInfoBlockComponent,
-  contactUs:ContactUsBlockComponent
-  
+  contactUs:ContactUsBlockComponent,
+  productDetail:ProductDetailBlockComponent,
 }
 
 export const RenderBlocks: React.FC<{
-  blocks: any[]
+  blocks: any[] | null | undefined
+  product?: unknown
 }> = (props) => {
-  const { blocks } = props
+  const { blocks, product } = props
+
 
   const hasBlocks = blocks && Array.isArray(blocks) && blocks.length > 0
 
@@ -76,7 +78,11 @@ export const RenderBlocks: React.FC<{
               return (
                 <div key={index}>
 
-                  <Block {...block} disableInnerContainer />
+                   <Block
+                   {...block}
+                   {...(blockType === 'productDetail' ? { product } : {})}
+                   disableInnerContainer
+                   />
                 </div>
               )
             }

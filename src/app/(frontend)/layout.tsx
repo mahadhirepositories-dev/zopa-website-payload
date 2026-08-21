@@ -32,11 +32,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <Providers>
   <EcommerceProvider
     currenciesConfig={{
-      defaultCurrency: 'INR',
-      supportedCurrencies: [
-        { code: 'INR', decimals: 2, label: 'Indian Rupee', symbol: '₹' },
-      ],
-    }}
+    defaultCurrency: 'USD',
+    supportedCurrencies: [
+      { code: 'USD', decimals: 2, label: 'US Dollar', symbol: '$' },
+    ],
+  }}
     paymentMethods={[
       stripeAdapterClient({
         publishableKey:

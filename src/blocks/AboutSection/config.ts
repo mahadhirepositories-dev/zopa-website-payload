@@ -18,13 +18,13 @@ export const AboutSection: Block = {
     {
       name: 'heading',
       type: 'text',
-      required: true,
+      required: false,
       label: 'Heading',
     },
     {
       name: 'content',
       type: 'textarea',
-      required: true,
+      required: false,
       label: 'Content',
     },
   ],
