@@ -6,7 +6,7 @@ import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
 export const AddToCartButton = ({
   productId,
 }: {
-  productId: number | string
+  productId: number
 }) => {
   const { addItem, isLoading } = useCart()
 
