@@ -27,6 +27,8 @@ import { WhoBenefitDetailBlockComponent } from './Whobenefit/Component'
 import { ContactInfoBlockComponent } from './Contactinfo/Component'
 import { ContactUsBlockComponent } from './Contactus/Component'
 import { ProductDetailBlockComponent } from './Productdetail/Component'
+import { LifeAtZopaBlockComponent } from './Lifeatzopa/Component'
+import { JobOpportunitiesBlockComponent } from './Joboppurtunities/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -54,6 +56,8 @@ const blockComponents = {
   contactInfo:ContactInfoBlockComponent,
   contactUs:ContactUsBlockComponent,
   productDetail:ProductDetailBlockComponent,
+  lifeAtZopa: LifeAtZopaBlockComponent,
+  jobOpportunities: JobOpportunitiesBlockComponent
 }
 
 export const RenderBlocks: React.FC<{

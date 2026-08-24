@@ -32,6 +32,8 @@ import { WhoBenefitDetail } from '@/blocks/Whobenefit/config'
 import { ContactInfo } from '@/blocks/Contactinfo/config'
 import { ContactUs } from '@/blocks/Contactus/config'
 import { ProductDetail } from '@/blocks/Productdetail/config'
+import { LifeAtZopa } from '@/blocks/Lifeatzopa/config'
+import { JobOpportunities } from '@/blocks/Joboppurtunities/config'
 
 import {
   MetaDescriptionField,
@@ -94,7 +96,8 @@ export const Pages: CollectionConfig<'pages'> = {
               type: 'blocks',
               blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock,Product,PricingCards,RecentClients,
                 BlogSection,FullWidthBanner,AboutSection,AboutUs,VisionMission,ProcurementSolutions,ServicesSection,ServiceDetailSection,
-                HowWeWork,InterestForm,PricingComparison,WhoCanBenefit,OutcomeSection,WhoBenefitDetail,ContactInfo,ContactUs,ProductDetail],
+                HowWeWork,InterestForm,PricingComparison,WhoCanBenefit,OutcomeSection,WhoBenefitDetail,ContactInfo,ContactUs,ProductDetail,
+              LifeAtZopa,JobOpportunities],
               required: true,
               admin: {
                 initCollapsed: true,

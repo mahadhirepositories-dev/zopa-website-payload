@@ -39,6 +39,8 @@ export const ContactUs: Block = {
             { label: 'Info', value: 'FaInfo' },
             { label: 'LinkedIn (Brand)', value: 'FaLinkedin' },
             { label: 'Address Book', value: 'FaAddressBook' },
+            { label: 'Mail', value:'FiMail'},
+            { label: 'Phone', value:'FiPhone'}
           ],
         },
         {

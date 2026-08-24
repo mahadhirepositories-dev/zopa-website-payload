@@ -14,12 +14,16 @@ import { Media } from '@/components/Media'
 import { FormFields } from '@/blocks/Form/FormFields'
 import { Button } from '@/components/ui/button'
 import { getClientSideURL } from '@/utilities/getURL'
+import { FiMail } from 'react-icons/fi'
+import { FiPhone } from 'react-icons/fi'
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   FaBriefcase,
   FaInfo,
   FaLinkedin,
   FaAddressBook,
+  FiMail,
+  FiPhone
 }
 
 function getAutoLink(icon: string, value: string): string {
@@ -44,6 +48,7 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
   const [error, setError] = useState<{ message: string; status?: string } | undefined>()
 
   const formFromProps = formDoc && typeof formDoc === 'object' ? formDoc : null
+  const submitButtonLabel = formFromProps?.submitButtonLabel || 'Submit'
 
   const defaultValues =
     formFromProps?.fields
@@ -106,12 +111,12 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
   return (
     <section className="py-16 bg-white">
       <div className="container">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           {/* Left Column */}
           <div className="flex flex-col gap-8">
             <div>
               {heading && (
-  <span className="inline-block self-start px-3 py-1 bg-[#DCDCDC] text-[13px] border border-border rounded-xs text-black mb-2">
+  <span className="inline-block self-start px-3 py-1 bg-[#DCDCDC] text-[13px] border border-border rounded-[4px] text-black mb-2">
     {heading}
   </span>
 )}
@@ -143,10 +148,10 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
                       <Icon className="w-5 h-5 text-gray-700" />
                     </div>
                     <div className="flex flex-col gap-1 min-w-0">
-                      <span className="text-sm font-semibold text-gray-900">
+                      <span className="text-sm font-semibold text-gray-900 font-sans">
                         {card.label}
                       </span>
-                      <span className="text-sm text-gray-600 whitespace-pre-line break-words">
+                      <span className="text-sm text-gray-600 whitespace-pre-line break-words font-sans">
                         {card.value}
                       </span>
                     </div>
@@ -173,26 +178,26 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
           </div>
 
           {/* Right Column — Form Card */}
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-  {/* Header — same style as InterestForm */}
-  <div className="bg-[#2a2a2a] px-8 py-2 flex items-center gap-4">
-    {formLogo && typeof formLogo === 'object' && (
-      <div className="w-25 h-25 flex-shrink-0 overflow-hidden rounded-sm">
-        <Media
-          resource={formLogo}
-          className="w-full h-full"
-          imgClassName="object-contain w-full h-full"
-        />
-      </div>
-    )}
-    <div className="w-px h-8 bg-gray-500" />
-    <h3 className="text-white text-[20px] font-[400] font-sans">
-      {props.formHeading || 'Contact Us'}
-    </h3>
-  </div>
+          <div className="bg-white rounded-[4px] shadow-lg overflow-hidden w-full h-fit self-start">
+          {/* Header — same style as InterestForm */}
+              <div className="bg-[#2a2a2a] px-8 py-2 flex items-center gap-4">
+                {formLogo && typeof formLogo === 'object' && (
+                  <div className="w-25 h-25 flex-shrink-0 overflow-hidden rounded-sm">
+                     <Media
+                      resource={formLogo}
+                      className="w-full h-full"
+                      imgClassName="object-contain w-full h-full"
+                     />
+                  </div>
+                )}
+                <div className="w-px h-8 bg-gray-500" />
+                 <h3 className="text-white text-[20px] font-[400] font-sans">
+                    {props.formHeading || 'Contact Us'}
+                 </h3>
+                </div>
 
   {/* Form body */}
-  <div className="p-8">
+  <div className="p-8 space-y-4">
     {formFromProps && (
       <FormProvider {...formMethods}>
         {isLoading && !hasSubmitted && (
@@ -221,12 +226,12 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
               register={register}
             />
             <Button
-              type="submit"
-              className="mt-4 w-20 bg-[#dbac2b] hover:bg-[#000] text-black hover:text-white"
-              disabled={isLoading}
+             type="submit"
+             className="mt-4 bg-[#dbac2b] hover:bg-[#000] text-black hover:text-white"
+             disabled={isLoading}
             >
-              {isLoading ? 'Submitting...' : 'Submit'}
-            </Button>
+               {isLoading ? 'Submitting...' : submitButtonLabel}
+             </Button>
           </form>
         )}
       </FormProvider>

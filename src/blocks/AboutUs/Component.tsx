@@ -18,10 +18,10 @@ export const AboutUsBlockComponent: React.FC<AboutUsBlock> = ({
   return (
     <section className="py-[100px] px-[50px] bg-white">
       <div className="container max-w-[1280px]">
-        <div className="grid grid-cols-1 lg:grid-cols-[42%_42%] gap-40 lg:gap-45 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[42%_42%] gap-40 lg:gap-45 items-start">
           {/* LEFT COLUMN (42%) — Image */}
           <div className="relative">
-            <div className="rounded-2xl overflow-hidden">
+            <div className="rounded-xl overflow-hidden">
               {image && typeof image === 'object' ? (
                 <Media
                   resource={image}
@@ -53,7 +53,7 @@ export const AboutUsBlockComponent: React.FC<AboutUsBlock> = ({
                   <div className="mt-6">
                     <CMSLink
                       {...ctaLink}
-                      className="inline-flex items-center gap-12 bg-black text-white hover:bg-gray-700 px-6 py-3 rounded-md font-medium"
+                      className="inline-flex items-center gap-12 bg-gray-800 text-white hover:bg-black px-6 py-3 rounded-md font-medium"
                     >
                       <ArrowRight className="w-4 h-4" />
                     </CMSLink>

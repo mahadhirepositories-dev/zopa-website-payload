@@ -279,6 +279,8 @@ export interface Page {
     | ContactInfoBlock
     | ContactUsBlock
     | ProductDetailBlock
+    | LifeAtZopaBlock
+    | JobOpportunitiesBlock
   )[];
   meta?: {
     title?: string | null;
@@ -1463,7 +1465,7 @@ export interface ContactUsBlock {
   description?: string | null;
   contactCards?:
     | {
-        icon: 'FaBriefcase' | 'FaInfo' | 'FaLinkedin' | 'FaAddressBook';
+        icon: 'FaBriefcase' | 'FaInfo' | 'FaLinkedin' | 'FaAddressBook' | 'FiMail' | 'FiPhone';
         label: string;
         value: string;
         /**
@@ -1492,6 +1494,71 @@ export interface ProductDetailBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'productDetail';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LifeAtZopaBlock".
+ */
+export interface LifeAtZopaBlock {
+  badge?: string | null;
+  heading: string;
+  description?: string | null;
+  items?:
+    | {
+        icon?: ('FaBuilding' | 'FaHandshake' | 'FaMedal') | null;
+        title: string;
+        description?: string | null;
+        points?:
+          | {
+              point: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'lifeAtZopa';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "JobOpportunitiesBlock".
+ */
+export interface JobOpportunitiesBlock {
+  badge?: string | null;
+  heading: string;
+  description?: string | null;
+  jobs?:
+    | {
+        position: string;
+        city: string;
+        locationType?: ('On-site' | 'Hybrid' | 'Remote') | null;
+        applyLink?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label?: string | null;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: 'default' | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'jobOpportunities';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2145,6 +2212,8 @@ export interface PagesSelect<T extends boolean = true> {
         contactInfo?: T | ContactInfoBlockSelect<T>;
         contactUs?: T | ContactUsBlockSelect<T>;
         productDetail?: T | ProductDetailBlockSelect<T>;
+        lifeAtZopa?: T | LifeAtZopaBlockSelect<T>;
+        jobOpportunities?: T | JobOpportunitiesBlockSelect<T>;
       };
   meta?:
     | T
@@ -2734,6 +2803,60 @@ export interface ProductDetailBlockSelect<T extends boolean = true> {
   showGallery?: T;
   headingOverride?: T;
   subtitleOverride?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LifeAtZopaBlock_select".
+ */
+export interface LifeAtZopaBlockSelect<T extends boolean = true> {
+  badge?: T;
+  heading?: T;
+  description?: T;
+  items?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        points?:
+          | T
+          | {
+              point?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "JobOpportunitiesBlock_select".
+ */
+export interface JobOpportunitiesBlockSelect<T extends boolean = true> {
+  badge?: T;
+  heading?: T;
+  description?: T;
+  jobs?:
+    | T
+    | {
+        position?: T;
+        city?: T;
+        locationType?: T;
+        applyLink?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }
