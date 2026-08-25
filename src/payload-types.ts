@@ -281,6 +281,7 @@ export interface Page {
     | ProductDetailBlock
     | LifeAtZopaBlock
     | JobOpportunitiesBlock
+    | TermsAndConditionsBlock
   )[];
   meta?: {
     title?: string | null;
@@ -1562,6 +1563,62 @@ export interface JobOpportunitiesBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TermsAndConditionsBlock".
+ */
+export interface TermsAndConditionsBlock {
+  fields?:
+    | (
+        | {
+            heading: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'heading';
+          }
+        | {
+            subHeading: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'subHeading';
+          }
+        | {
+            points?:
+              | {
+                  point?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'points';
+          }
+        | {
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'description';
+          }
+      )[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'termsAndConditions';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -2214,6 +2271,7 @@ export interface PagesSelect<T extends boolean = true> {
         productDetail?: T | ProductDetailBlockSelect<T>;
         lifeAtZopa?: T | LifeAtZopaBlockSelect<T>;
         jobOpportunities?: T | JobOpportunitiesBlockSelect<T>;
+        termsAndConditions?: T | TermsAndConditionsBlockSelect<T>;
       };
   meta?:
     | T
@@ -2856,6 +2914,51 @@ export interface JobOpportunitiesBlockSelect<T extends boolean = true> {
               appearance?: T;
             };
         id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TermsAndConditionsBlock_select".
+ */
+export interface TermsAndConditionsBlockSelect<T extends boolean = true> {
+  fields?:
+    | T
+    | {
+        heading?:
+          | T
+          | {
+              heading?: T;
+              id?: T;
+              blockName?: T;
+            };
+        subHeading?:
+          | T
+          | {
+              subHeading?: T;
+              id?: T;
+              blockName?: T;
+            };
+        points?:
+          | T
+          | {
+              points?:
+                | T
+                | {
+                    point?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        description?:
+          | T
+          | {
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   id?: T;
   blockName?: T;

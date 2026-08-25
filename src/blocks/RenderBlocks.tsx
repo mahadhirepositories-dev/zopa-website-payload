@@ -29,6 +29,7 @@ import { ContactUsBlockComponent } from './Contactus/Component'
 import { ProductDetailBlockComponent } from './Productdetail/Component'
 import { LifeAtZopaBlockComponent } from './Lifeatzopa/Component'
 import { JobOpportunitiesBlockComponent } from './Joboppurtunities/Component'
+import { TermsAndConditionsBlock } from './Termsandconditions/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -57,7 +58,8 @@ const blockComponents = {
   contactUs:ContactUsBlockComponent,
   productDetail:ProductDetailBlockComponent,
   lifeAtZopa: LifeAtZopaBlockComponent,
-  jobOpportunities: JobOpportunitiesBlockComponent
+  jobOpportunities: JobOpportunitiesBlockComponent,
+  termsAndConditions:TermsAndConditionsBlock,
 }
 
 export const RenderBlocks: React.FC<{
