@@ -92,7 +92,7 @@ export default function CartContent() {
       {items.length === 0 ? (
         <p className="text-muted-foreground">
           Your cart is empty.{' '}
-          <Link href="/shop" className="underline">
+          <Link href="/" className="underline">
             Continue shopping
           </Link>
         </p>

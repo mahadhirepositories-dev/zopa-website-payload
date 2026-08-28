@@ -129,7 +129,7 @@ export const ProductDetailBlockComponent = ({
               <Link href="/" className="hover:underline">Home</Link>
               <span className="mx-2">/</span>
               <Link
-               href={categorySlug ? `/shop/category/${categorySlug}` : '/shop'}
+               href={categorySlug ? `/shop/category/${categorySlug}` : '/'}
                className="hover:underline"
                >
                 {categoryName}

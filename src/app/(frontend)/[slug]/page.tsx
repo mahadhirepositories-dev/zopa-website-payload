@@ -12,6 +12,7 @@ import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import ProductDetailClient from '@/app/(frontend)/shop/[slug]/page.client'
 
 export async function generateStaticParams() {
   try {
@@ -66,8 +67,43 @@ export default async function Page({ params: paramsPromise }: Args) {
   }
 
   if (!page) {
-    return <PayloadRedirects url={url} />
+  // Check if a product with this slug exists
+  const payload = await getPayload({ config: configPromise })
+  const productResult = await payload.find({
+    collection: 'products',
+    draft,
+    limit: 1,
+    depth: 3,
+    where: { slug: { equals: decodedSlug } },
+  })
+
+  const product = productResult.docs[0]
+
+  if (product) {
+    const hasDetailBlock = product.layout?.some(
+      (b) => (b as any).blockType === 'productDetail',
+    )
+
+    if (hasDetailBlock) {
+      return <RenderBlocks blocks={product.layout} product={product} />
+    }
+
+    return (
+      <ProductDetailClient
+        product={product as any}
+        layoutBlocks={
+          product.layout && product.layout.length > 0 ? (
+            <div className="mt-16">
+              <RenderBlocks blocks={product.layout} />
+            </div>
+          ) : null
+        }
+      />
+    )
   }
+
+  return <PayloadRedirects url={url} />
+}
 
   const { hero, layout } = page
 

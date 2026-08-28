@@ -13,7 +13,8 @@ type Args = {
 }
 
 export default async function ProductPage({ params: paramsPromise }: Args) {
-  const { slug } = await paramsPromise
+   const { slug } = await paramsPromise                          
+
   const { isEnabled: draft } = await draftMode()
   const payload = await getPayload({ config: configPromise })
   
