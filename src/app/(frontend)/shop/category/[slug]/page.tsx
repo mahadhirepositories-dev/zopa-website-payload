@@ -32,7 +32,7 @@ export default async function CategoryPage({ params, searchParams }: Args) {
 
   // Fetch products in this category (+ optional price sorting)
   const sortBy =
-    sort === 'price-asc' ? 'priceInUSD' : sort === 'price-desc' ? '-priceInUSD' : undefined
+    sort === 'price-asc' ? 'priceInINR' : sort === 'price-desc' ? '-priceInINR' : undefined
 
   const productsRes = await payload.find({
     collection: 'products',
@@ -97,9 +97,9 @@ export default async function CategoryPage({ params, searchParams }: Args) {
                   )}
                   <div className="p-4">
                     <h2 className="text-lg font-semibold">{product.title}</h2>
-                    {product.priceInUSD != null && (
+                    {product.priceInINR != null && (
                       <p className="text-xl font-bold mt-2">
-                        ₹{(product.priceInUSD / 100).toLocaleString('en-IN')}
+                        ₹{(product.priceInINR / 100).toLocaleString('en-IN')}
                       </p>
                     )}
                   </div>

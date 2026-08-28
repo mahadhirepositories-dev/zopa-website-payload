@@ -1,5 +1,6 @@
 'use client'
 
+
 import React, { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
@@ -14,7 +15,7 @@ type CartItem = {
     slug?: string
     subtitle?: string
     description?: string
-    priceInUSD?: number
+    priceInINR?: number
     image?: { url?: string } | number | null
   } | null
 }
@@ -82,7 +83,7 @@ export default function CheckoutContent() {
   const items = cart?.items ?? []
   const subtotal = items.reduce(
     (sum, item) =>
-      sum + (item.product?.priceInUSD ?? 0) * (item.quantity ?? 1),
+      sum + (item.product?.priceInINR ?? 0) * (item.quantity ?? 1),
     0,
   )
 
@@ -92,11 +93,108 @@ export default function CheckoutContent() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // TODO: Integrate Razorpay payment here
-    alert('Order placed! (Payment integration pending)')
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+
+  const cartId = localStorage.getItem('cart')
+  if (!cartId) {
+    alert('Cart not found')
+    return
   }
+
+  try {
+    const res = await fetch('/api/create-order', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    ...(localStorage.getItem('cart_secret') ? { 'x-cart-secret': localStorage.getItem('cart_secret')! } : {}),
+  },
+  body: JSON.stringify({ cartId }),   // removed `amount` — server recomputes
+})
+
+    if (!res.ok) throw new Error('Failed to create order')
+    const { orderId, amount, currency, keyId } = await res.json()
+
+    const options = {
+      key: keyId,
+      amount,
+      currency,
+      name: 'Zopa',
+      description: 'Order Payment',
+      order_id: orderId,
+      handler: async (response: any) => {
+  if (!response.razorpay_signature) {
+    alert('Payment incomplete. Please try again.')
+    return
+  }
+
+  try {
+    const verifyRes = await fetch('/api/verify-payment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(localStorage.getItem('cart_secret')
+          ? { 'x-cart-secret': localStorage.getItem('cart_secret')! }
+          : {}),
+      },
+      body: JSON.stringify({
+        razorpay_order_id: response.razorpay_order_id,
+        razorpay_payment_id: response.razorpay_payment_id,
+        razorpay_signature: response.razorpay_signature,
+        cartId,
+        customerEmail: form.email,
+        billingAddress: {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          addressLine1: form.address,
+          addressLine2: form.apartment,
+          city: form.city,
+          state: form.state,
+          postalCode: form.pinCode,
+          country: form.country,
+          phone: form.phone,
+        },
+      }),
+    })
+
+    const data = await verifyRes.json()
+
+    if (verifyRes.ok && data.verified) {
+      localStorage.removeItem('cart')
+      localStorage.removeItem('cart_secret')
+      window.location.href = '/order-confirmation'
+    } else {
+      alert(data.error || 'Payment verification failed. Contact support.')
+    }
+  } catch (err) {
+    console.error('Verify error:', err)
+    alert('Something went wrong during verification. Contact support.')
+  }
+},
+      prefill: {
+        name: `${form.firstName} ${form.lastName}`,
+        email: form.email,
+        contact: form.phone,
+      },
+      notes: {
+        address: form.address,
+        city: form.city,
+        state: form.state,
+        pincode: form.pinCode,
+      },
+      theme: { color: '#D4A843' },
+      modal: {
+        ondismiss: () => alert('Payment cancelled'),
+      },
+    }
+
+    const razorpay = new window.Razorpay(options)
+    razorpay.open()
+  } catch (error) {
+    console.error('Payment error:', error)
+    alert('Something went wrong. Please try again.')
+  }
+}
 
   if (isLoading || pending) {
     return (
@@ -276,9 +374,9 @@ export default function CheckoutContent() {
                 className="mt-1"
               />
               <div>
-                <p className="font-medium">Pay by Stripe</p>
+                <p className="font-medium">Pay by Razorpay</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Pay securely by Credit or Debit card or Internet Banking through Stripe.
+                  Pay securely by Credit or Debit card or Internet Banking through Razorpay.
                 </p>
               </div>
             </label>
@@ -353,7 +451,7 @@ export default function CheckoutContent() {
                 <div className="min-w-0 flex-1">
                   <p className="font-medium text-sm">{p?.title ?? 'Product'}</p>
                   <p className="text-sm font-semibold mt-0.5">
-                    {inr(p?.priceInUSD ?? 0)}
+                    {inr(p?.priceInINR ?? 0)}
                   </p>
                   {(p?.subtitle || p?.description) && (
                     <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
@@ -363,7 +461,7 @@ export default function CheckoutContent() {
                 </div>
 
                 <p className="font-semibold text-sm whitespace-nowrap">
-                  {inr((p?.priceInUSD ?? 0) * qty)}
+                  {inr((p?.priceInINR ?? 0) * qty)}
                 </p>
               </div>
             )

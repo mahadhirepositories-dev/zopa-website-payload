@@ -14,7 +14,7 @@ type CartItem = {
     slug?: string
     subtitle?: string
     description?: string
-    priceInUSD?: number
+    priceInINR?: number
     image?: { url?: string } | number | null
   } | null
 }
@@ -26,14 +26,18 @@ const inr = (cents: number) =>
   })}`
 
 export default function CartContent() {
-  const { isLoading, incrementItem, decrementItem, removeItem, clearCart } =
-    useCart()
+  const { isLoading } = useCart()
 
-  const [cart, setCart] = useState<{ items: CartItem[] } | null>(null)
+  const [cart, setCart] = useState<{
+    id: string
+    items: CartItem[]
+    secret?: string
+  } | null>(null)
   const [pending, setPending] = useState(true)
   const [couponCode, setCouponCode] = useState('')
+  const [updatingId, setUpdatingId] = useState<string | null>(null)
 
-  const reload = useCallback(async () => {
+  const fetchCart = useCallback(async () => {
     const id = localStorage.getItem('cart')
     const secret = localStorage.getItem('cart_secret')
 
@@ -49,7 +53,8 @@ export default function CartContent() {
         { credentials: 'include' },
       )
       if (!res.ok) throw new Error(String(res.status))
-      setCart(await res.json())
+      const data = await res.json()
+      setCart({ ...data, secret: secret || undefined })
     } catch {
       setCart(null)
     } finally {
@@ -58,21 +63,68 @@ export default function CartContent() {
   }, [])
 
   useEffect(() => {
-    void reload()
-  }, [reload])
+    void fetchCart()
+  }, [fetchCart])
 
-  const wrapped =
-    (fn: (id: string) => Promise<void>) => (itemID: string) =>
-      fn(itemID).finally(() => void reload())
+  // Use our custom /api/cart-actions endpoint (Local API, not broken plugin REST)
+  const callAction = useCallback(
+    async (action: 'increment' | 'decrement' | 'remove', itemId: string) => {
+      if (!cart?.id) return
 
-  const onIncrement = wrapped(incrementItem)
-  const onDecrement = wrapped(decrementItem)
-  const onRemove = wrapped(removeItem)
+      const res = await fetch('/api/cart-actions', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action,
+          cartId: cart.id,
+          itemId,
+          ...(cart.secret ? { secret: cart.secret } : {}),
+        }),
+      })
+
+      if (!res.ok) throw new Error(`Cart action failed: ${res.status}`)
+      return res.json()
+    },
+    [cart],
+  )
+
+  const handleUpdate = useCallback(
+    async (itemId: string, action: 'increment' | 'decrement') => {
+      setUpdatingId(itemId)
+      try {
+        await callAction(action, itemId)
+        await fetchCart()
+      } catch (err) {
+        console.error('Cart update failed:', err)
+        alert('Failed to update cart. Please try again.')
+      } finally {
+        setUpdatingId(null)
+      }
+    },
+    [callAction, fetchCart],
+  )
+
+  const handleRemove = useCallback(
+    async (itemId: string) => {
+      setUpdatingId(itemId)
+      try {
+        await callAction('remove', itemId)
+        await fetchCart()
+      } catch (err) {
+        console.error('Cart remove failed:', err)
+        alert('Failed to remove item. Please try again.')
+      } finally {
+        setUpdatingId(null)
+      }
+    },
+    [callAction, fetchCart],
+  )
 
   const items = cart?.items ?? []
   const subtotal = items.reduce(
     (sum, item) =>
-      sum + (item.product?.priceInUSD ?? 0) * (item.quantity ?? 1),
+      sum + (item.product?.priceInINR ?? 0) * (item.quantity ?? 1),
     0,
   )
 
@@ -86,7 +138,6 @@ export default function CartContent() {
 
   return (
     <section className="container py-16">
-      {/* Breadcrumb */}
       <h1 className="text-3xl font-bold mb-10">Cart</h1>
 
       {items.length === 0 ? (
@@ -98,9 +149,7 @@ export default function CartContent() {
         </p>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-12">
-          {/* ── Left: Products ── */}
           <div>
-            {/* Table head */}
             <div className="hidden sm:grid grid-cols-[1fr_140px] pb-3 border-b border-border">
               <span className="text-sm font-bold tracking-wide uppercase">
                 Product
@@ -115,13 +164,10 @@ export default function CartContent() {
               const image =
                 p?.image && typeof p.image === 'object' ? p.image : null
               const qty = item.quantity ?? 1
+              const busy = updatingId === item.id
 
               return (
-                <div
-                  key={item.id}
-                  className="py-6 border-b border-border"
-                >
-                  {/* Image | info | line total */}
+                <div key={item.id} className="py-6 border-b border-border">
                   <div className="grid grid-cols-[96px_1fr] sm:grid-cols-[96px_1fr_140px] gap-4">
                     <div className="h-24 w-24 overflow-hidden rounded border bg-muted">
                       {image?.url && (
@@ -141,7 +187,7 @@ export default function CartContent() {
                         {p?.title ?? 'Product'}
                       </Link>
                       <p className="font-semibold mt-1">
-                        {inr(p?.priceInUSD ?? 0)}
+                        {inr(p?.priceInINR ?? 0)}
                       </p>
                       {(p?.subtitle || p?.description) && (
                         <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
@@ -151,24 +197,25 @@ export default function CartContent() {
                     </div>
 
                     <p className="hidden sm:block text-right font-semibold">
-                      {inr((p?.priceInUSD ?? 0) * qty)}
+                      {inr((p?.priceInINR ?? 0) * qty)}
                     </p>
                   </div>
 
-                  {/* Qty + Remove row */}
                   <div className="mt-4 flex items-center gap-4 sm:pl-[112px]">
                     <div className="flex items-center border rounded">
                       <button
-                        onClick={() => onDecrement(item.id)}
-                        className="px-3 py-1.5"
+                        onClick={() => handleUpdate(item.id, 'decrement')}
+                        disabled={busy || qty <= 1}
+                        className="px-3 py-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
                         aria-label="Decrease quantity"
                       >
                         −
                       </button>
-                      <span className="px-4">{qty}</span>
+                      <span className="px-4">{busy ? '…' : qty}</span>
                       <button
-                        onClick={() => onIncrement(item.id)}
-                        className="px-3 py-1.5"
+                        onClick={() => handleUpdate(item.id, 'increment')}
+                        disabled={busy}
+                        className="px-3 py-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
                         aria-label="Increase quantity"
                       >
                         +
@@ -176,8 +223,9 @@ export default function CartContent() {
                     </div>
 
                     <button
-                      onClick={() => onRemove(item.id)}
-                      className="text-muted-foreground hover:text-red-600"
+                      onClick={() => handleRemove(item.id)}
+                      disabled={busy}
+                      className="text-muted-foreground hover:text-red-600 disabled:opacity-50"
                       aria-label="Remove item"
                     >
                       <Trash2 className="h-5 w-5" />
@@ -188,18 +236,18 @@ export default function CartContent() {
             })}
           </div>
 
-          {/* ── Right: Cart totals ── */}
           <aside className="h-fit border rounded-lg p-6 lg:sticky lg:top-24">
             <h2 className="text-sm font-bold tracking-wide uppercase mb-6">
               Cart Totals
             </h2>
 
-            {/* Add coupons */}
             <div className="mb-6">
               <details className="group">
                 <summary className="cursor-pointer select-none text-muted-foreground hover:text-foreground flex justify-between items-center">
                   <span>Add coupons</span>
-                  <span className="transition-transform group-open:rotate-180">▾</span>
+                  <span className="transition-transform group-open:rotate-180">
+                    ▾
+                  </span>
                 </summary>
                 <div className="mt-3 flex gap-2">
                   <input
@@ -232,5 +280,4 @@ export default function CartContent() {
       )}
     </section>
   )
- 
 }

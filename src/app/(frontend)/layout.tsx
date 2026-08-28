@@ -27,16 +27,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <InitTheme />
     <link href="/favicon.ico" rel="icon" sizes="32x32" />
     <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+    <script src="https://checkout.razorpay.com/v1/checkout.js" />
   </head>
   <body>
     <Providers>
   <EcommerceProvider
     currenciesConfig={{
-    defaultCurrency: 'USD',
-    supportedCurrencies: [
-      { code: 'USD', decimals: 2, label: 'US Dollar', symbol: '$' },
-    ],
-  }}
+  defaultCurrency: 'INR',
+  supportedCurrencies: [
+    { code: 'INR', decimals: 2, label: 'Indian Rupee', symbol: '₹' },
+  ],
+}}
     paymentMethods={[
       stripeAdapterClient({
         publishableKey:

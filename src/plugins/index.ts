@@ -277,10 +277,10 @@ export const plugins: Plugin[] = [
     ],
   },
   currencies: {
-    defaultCurrency: 'USD',
-    supportedCurrencies: [
-      { code: 'USD', decimals: 2, label: 'US Dollar', symbol: '$' },
-    ],
-  },
+  defaultCurrency: 'INR',
+  supportedCurrencies: [
+    { code: 'INR', decimals: 2, label: 'Indian Rupee', symbol: '₹' },
+  ],
+},
 }),
 ]

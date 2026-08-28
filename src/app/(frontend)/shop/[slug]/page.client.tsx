@@ -23,7 +23,7 @@ export default function ProductDetailClient({ product, layoutBlocks }: Props) {
       typeof img.image === 'object' && img.image !== null,
   )
 
-  const price = product.priceInUSD ?? 0
+  const price = product.priceInINR ?? 0
   const formattedPrice = `₹${(price / 100).toLocaleString('en-IN', {
     minimumFractionDigits: 2,
   })}`
