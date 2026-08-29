@@ -10,7 +10,7 @@ import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/
 import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
 import { ecommercePlugin } from '@payloadcms/plugin-ecommerce'
-import { stripeAdapter } from '@payloadcms/plugin-ecommerce/payments/stripe'
+import type { PaymentAdapter } from '@payloadcms/plugin-ecommerce/types'
 import { isAdmin } from '@/access/isAdmin'
 import { adminOrPublishedStatus } from '@/access/AdminorPublishedStatus'
 import { isCustomer } from '@/access/isCustomer'
@@ -46,6 +46,36 @@ import { ContactUs } from '@/blocks/Contactus/config'
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
 import { ProductDetail } from '@/blocks/Productdetail/config'
+
+const razorpayAdapter: PaymentAdapter = {
+  name: 'razorpay',
+  label: 'Razorpay',
+  initiatePayment: async () => {
+    throw new Error('Razorpay initiation is handled by POST /api/create-order')
+  },
+  confirmOrder: async () => {
+    throw new Error('Razorpay confirmation is handled by POST /api/verify-payment')
+  },
+  group: {
+    name: 'razorpay',
+    type: 'group',
+    admin: {
+      condition: (data: any) => data?.paymentMethod === 'razorpay',
+    },
+    fields: [
+      {
+        name: 'razorpayOrderID',
+        type: 'text',
+        label: 'Razorpay Order ID',
+      },
+      {
+        name: 'razorpayPaymentID',
+        type: 'text',
+        label: 'Razorpay Payment ID',
+      },
+    ],
+  },
+}
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
   return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
@@ -269,11 +299,7 @@ export const plugins: Plugin[] = [
 },
   payments: {
     paymentMethods: [
-      stripeAdapter({
-        secretKey: process.env.STRIPE_SECRET_KEY!,
-        publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
-        webhookSecret: process.env.STRIPE_WEBHOOKS_SIGNING_SECRET!,
-      }),
+      razorpayAdapter,
     ],
   },
   currencies: {

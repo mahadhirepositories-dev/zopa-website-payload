@@ -16,7 +16,7 @@ import { draftMode } from 'next/headers'
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import { EcommerceProvider } from '@payloadcms/plugin-ecommerce/client/react'
-import { stripeAdapterClient } from '@payloadcms/plugin-ecommerce/payments/stripe'
+import Script from 'next/script'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
@@ -27,7 +27,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <InitTheme />
     <link href="/favicon.ico" rel="icon" sizes="32x32" />
     <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
-    <script src="https://checkout.razorpay.com/v1/checkout.js" />
+    <Script src="https://checkout.razorpay.com/v1/checkout.js" 
+     strategy='lazyOnload'/>
   </head>
   <body>
     <Providers>
@@ -39,10 +40,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   ],
 }}
     paymentMethods={[
-      stripeAdapterClient({
-        publishableKey:
-          process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
-      }),
+      { name: 'razorpay', label: 'Razorpay', confirmOrder: false, initiatePayment: false },
     ]}
   >
     <AdminBar adminBarProps={{ preview: isEnabled }} />

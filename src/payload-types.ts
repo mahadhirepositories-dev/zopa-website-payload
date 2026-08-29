@@ -1946,10 +1946,10 @@ export interface Transaction {
         id?: string | null;
       }[]
     | null;
-  paymentMethod?: 'stripe' | null;
-  stripe?: {
-    customerID?: string | null;
-    paymentIntentID?: string | null;
+  paymentMethod?: 'razorpay' | null;
+  razorpay?: {
+    razorpayOrderID?: string | null;
+    razorpayPaymentID?: string | null;
   };
   billingAddress?: {
     title?: string | null;
@@ -3517,11 +3517,11 @@ export interface TransactionsSelect<T extends boolean = true> {
         id?: T;
       };
   paymentMethod?: T;
-  stripe?:
+  razorpay?:
     | T
     | {
-        customerID?: T;
-        paymentIntentID?: T;
+        razorpayOrderID?: T;
+        razorpayPaymentID?: T;
       };
   billingAddress?:
     | T

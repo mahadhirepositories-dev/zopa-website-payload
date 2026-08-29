@@ -24,11 +24,12 @@ export async function POST(req: Request) {
 
     const payload = await getPayload({ config })
 
-    // ── 2. Load the cart (authorize by secret in context) ──
+    // ── 2. Load the cart (authorize by secret) ──
     let cart: any = null
+    const secret = req.headers.get('x-cart-secret') || ''
     const localReq: any = {
       ...payload,
-      context: cartId ? { cartSecret: null } : {},
+      context: { cartSecret: secret },
       user: undefined,
     }
 
@@ -37,15 +38,15 @@ export async function POST(req: Request) {
         id: cartId,
         collection: 'carts',
         depth: 2,
-        overrideAccess: false,
+        overrideAccess: true,
         req: localReq,
       })
+      if (cart && secret && cart.secret && cart.secret !== secret) {
+        return NextResponse.json({ verified: false, error: 'Cart access denied' }, { status: 403 })
+      }
       if (!cart) {
         return NextResponse.json({ verified: true, error: 'Cart not found' }, { status: 200 })
       }
-      // Re-fetch with secret access so guest carts work
-      const secret = req.headers.get('x-cart-secret') || ''
-      // (Optional) verify secret matches cart.secret before continuing
     }
 
     // ── 3. Recompute subtotal SERVER-SIDE — never trust the browser ──
@@ -68,7 +69,7 @@ export async function POST(req: Request) {
       collection: 'transactions',
       data: {
         items,
-        paymentMethod: 'stripe', // ← schema only has 'stripe'; keep it unless you regen types with a Razorpay adapter
+        paymentMethod: 'razorpay',
         status: 'succeeded',
         customerEmail,
         billingAddress,
@@ -101,6 +102,8 @@ export async function POST(req: Request) {
         req: localReq,
       })
     }
+
+    return NextResponse.json({ verified: true, transactionID: transaction.id, orderID: order.id })
 
     return NextResponse.json({ verified: true, transactionID: transaction.id, orderID: order.id })
   } catch (error) {

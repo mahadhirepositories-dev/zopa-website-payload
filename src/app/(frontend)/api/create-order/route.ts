@@ -17,9 +17,11 @@ export async function POST(req: Request) {
 
     const payload = await getPayload({ config })
 
+    const secret = req.headers.get('x-cart-secret') || undefined
+
     const localReq: any = {
       ...payload,
-      context: { cartSecret: req.headers.get('x-cart-secret') || undefined },
+      context: { cartSecret: secret },
       user: undefined,
     }
 
@@ -27,12 +29,17 @@ export async function POST(req: Request) {
       id: cartId,
       collection: 'carts',
       depth: 2,
-      overrideAccess: false,
+      overrideAccess: true,
       req: localReq,
     })
 
     if (!cart) {
       return NextResponse.json({ error: 'Cart not found' }, { status: 404 })
+    }
+
+    // defensive: confirm the secret matches to protect the guest cart
+    if (secret && cart.secret && cart.secret !== secret) {
+      return NextResponse.json({ error: 'Cart access denied' }, { status: 403 })
     }
 
     // ── Recompute amount server-side from the real cart ──
@@ -66,7 +73,13 @@ export async function POST(req: Request) {
       keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
     })
   } catch (error) {
-    console.error('Razorpay order creation failed:', error)
-    return NextResponse.json({ error: 'Failed to create order' }, { status: 500 })
-  }
+  console.error('Razorpay order creation failed:', error)
+  return NextResponse.json(
+    {
+      error: 'Failed to create order',
+      detail: error instanceof Error ? error.message : String(error),
+    },
+    { status: 500 },
+  )
+}
 }

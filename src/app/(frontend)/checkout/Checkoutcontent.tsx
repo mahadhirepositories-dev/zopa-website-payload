@@ -369,7 +369,7 @@ export default function CheckoutContent() {
               <input
                 type="radio"
                 name="payment"
-                value="stripe"
+                value="razorpay"
                 defaultChecked
                 className="mt-1"
               />
