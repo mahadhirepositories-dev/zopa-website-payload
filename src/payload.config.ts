@@ -14,6 +14,7 @@ import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
+import { Reviews } from './collections/Reviews'
 
 
 const filename = fileURLToPath(import.meta.url)
@@ -85,7 +86,7 @@ export default buildConfig({
     push: process.env.NODE_ENV === 'development',
   }),
   
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [Pages, Posts, Media, Categories, Users,Reviews],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins,

@@ -12,7 +12,7 @@ import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
-import ProductDetailClient from '@/app/(frontend)/shop/[slug]/page.client'
+import { ProductDetailBlockComponent } from '@/blocks/Productdetail/Component'
 
 export async function generateStaticParams() {
   try {
@@ -79,17 +79,20 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   const product = productResult.docs[0]
 
-  if (product) {
+if (product) {
     const hasDetailBlock = product.layout?.some(
       (b) => (b as any).blockType === 'productDetail',
     )
 
-    if (hasDetailBlock) {
-      return <RenderBlocks blocks={product.layout} product={product} />
-    }
+    const detailBlock = hasDetailBlock
+      ? (product.layout?.find((b) => (b as any).blockType === 'productDetail') ??
+        {})
+      : { showBreadcrumb: true, showGallery: true }
 
     return (
-      <ProductDetailClient
+      <ProductDetailBlockComponent
+        blockType="productDetail"
+        {...(detailBlock as Record<string, unknown>)}
         product={product as any}
         layoutBlocks={
           product.layout && product.layout.length > 0 ? (

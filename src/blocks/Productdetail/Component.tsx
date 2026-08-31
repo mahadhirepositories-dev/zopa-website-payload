@@ -2,18 +2,28 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
+import { RenderBlocks } from '@/blocks/RenderBlocks'
 import type { Product, ProductDetailBlock } from '@/payload-types'
+import { ProductReviews } from '@/components/ProductReviews'
+
+function extractText(node: Record<string, any>): string {
+  if (node.text) return node.text
+  if (node.children) return node.children.map(extractText).join('')
+  return ''
+}
 
 type Props = ProductDetailBlock & {
   product?: Product | null
+  layoutBlocks?: React.ReactNode
 }
 
 export const ProductDetailBlockComponent = ({
-  showBreadcrumb,
-  showGallery,
+  showBreadcrumb = true,
+  showGallery = true,
   headingOverride,
   subtitleOverride,
   product,
+  layoutBlocks,
 }: Props) => {
   const { addItem, isLoading } = useCart()
   const [quantity, setQuantity] = useState(1)
@@ -50,18 +60,19 @@ export const ProductDetailBlockComponent = ({
   const title = headingOverride || product.title
 
   const handleAddToCart = async () => {
-  try {
-    await addItem({ product: product.id }, quantity)
-    setShowSuccess(true)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-    setTimeout(() => setShowSuccess(false), 6000)
-  } catch (error) {
-    console.error('Failed to add to cart:', error)
+    try {
+      await addItem({ product: product.id }, quantity)
+      setShowSuccess(true)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      setTimeout(() => setShowSuccess(false), 6000)
+    } catch (error) {
+      console.error('Failed to add to cart:', error)
+    }
   }
-}
 
   return (
     <section className="container py-16">
+      {/* Success / View Cart banner - always available */}
       {showSuccess && (
         <div
           role="status"
@@ -85,9 +96,13 @@ export const ProductDetailBlockComponent = ({
           </Link>
         </div>
       )}
+
+      {/* Extra marketing blocks for this product (About, Pricing, etc.) */}
+      {layoutBlocks}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
         {/* Left: Main Image */}
-         <div>
+        <div>
           <div className="border rounded-lg overflow-hidden aspect-square mb-4">
             {images[selectedImage]?.image &&
               typeof images[selectedImage].image === 'object' && (
@@ -129,9 +144,9 @@ export const ProductDetailBlockComponent = ({
               <Link href="/" className="hover:underline">Home</Link>
               <span className="mx-2">/</span>
               <Link
-               href={categorySlug ? `/shop/category/${categorySlug}` : '/'}
-               className="hover:underline"
-               >
+                href={categorySlug ? `/shop/category/${categorySlug}` : '/'}
+                className="hover:underline"
+              >
                 {categoryName}
               </Link>
               <span className="mx-2">/</span>
@@ -142,10 +157,10 @@ export const ProductDetailBlockComponent = ({
           <h2 className="text-3xl font-bold mb-2">{title}</h2>
 
           {(subtitleOverride || product.subtitle) && (
-           <p className="text-lg text-gray-900 font-semibold mb-4">
-           {subtitleOverride || product.subtitle}
-           </p>
-           )}
+            <p className="text-lg text-gray-900 font-semibold mb-4">
+              {subtitleOverride || product.subtitle}
+            </p>
+          )}
 
           {product.description && (
             <p className="text-muted-foreground mb-6">{product.description}</p>
@@ -211,6 +226,13 @@ export const ProductDetailBlockComponent = ({
             )}
         </div>
       </div>
+      <ProductReviews
+        reviewDescription={ typeof product.reviewDescription === 'object' && product.reviewDescription !== null
+      ? extractText(product.reviewDescription)
+      : product.reviewDescription}
+        productTitle={product.title}
+        productId={product.id}
+      />
     </section>
   )
 }

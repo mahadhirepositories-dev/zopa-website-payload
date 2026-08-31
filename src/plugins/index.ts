@@ -189,6 +189,14 @@ export const plugins: Plugin[] = [
         type: 'textarea',
       },
       {
+       name: 'reviewDescription',
+       type: 'textarea',
+       label: 'Review Description',
+       admin: {
+          description: 'Description shown in the Reviews tab on the product page',
+        },
+      },
+      {
         name: 'image',
         type: 'upload',
         relationTo: 'media',

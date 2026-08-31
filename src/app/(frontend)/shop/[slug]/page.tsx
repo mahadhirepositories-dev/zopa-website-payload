@@ -5,7 +5,7 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { notFound } from 'next/navigation'
 
-import ProductDetailClient from './page.client'
+import { ProductDetailBlockComponent } from '@/blocks/Productdetail/Component'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 
 type Args = {
@@ -13,11 +13,10 @@ type Args = {
 }
 
 export default async function ProductPage({ params: paramsPromise }: Args) {
-   const { slug } = await paramsPromise                          
+  const { slug } = await paramsPromise
 
   const { isEnabled: draft } = await draftMode()
   const payload = await getPayload({ config: configPromise })
-  
 
   const result = await payload.find({
     collection: 'products',
@@ -30,17 +29,18 @@ export default async function ProductPage({ params: paramsPromise }: Args) {
   const product = result.docs[0]
   if (!product) return notFound()
 
-   const hasDetailBlock = product.layout?.some(
+  const hasDetailBlock = product.layout?.some(
     (b) => b.blockType === 'productDetail',
   )
 
-  if (hasDetailBlock) {
-    return <RenderBlocks blocks={product.layout} product={product} />
-  }
+  const detailBlock = hasDetailBlock
+    ? (product.layout?.find((b) => b.blockType === 'productDetail') ?? {})
+    : { showBreadcrumb: true, showGallery: true }
 
-  // fallback: old hardcoded template for products without the block
   return (
-    <ProductDetailClient
+    <ProductDetailBlockComponent
+      blockType="productDetail"
+      {...(detailBlock as Record<string, unknown>)}
       product={product}
       layoutBlocks={
         product.layout && product.layout.length > 0 ? (
@@ -51,7 +51,6 @@ export default async function ProductPage({ params: paramsPromise }: Args) {
       }
     />
   )
-
 }
 
 export async function generateMetadata({
