@@ -336,6 +336,13 @@ export interface Post {
     image?: (number | null) | Media;
     description?: string | null;
   };
+  faq?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
   publishedAt?: string | null;
   authors?: (number | User)[] | null;
   populatedAuthors?:
@@ -3004,6 +3011,13 @@ export interface PostsSelect<T extends boolean = true> {
         title?: T;
         image?: T;
         description?: T;
+      };
+  faq?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
       };
   publishedAt?: T;
   authors?: T;
