@@ -15,6 +15,7 @@ import { PostHero } from '@/heros/PostHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import { CommentForm } from '@/components/Commentform'
 
 export async function generateStaticParams() {
   try {
@@ -57,20 +58,20 @@ export default async function Post({ params: paramsPromise }: Args) {
 
       {/* Content */}
       <div className="container py-3">
-        <div className="max-w-3xl mx-auto">
-          <RichText className="prose prose-lg max-w-none" data={post.content} enableGutter={false} />
+        <div className="max-w-5xl mx-auto">
+          <RichText className="prose prose-lg max-w-none font-sans" data={post.content} enableGutter={false} />
         </div>
       </div>
 
       {/* CTA Section */}
       <div className="container py-12">
-        <div className="max-w-3xl mx-auto bg-[#DCDCDC] rounded-lg p-10 text-center">
+        <div className="max-w-5xl mx-auto bg-[#DCDCDC] rounded-lg p-10 text-center">
           <h2 className="text-[20px] font-[500] text-black mb-4">
             Optimize Resources, Achieve Success
           </h2>
           <Link
             href="/shop"
-            className="inline-block bg-black text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+            className="inline-block bg-[#dbac2b] text-black px-8 py-3 rounded-lg font-semibold hover:bg-black hover:text-white transition-colors"
           >
             Explore Our Services
           </Link>
@@ -80,15 +81,15 @@ export default async function Post({ params: paramsPromise }: Args) {
       {/* FAQ Section */}
       {post.faq && post.faq.length > 0 && (
         <div className="container py-12">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold mb-8">FAQ</h2>
             <div className="space-y-6">
               {post.faq.map((item, index) => (
                 <div key={item.id ?? index} className="border-b border-border pb-6">
-                  <p className="font-semibold mb-2">
+                  <p className="font-semibold font-sans mb-2">
                     {index + 1}. {item.question}
                   </p>
-                  <p className="text-muted-foreground">{item.answer}</p>
+                  <p className="text-gray-800 font-sans">{item.answer}</p>
                 </div>
               ))}
             </div>
@@ -98,24 +99,29 @@ export default async function Post({ params: paramsPromise }: Args) {
 
       {/* What do you think? */}
       <div className="container py-12">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl font-bold mb-4">What do you think?</h2>
-          <button className="text-muted-foreground hover:underline text-sm">
-            Show comments / Leave a comment
-          </button>
+        <div className="max-w-3xl mx-auto bg-[#DCDCDC] rounded-lg p-10 text-center">
+          <h2 className="text-2xl font-bold mb-6 text-black">What do you think?</h2>
+          <hr className="border-gray-400 mb-6" />
+          <CommentForm postId={String(post.id)} />
         </div>
-      </div>
+     </div>
 
       {/* Related Posts */}
       {post.relatedPosts && post.relatedPosts.length > 0 && (
         <div className="container py-12">
-          <h2 className="text-3xl font-bold mb-2">Related Industry Trends</h2>
-          <h3 className="text-3xl font-bold mb-8">& Real Results</h3>
+          <div className="py-8">
+          <span className="inline-block border border-gray-300 bg-[#DCDCDC] rounded-[5px] px-4 py-1 text-xs text-gray-700 mb-6">
+           Insights &amp; Success Stories
+          </span>
+          <h2 className="md:text-4xl lg:text-5xl font-normal text-black mb-8 leading-tight max-w-4xl">
+             Related Industry Trends<br />&amp; Real Results
+          </h2>
           <RelatedPosts
-            docs={post.relatedPosts.filter((p) => typeof p === 'object')}
+           docs={post.relatedPosts.filter((p) => typeof p === 'object')}
           />
+          </div>
         </div>
-      )}
+     )}
     </article>
   )
 }

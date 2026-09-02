@@ -38,19 +38,20 @@ export default async function ProductPage({ params: paramsPromise }: Args) {
     : { showBreadcrumb: true, showGallery: true }
 
   return (
+  <>
     <ProductDetailBlockComponent
       blockType="productDetail"
       {...(detailBlock as Record<string, unknown>)}
       product={product}
-      layoutBlocks={
-        product.layout && product.layout.length > 0 ? (
-          <div className="mt-16">
-            <RenderBlocks blocks={product.layout} />
-          </div>
-        ) : null
-      }
     />
-  )
+
+    {product.layout && product.layout.length > 0 && (
+      <div className="mt-16">
+        <RenderBlocks blocks={product.layout} />
+      </div>
+    )}
+  </>
+)
 }
 
 export async function generateMetadata({
