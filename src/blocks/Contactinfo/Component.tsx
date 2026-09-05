@@ -49,8 +49,8 @@ export const ContactInfoBlockComponent: React.FC<ContactInfoBlock> = (props) => 
                   {Icon && <Icon className="w-5 h-5 text-gray-600" />}
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">{item.label}</p>
-                  <p className="font-semibold text-gray-900">{item.value}</p>
+                  <p className="text-sm text-gray-800 font-sans">{item.label}</p>
+                  <p className="mt-1 text-gray-900 font-sans">{item.value}</p>
                 </div>
               </a>
             )

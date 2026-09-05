@@ -40,7 +40,7 @@ export const PricingCardsBlockComponent: React.FC<PricingCardsBlock> = (props) =
               <div
                 key={index}
                 className={card.cardType==="services"? 'relative w-full sm:w-[calc(25%-1.125rem)] min-w-[240px] max-w-[320px] rounded-lg overflow-hidden flex flex-col':
-                  'group w-full sm:w-[calc(33.333%-1.5rem)] min-w-[280px] max-w-[300px] border border-border rounded-lg bg-white flex flex-col hover:border-[#dbac2b]'}
+                  'group w-full sm:w-[calc(33.333%-1.5rem)] min-w-[280px] max-w-[300px] border border-border rounded-lg bg-white flex flex-col hover:border-[#dbac2b] overflow-hidden'}
               >
                 {/* Card Header */}
                 {card.cardType === 'services' ? (

@@ -141,17 +141,17 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
                 const cardContent = (
                     <div
                     className={`flex items-start gap-4 p-5 rounded-md border border-gray-200 ${
-                    index === 1 || index === 3 ? 'bg-[#DCDCDC]' : 'bg-white'
+                    index === 1 || index === 3 ? 'bg-[#DCDCDC] ' : 'bg-white'
                        } hover:bg-[#dbac2b] transition-colors`}
                     >
                     <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shrink-0 border border-gray-200">
                       <Icon className="w-5 h-5 text-gray-700" />
                     </div>
                     <div className="flex flex-col gap-1 min-w-0">
-                      <span className="text-sm font-semibold text-gray-900 font-sans">
+                      <span className="text-[15px] text-gray-900 font-sans">
                         {card.label}
                       </span>
-                      <span className="text-sm text-gray-600 whitespace-pre-line break-words font-sans">
+                      <span className="text-[15px] text-gray-900 whitespace-pre-line break-words font-sans">
                         {card.value}
                       </span>
                     </div>

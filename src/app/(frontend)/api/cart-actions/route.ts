@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       id: cartId,
       collection: 'carts',
       depth: 0,
-      overrideAccess: false,
+      overrideAccess: true,
       req: localReq as any,
     })
 
@@ -75,7 +75,7 @@ export async function POST(req: Request) {
      collection: 'carts',
      data: { items, currency: 'INR' },
      depth: 2,
-     overrideAccess: false,
+     overrideAccess: true,
      req: localReq as any,
 })
 
