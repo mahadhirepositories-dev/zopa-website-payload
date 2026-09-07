@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback,useEffect, useRef, useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import {
   FaWhatsapp,
@@ -46,6 +46,12 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [hasSubmitted, setHasSubmitted] = useState(false)
   const [error, setError] = useState<{ message: string; status?: string } | undefined>()
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
 
   const formFromProps = formDoc && typeof formDoc === 'object' ? formDoc : null
   const submitButtonLabel = formFromProps?.submitButtonLabel || 'Submit'
@@ -60,10 +66,11 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
 
   const formMethods = useForm({ defaultValues })
   const {
-    control,
-    formState: { errors },
-    handleSubmit,
-    register,
+  control,
+  formState: { errors },
+  handleSubmit,
+  register,
+  reset,
   } = formMethods
 
   const onSubmit = useCallback(
@@ -97,6 +104,12 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
           }
           setIsLoading(false)
           setHasSubmitted(true)
+          if (timeoutRef.current) clearTimeout(timeoutRef.current)
+          timeoutRef.current = setTimeout(() => {
+            setHasSubmitted(false)
+            setError(undefined)
+            reset()
+          }, 7000)
         } catch (err) {
           clearTimeout(loadingTimerID)
           setIsLoading(false)
@@ -105,7 +118,7 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
       }
       void submitForm()
     },
-    [formFromProps?.id],
+    [formFromProps?.id, reset],
   )
 
   return (
@@ -128,7 +141,7 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
               )}
             </div>
 
-            <div className="flex flex-col gap-0 overflow-hidden">
+            <div className="flex flex-col gap-0 overflow-hidden rounded-xl">
               {contactCards?.map((card, index) => {
                 const Icon = card.icon ? iconMap[card.icon] || FaBriefcase : FaBriefcase
                 const isLinkedin = card.icon === 'FaLinkedin'
@@ -140,7 +153,7 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
 
                 const cardContent = (
                     <div
-                    className={`flex items-start gap-4 p-5 rounded-md border border-gray-200 ${
+                    className={`flex items-start gap-4 p-5 border border-gray-200 ${
                     index === 1 || index === 3 ? 'bg-[#DCDCDC] ' : 'bg-white'
                        } hover:bg-[#dbac2b] transition-colors`}
                     >
@@ -214,7 +227,8 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
           <div className="text-center py-8">
             <p className="text-lg font-semibold text-green-600 mb-2">Thank you!</p>
             <p className="text-sm text-gray-500">
-              Your message has been sent successfully.
+              Your message has been sent successfully.<br/>
+              Form will be back in 7 seconds.
             </p>
           </div>
         ) : (

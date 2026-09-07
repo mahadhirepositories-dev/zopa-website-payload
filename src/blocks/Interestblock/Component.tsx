@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import type { InterestFormBlock } from '@/payload-types'
 import { Media } from '@/components/Media'
@@ -29,6 +29,13 @@ export const InterestFormBlockComponent: React.FC<InterestFormBlock> = (props) =
   const [isLoading, setIsLoading] = useState(false)
   const [hasSubmitted, setHasSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
 
   const defaultValues =
     form && typeof form === 'object' && form.fields
@@ -44,11 +51,12 @@ export const InterestFormBlockComponent: React.FC<InterestFormBlock> = (props) =
   const formMethods = useForm({ defaultValues })
 
   const {
-    handleSubmit,
-    control,
-    formState: { errors },
-    register,
-  } = formMethods
+  handleSubmit,
+  control,
+  formState: { errors },
+  register,
+  reset,
+} = formMethods
 
   const onSubmit = useCallback(
     async (data: Record<string, any>) => {
@@ -81,12 +89,18 @@ export const InterestFormBlockComponent: React.FC<InterestFormBlock> = (props) =
 
         setIsLoading(false)
         setHasSubmitted(true)
+        if (timeoutRef.current) clearTimeout(timeoutRef.current)
+        timeoutRef.current = setTimeout(() => {
+          setHasSubmitted(false)
+          setError(null)
+          reset()
+        }, 7000) // show thank-you for 7s, then bring the form back
       } catch (err) {
         setIsLoading(false)
         setError('Something went wrong. Please try again.')
       }
     },
-    [form],
+   [form, reset]
   )
 
   return (
@@ -190,7 +204,8 @@ export const InterestFormBlockComponent: React.FC<InterestFormBlock> = (props) =
                           Thank you for your interest!
                         </p>
                         <p className="text-sm text-gray-500">
-                          We have received your submission and will get back to you shortly.
+                          We have received your submission and will get back to you shortly.<br/>
+                          Form will back in 7 seconds..
                         </p>
                       </div>
                     )}

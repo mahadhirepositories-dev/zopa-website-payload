@@ -910,6 +910,7 @@ export interface ProductFlux {
            */
           appearance?: ('default' | 'outline') | null;
         };
+        backgroundImage?: (number | null) | Media;
         id?: string | null;
       }[]
     | null;
@@ -2461,6 +2462,7 @@ export interface ProductFluxSelect<T extends boolean = true> {
               label?: T;
               appearance?: T;
             };
+        backgroundImage?: T;
         id?: T;
       };
   id?: T;

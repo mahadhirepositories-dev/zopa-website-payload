@@ -65,18 +65,32 @@ export const Product_Block:React.FC<product_flux_block>=(props)=>{
                             )
                         }
                         if (c.type === 'cta') {
-                              return (
-                                <div key={i} className="border border-border rounded-lg p-6 bg-white flex flex-col items-center justify-center text-center">
-                                  {c.label && <h3 className="font-semibold text-lg mb-4">{c.label}</h3>}
-                                  {c.ctaLink && (
-                                    <div className="inline-flex items-center gap-2">
-                                      <CMSLink {...c.ctaLink} appearance="default" className="text-black"/>
-                                      <span aria-hidden="true">&rarr;</span>
-                                    </div>
-                                  )}
-                                </div>
-                              )
-                            }
+  return (
+    <div key={i} className="relative rounded-lg overflow-hidden flex flex-col justify-end min-h-[288px] p-6">
+      {c.backgroundImage && typeof c.backgroundImage !== 'string' ? (
+        <div className="absolute inset-0">
+          <Media resource={c.backgroundImage} className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-[#dbac2b] mix-blend-multiply" />
+        </div>
+      ) : (
+        <div className="absolute inset-0 bg-[#dbac2b]" />
+      )}
+      <div className="relative z-10">
+        {c.label && (
+          <h3 className="font-semibold text-4xl text-black mb-28 leading-snug">{c.label}</h3>
+        )}
+        {c.ctaLink && (
+          <CMSLink
+            {...c.ctaLink}
+            appearance="default"
+            className="inline-flex items-center gap-2 bg-black text-white px-5 py-2 rounded-md text-sm font-medium hover:bg-white hover:text-black transition-colors"
+          />
+          
+        )}
+      </div>
+    </div>
+  )
+}
             const Icon = c.icon ? iconmap[c.icon as keyof typeof iconmap] : Sparkles
                         return (
                           <div key={i} className="border border-border rounded-lg p-6 bg-white hover:bg-[#dbac2b] flex flex-col">

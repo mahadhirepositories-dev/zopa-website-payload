@@ -104,7 +104,14 @@ export const Product:Block = {
                         label:'CTAlink',
                         admin:{condition:(_,s)=>s?.type==='cta',},
                     },
-                })
+                }),
+                {
+                 name: 'backgroundImage',
+                 type: 'upload',
+                 relationTo: 'media',
+                 label: 'Background Image',
+                 admin: { condition: (_, s) => s?.type === 'cta' },
+                },
 
             ],
             
