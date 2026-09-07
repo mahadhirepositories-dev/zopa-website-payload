@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import Razorpay from 'razorpay'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { loadAuthorizedCart } from '@/utilities/cartAccess'
 
 const razorpay = new Razorpay({
   key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
@@ -19,27 +20,15 @@ export async function POST(req: Request) {
 
     const secret = req.headers.get('x-cart-secret') || undefined
 
-    const localReq: any = {
-      ...payload,
-      context: { cartSecret: secret },
-      user: undefined,
-    }
-
-    const cart = await payload.findByID({
-      id: cartId,
-      collection: 'carts',
-      depth: 2,
-      overrideAccess: true,
-      req: localReq,
+    const { cart, error } = await loadAuthorizedCart({
+      payload,
+      headers: req.headers,
+      cartId,
+      clientSecret: secret,
     })
 
-    if (!cart) {
-      return NextResponse.json({ error: 'Cart not found' }, { status: 404 })
-    }
-
-    // defensive: confirm the secret matches to protect the guest cart
-    if (secret && cart.secret && cart.secret !== secret) {
-      return NextResponse.json({ error: 'Cart access denied' }, { status: 403 })
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: error.status })
     }
 
     // ── Recompute amount server-side from the real cart ──
@@ -73,13 +62,13 @@ export async function POST(req: Request) {
       keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
     })
   } catch (error) {
-  console.error('Razorpay order creation failed:', error)
-  return NextResponse.json(
-    {
-      error: 'Failed to create order',
-      detail: error instanceof Error ? error.message : String(error),
-    },
-    { status: 500 },
-  )
-}
+    console.error('Razorpay order creation failed:', error)
+    return NextResponse.json(
+      {
+        error: 'Failed to create order',
+        detail: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 },
+    )
+  }
 }
