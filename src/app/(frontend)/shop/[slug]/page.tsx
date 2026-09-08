@@ -39,17 +39,17 @@ export default async function ProductPage({ params: paramsPromise }: Args) {
 
   return (
   <>
-    <ProductDetailBlockComponent
-      blockType="productDetail"
-      {...(detailBlock as Record<string, unknown>)}
-      product={product}
-    />
-
     {product.layout && product.layout.length > 0 && (
       <div className="mt-16">
         <RenderBlocks blocks={product.layout} />
       </div>
     )}
+    
+    <ProductDetailBlockComponent
+      blockType="productDetail"
+      {...(detailBlock as Record<string, unknown>)}
+      product={product}
+    />
   </>
 )
 }

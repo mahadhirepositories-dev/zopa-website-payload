@@ -16,6 +16,8 @@ import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { Reviews } from './collections/Reviews'
 import { Comments } from './collections/Comment'
+import { Emails } from './collections/Emails'
+
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -86,7 +88,7 @@ export default buildConfig({
     push: process.env.NODE_ENV === 'development',
   }),
   
-  collections: [Pages, Posts, Media, Categories, Users,Reviews,Comments],
+  collections: [Pages, Posts, Media, Categories, Users,Reviews,Comments,Emails],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins,

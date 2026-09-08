@@ -202,24 +202,26 @@ export default function CartContent() {
                   </div>
 
                   <div className="mt-4 flex items-center gap-4 sm:pl-[112px]">
-                    <div className="flex items-center border rounded">
-                      <button
+                    <div className="flex items-center border rounded overflow-hidden">
+                      <span className="px-4 py-1.5 text-center min-w-[40px]">{busy ? '…' : qty}</span>
+                      <div className="flex flex-col border-l">
+                        <button
+                          onClick={() => handleUpdate(item.id, 'increment')}
+                          disabled={busy}
+                          className="px-2 py-0.5 text-xs leading-none border-b hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                          aria-label="Increase quantity"
+                        >
+                         ▲
+                        </button>
+                        <button
                         onClick={() => handleUpdate(item.id, 'decrement')}
                         disabled={busy || qty <= 1}
-                        className="px-3 py-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-2 py-0.5 text-xs leading-none hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                         aria-label="Decrease quantity"
-                      >
-                        −
-                      </button>
-                      <span className="px-4">{busy ? '…' : qty}</span>
-                      <button
-                        onClick={() => handleUpdate(item.id, 'increment')}
-                        disabled={busy}
-                        className="px-3 py-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
-                        aria-label="Increase quantity"
-                      >
-                        +
-                      </button>
+                        >
+                        ▼
+                       </button>
+                      </div>
                     </div>
 
                     <button

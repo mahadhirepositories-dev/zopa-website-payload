@@ -128,7 +128,7 @@ export const ProductReviews = ({ reviewDescription, productTitle, productId }: P
           onClick={() => setActiveTab('description')}
           className={`px-6 py-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
             activeTab === 'description'
-              ? 'border-primary text-foreground'
+              ? 'border-primary text-foreground bg-[#DCDCDC] rounded-[5px]'
               : 'border-transparent text-muted-foreground hover:text-foreground'
           }`}
         >
@@ -138,7 +138,7 @@ export const ProductReviews = ({ reviewDescription, productTitle, productId }: P
           onClick={() => setActiveTab('reviews')}
           className={`px-6 py-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
             activeTab === 'reviews'
-              ? 'border-primary text-foreground'
+              ? 'border-primary text-foreground bg-[#DCDCDC] rounded-[5px]'
               : 'border-transparent text-muted-foreground hover:text-foreground'
           }`}
         >
@@ -148,9 +148,9 @@ export const ProductReviews = ({ reviewDescription, productTitle, productId }: P
 
       {activeTab === 'description' && (
         <div className="max-w-7xl">
-          <h2 className="text-3xl font-bold mb-6">Description</h2>
+          <h2 className="text-[35px] font-[500] mb-6 font-sans">Description</h2>
           {reviewDescription ? (
-            <p className="text-muted-foreground leading-relaxed">{reviewDescription}</p>
+            <p className="text-gray-800 text-[15px] font-sans">{reviewDescription}</p>
           ) : (
             <p className="text-muted-foreground">No description available for this product.</p>
           )}
@@ -159,16 +159,16 @@ export const ProductReviews = ({ reviewDescription, productTitle, productId }: P
 
       {activeTab === 'reviews' && (
         <div className="max-w-3xl">
-          <h2 className="text-3xl font-bold mb-4">Reviews</h2>
+          <h2 className="text-[35px] font-[500] mb-4 font-sans tracking-[1px]">Reviews</h2>
 
           {reviews.length === 0 && (
-            <p className="text-muted-foreground mb-6">There are no reviews yet.</p>
+            <p className="text-gray-700 mb-3 font-sans text-[15px]">There are no reviews yet.</p>
           )}
 
-          <p className="text-muted-foreground mb-2">
+          <p className="text-gray-700 font-sans text-[15px]">
             Be the first to review &ldquo;{productTitle}&rdquo;
           </p>
-          <p className="text-muted-foreground text-sm mb-6">
+          <p className="text-gray-700 font-sans mb-6 text-[15px]">
             Your email address will not be published. Required fields are marked *
           </p>
 
@@ -180,14 +180,14 @@ export const ProductReviews = ({ reviewDescription, productTitle, productId }: P
 
           <form onSubmit={handleSubmit} className="space-y-6 mb-12">
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-[15px] font-sans text-gray-700 mb-1">
                 Your rating <span className="text-destructive">*</span>
               </label>
               <StarRating rating={rating} onRate={setRating} interactive />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-[15px] font-sans text-gray-700 mb-1">
                 Your review <span className="text-destructive">*</span>
               </label>
               <Textarea
@@ -195,13 +195,12 @@ export const ProductReviews = ({ reviewDescription, productTitle, productId }: P
                 onChange={(e) => setReviewText(e.target.value)}
                 rows={5}
                 required
-                placeholder="Write your review here..."
                 className="w-full"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-[15px] font-sans text-gray-700 mb-1">
                 Name <span className="text-destructive">*</span>
               </label>
               <Input
@@ -209,13 +208,12 @@ export const ProductReviews = ({ reviewDescription, productTitle, productId }: P
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                placeholder="Your name"
                 className="max-w-sm"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-[15px] font-sans text-gray-700 mb-1">
                 Email <span className="text-destructive">*</span>
               </label>
               <Input
@@ -223,7 +221,6 @@ export const ProductReviews = ({ reviewDescription, productTitle, productId }: P
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="your@email.com"
                 className="max-w-sm"
               />
             </div>

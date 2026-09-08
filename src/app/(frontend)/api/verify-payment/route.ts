@@ -3,8 +3,13 @@ import crypto from 'crypto'
 import { after } from 'next/server'
 import { getPayload, type Payload } from 'payload'
 import config from '@payload-config'
-import { sendOrderEmail } from '@/utilities/sendOrderEmail'
+import { enqueueOrderEmail, processEmailJob } from '@/utilities/emailQueue'
 import { loadAuthorizedCart } from '@/utilities/cartAccess'
+
+// nodemailer + pg + pdfkit are Node-only — never run this on the Edge runtime.
+export const runtime = 'nodejs'
+// Headroom for the SMTP/PDF work deferred into `after()`. Matches the seed route.
+export const maxDuration = 60
 
 type OrderDraft = {
   items: any[]
@@ -42,7 +47,6 @@ async function createOrder(payload: Payload, txnId: any, data: OrderDraft): Prom
     overrideAccess: true,
   })
 
-  // Back-link so the transaction is never an orphan (best-effort)
   await payload
     .update({
       id: txnId,
@@ -55,9 +59,38 @@ async function createOrder(payload: Payload, txnId: any, data: OrderDraft): Prom
   return order.id
 }
 
+// Durable email flow: enqueue (idempotent by orderId), then one delivery attempt.
+async function queueAndSendEmail(
+  payload: Payload,
+  orderId: number,
+  customerEmail: string,
+  items: any[],
+): Promise<void> {
+  const job = await enqueueOrderEmail(payload, { id: orderId, customerEmail }, items)
+  await processEmailJob(payload, job.id)
+}
+
+function deferEmailSend(orderId: number, customerEmail: string, items: any[]) {
+  after(async () => {
+    try {
+      const p2 = await getPayload({ config })
+      await queueAndSendEmail(p2, orderId, customerEmail, items)
+    } catch (e) {
+      // Worst case: job remains `pending` in the emails table; the cron picks it up.
+      console.error(`RECONCILE: order ${orderId} email attempt FAILED (queued for retry):`, e)
+    }
+  })
+}
+
 export async function POST(req: Request) {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, cartId, customerEmail, billingAddress } =
-    await req.json()
+  const {
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_signature,
+    cartId,
+    customerEmail,
+    billingAddress,
+  } = await req.json()
 
   // ── 1. Verify signature — the ONLY gate that should fail the request ──
   const body = razorpay_order_id + '|' + razorpay_payment_id
@@ -107,6 +140,9 @@ export async function POST(req: Request) {
       typeof existingTxn.order === 'object' ? existingTxn.order?.id : existingTxn.order
 
     if (linkedOrder) {
+      // Replay of an already-completed payment — idempotent enqueue also heals
+      // an order whose email was never delivered.
+      deferEmailSend(linkedOrder, customerEmail, items)
       return NextResponse.json({ verified: true, transactionID, orderID: linkedOrder, replayed: true })
     }
 
@@ -118,7 +154,10 @@ export async function POST(req: Request) {
         amount: await computeAmount(payload, items),
       })
     } catch (e) {
-      console.error(`RECONCILE: self-heal order creation failed for payment ${razorpay_payment_id}:`, e)
+      console.error(
+        `RECONCILE: self-heal order creation failed for payment ${razorpay_payment_id}:`,
+        e,
+      )
     }
 
     if (cart && orderID) {
@@ -126,19 +165,19 @@ export async function POST(req: Request) {
         .update({
           id: cart.id,
           collection: 'carts',
-          data: { status: 'purchased', items: [], purchasedAt: new Date().toISOString(), subtotal: 0, currency: 'INR' },
+          data: {
+            status: 'purchased',
+            items: [],
+            purchasedAt: new Date().toISOString(),
+            subtotal: 0,
+            currency: 'INR',
+          },
           overrideAccess: true,
         })
         .catch((e) => console.error('cart update failed (ignored):', e))
     }
     if (orderID) {
-      after(async () => {
-        try {
-          await sendOrderEmail(payload, { id: orderID, customerEmail }, items)
-        } catch (e) {
-          console.error(`RECONCILE: order ${orderID} email FAILED:`, e)
-        }
-      })
+      deferEmailSend(orderID, customerEmail, items)
     }
     return NextResponse.json({ verified: true, transactionID, orderID, replayed: true })
   }
@@ -169,9 +208,12 @@ export async function POST(req: Request) {
 
     orderID = await createOrder(payload, txn.id, { items, customerEmail, amount })
   } catch (e) {
-    // Signature verified + money left the customer's account, but nothing durable persisted.
-    // Answer success anyway (never tell a paid customer their payment failed) and flag loudly.
-    console.error(`RECONCILE: payment ${razorpay_payment_id} (order ${razorpay_order_id}) NOT persisted:`, e)
+    // Signature verified + money left the customer's account, but nothing durable
+    // persisted. Answer success anyway and flag loudly.
+    console.error(
+      `RECONCILE: payment ${razorpay_payment_id} (order ${razorpay_order_id}) NOT persisted:`,
+      e,
+    )
   }
 
   // ── 4. Cart update — only when an order actually exists ──
@@ -180,7 +222,13 @@ export async function POST(req: Request) {
       await payload.update({
         id: cart.id,
         collection: 'carts',
-        data: { status: 'purchased', items: [], purchasedAt: new Date().toISOString(), subtotal: 0, currency: 'INR' },
+        data: {
+          status: 'purchased',
+          items: [],
+          purchasedAt: new Date().toISOString(),
+          subtotal: 0,
+          currency: 'INR',
+        },
         overrideAccess: true,
       })
     } catch (e) {
@@ -188,15 +236,10 @@ export async function POST(req: Request) {
     }
   }
 
-  // ── 5. Email — deferred but awaited by the runtime (not killed on serverless) ──
+  // ── 5. Email — enqueued BEFORE the response returns, so even if this
+  //    function dies, the cron worker delivers it. ──
   if (orderID) {
-    after(async () => {
-      try {
-        await sendOrderEmail(payload, { id: orderID, customerEmail }, items)
-      } catch (e) {
-        console.error(`RECONCILE: order ${orderID} email FAILED:`, e)
-      }
-    })
+    deferEmailSend(orderID, customerEmail, items)
   }
 
   return NextResponse.json({ verified: true, transactionID, orderID })

@@ -56,7 +56,6 @@ export const ProductDetailBlockComponent = ({
       ? product.categories[0].slug
       : null
 
-  const circledNumbers = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩']
   const title = headingOverride || product.title
 
   const handleAddToCart = async () => {
@@ -154,22 +153,22 @@ export const ProductDetailBlockComponent = ({
             </nav>
           )}
 
-          <h2 className="text-3xl font-bold mb-2">{title}</h2>
+          <h2 className="text-[40px] font-[400] mb-5">{title}</h2>
 
           {(subtitleOverride || product.subtitle) && (
-            <p className="text-lg text-gray-900 font-semibold mb-4">
+            <p className="text-black/80 font-[700] text-[20px] mb-4">
               {subtitleOverride || product.subtitle}
             </p>
           )}
 
           {product.description && (
-            <p className="text-muted-foreground mb-6">{product.description}</p>
+            <p className="text-black/80 text-[20px] mb-6">{product.description}</p>
           )}
 
           {product.whyRegister && product.whyRegister.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">Why Register?</h3>
-              <ul className="space-y-1 text-muted-foreground">
+              <h3 className="text-black/80 font-[700] text-[20px] mb-3">Why Register?</h3>
+              <ul className="space-y-2 text-black/80 text-[20px]">
                 {product.whyRegister.map((item, index) => (
                   <li key={item.id ?? index}>• {item.text}</li>
                 ))}
@@ -179,21 +178,21 @@ export const ProductDetailBlockComponent = ({
 
           {product.howItWorks && product.howItWorks.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">How it Works:</h3>
-              <ol className="space-y-1 text-muted-foreground">
+              <h3 className="text-black/80 font-[700] text-[20px] mb-3">How it Works:</h3>
+              <ul className="space-y-2 text-black/80 text-[20px]">
                 {product.howItWorks.map((item, index) => (
                   <li key={item.id ?? index}>
-                    {circledNumbers[index]} {item.text}
+                     • {item.text}
                   </li>
                 ))}
-              </ol>
+              </ul>
             </div>
           )}
 
           {product.afterApproval && product.afterApproval.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">After approval:</h3>
-              <ul className="space-y-1 text-muted-foreground">
+              <h3 className="text-black/80 font-[700] text-[20px] mb-3">After approval:</h3>
+              <ul className="space-y-2 text-black/80 text-[20px]">
                 {product.afterApproval.map((item, index) => (
                   <li key={item.id ?? index}>• {item.text}</li>
                 ))}
@@ -204,19 +203,33 @@ export const ProductDetailBlockComponent = ({
           <p className="text-3xl font-bold mb-6">{formattedPrice}</p>
 
           <div className="flex items-center gap-4 mb-6">
-            <div className="flex items-center border rounded">
-              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-4 py-2 text-lg">−</button>
-              <span className="px-4 py-2 text-lg">{quantity}</span>
-              <button onClick={() => setQuantity(quantity + 1)} className="px-4 py-2 text-lg">+</button>
-            </div>
-            <button
-              onClick={handleAddToCart}
-              disabled={isLoading}
-              className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:opacity-90 disabled:opacity-50"
-            >
-              {isLoading ? 'Adding...' : 'Add to cart'}
-            </button>
-          </div>
+  <div className="flex items-center border rounded overflow-hidden">
+    <span className="px-4 py-2 text-lg text-center min-w-[40px]">{quantity}</span>
+    <div className="flex flex-col border-l">
+      <button
+        onClick={() => setQuantity(quantity + 1)}
+        className="px-2 py-1 text-xs leading-none border-b hover:bg-gray-100"
+        aria-label="Increase quantity"
+      >
+        ▲
+      </button>
+      <button
+        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+        className="px-2 py-1 text-xs leading-none hover:bg-gray-100"
+        aria-label="Decrease quantity"
+      >
+        ▼
+      </button>
+    </div>
+  </div>
+  <button
+    onClick={handleAddToCart}
+    disabled={isLoading}
+    className="bg-[#DBAC2B] text-[15px] text-gray-800 px-8 py-3 rounded-[4px] font-semibold hover:bg-black hover:text-white disabled:opacity-50"
+  >
+    {isLoading ? 'Adding...' : 'Add to cart'}
+  </button>
+</div>
 
           {product.categories?.[0] &&
             typeof product.categories[0] === 'object' && (

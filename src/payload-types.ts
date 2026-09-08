@@ -79,6 +79,7 @@ export interface Config {
     users: User;
     reviews: Review;
     comments: Comment;
+    emails: Email;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -117,6 +118,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     reviews: ReviewsSelect<false> | ReviewsSelect<true>;
     comments: CommentsSelect<false> | CommentsSelect<true>;
+    emails: EmailsSelect<false> | EmailsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -1786,6 +1788,27 @@ export interface Comment {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "emails".
+ */
+export interface Email {
+  id: number;
+  orderId: number;
+  to: string;
+  subject: string;
+  html: string;
+  status?: ('pending' | 'processing' | 'sent' | 'failed') | null;
+  attempts?: number | null;
+  /**
+   * Last failure message — surface me in the admin
+   */
+  lastError?: string | null;
+  nextRetryAt?: string | null;
+  sentAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -2163,6 +2186,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'comments';
         value: number | Comment;
+      } | null)
+    | ({
+        relationTo: 'emails';
+        value: number | Email;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -3219,6 +3246,23 @@ export interface CommentsSelect<T extends boolean = true> {
   email?: T;
   website?: T;
   status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "emails_select".
+ */
+export interface EmailsSelect<T extends boolean = true> {
+  orderId?: T;
+  to?: T;
+  subject?: T;
+  html?: T;
+  status?: T;
+  attempts?: T;
+  lastError?: T;
+  nextRetryAt?: T;
+  sentAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }
