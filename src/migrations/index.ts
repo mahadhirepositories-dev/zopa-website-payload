@@ -7,6 +7,7 @@ import * as migration_20260808_230000_add_uuid_to_version_tables from './2026080
 import * as migration_20260812_100000_add_new_blocks from './20260812_100000_add_new_blocks';
 import * as migration_20260814_064419 from './20260814_064419';
 import * as migration_20260818_064111 from './20260818_064111';
+import * as migration_20260909_133040_add_ecommerce_and_new_collections from './20260909_133040_add_ecommerce_and_new_collections';
 
 export const migrations = [
   {
@@ -52,6 +53,11 @@ export const migrations = [
   {
     up: migration_20260818_064111.up,
     down: migration_20260818_064111.down,
-    name: '20260818_064111'
+    name: '20260818_064111',
+  },
+  {
+    up: migration_20260909_133040_add_ecommerce_and_new_collections.up,
+    down: migration_20260909_133040_add_ecommerce_and_new_collections.down,
+    name: '20260909_133040_add_ecommerce_and_new_collections'
   },
 ];

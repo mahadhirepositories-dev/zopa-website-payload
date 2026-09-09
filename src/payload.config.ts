@@ -17,6 +17,7 @@ import { getServerSideURL } from './utilities/getURL'
 import { Reviews } from './collections/Reviews'
 import { Comments } from './collections/Comment'
 import { Emails } from './collections/Emails'
+import { migrations } from './migrations'
 
 
 const filename = fileURLToPath(import.meta.url)
@@ -85,7 +86,8 @@ export default buildConfig({
               rejectUnauthorized: false, // Required for Supabase in production/build environments
             },
     },
-    push: process.env.NODE_ENV === 'development',
+    prodMigrations: migrations,
+    push: false,
   }),
   
   collections: [Pages, Posts, Media, Categories, Users,Reviews,Comments,Emails],
