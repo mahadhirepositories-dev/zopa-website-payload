@@ -51,7 +51,6 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   FaChartLine,
   FaLeaf,
   FaClipboard,
-  FaRegSquare,
   FaMedal,
   FaShieldHalved,
   SquarePlayIcon

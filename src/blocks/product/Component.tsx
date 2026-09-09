@@ -37,11 +37,11 @@ export const Product_Block:React.FC<product_flux_block>=(props)=>{
                     {features.map((f,i)=>{
                         const Icon=f.icon? iconmap[f.icon as keyof typeof iconmap]:Sparkles
                         return(
-                            <div key={i} className="border border-border rounded-lg p-6 bg-white hover:bg-[#dbac2b] text-black flex flex-col min-h-72">
-                                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <div key={i} className="border border-border rounded-lg p-6 bg-white hover:bg-[#dbac2b] text-black flex flex-col min-h-64">
+                                <div className="h-10 w-10 rounded-full flex items-center justify-center">
                                   {Icon && <Icon className="w-12 h-12  text-black"/>}                               
                                 </div>
-                                <h3 className="font-semibold text-2xl mt-auto">{f.title}</h3>
+                                <h3 className="font-[400] text-2xl mt-auto font-sans">{f.title}</h3>
 
                             </div>
                         )
@@ -50,34 +50,37 @@ export const Product_Block:React.FC<product_flux_block>=(props)=>{
             )}
 
             {statcards && statcards.length>0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
                     {statcards.map((c,i)=>{
                         if(c.type==='image'){
                             return(
-                                <div key={i} className="border border-border rounded-lg overflow-hidden bg-white">
-                                    {c.media && typeof c.media!=='string'?
-                                    <div className="p-8"><Media resource={c.media} className="w-full object-cover"/></div>:
-                                    <div className="w-full h-48 bg-white flex items-center justify-center text-muted-foreground">
-                                         Image
-                                    </div>                                   
-                                    }
+                                <div key={i} className="border border-border rounded-lg overflow-hidden bg-white h-64">
+                                 {c.media && typeof c.media !== 'string' ?
+                                <div className="p-6 h-full flex items-center justify-center overflow-hidden">
+                                    <Media resource={c.media} className="max-h-full w-auto object-contain mb-8" />
+                                 </div> :
+                                 <div className="w-full h-full bg-white flex items-center justify-center text-muted-foreground">
+                                   Image
                                 </div>
+                }
+               </div>
                             )
                         }
                         if (c.type === 'cta') {
   return (
-    <div key={i} className="relative rounded-lg overflow-hidden flex flex-col justify-end min-h-[288px] p-6">
-      {c.backgroundImage && typeof c.backgroundImage !== 'string' ? (
-        <div className="absolute inset-0">
-          <Media resource={c.backgroundImage} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-[#dbac2b] mix-blend-multiply" />
-        </div>
-      ) : (
-        <div className="absolute inset-0 bg-[#dbac2b]" />
-      )}
+    <div key={i} className="relative rounded-lg overflow-hidden flex flex-col justify-end h-64 p-6">
+      {/* was: backgroundImage + mix-blend-multiply */}
+      <div className="absolute inset-0 bg-[#DBAC2B]" />
+      <div
+       className="absolute inset-0 opacity-20"
+       style={{
+       backgroundImage:
+        'repeating-linear-gradient(90deg, rgba(0,0,0,0.15) 0 2px, transparent 2px 14px)',
+       }}
+       />
       <div className="relative z-10">
         {c.label && (
-          <h3 className="font-semibold text-4xl text-black mb-28 leading-snug">{c.label}</h3>
+          <h3 className="font-[400] text-4xl text-black mb-5 leading-snug font-sans">{c.label}</h3>
         )}
         {c.ctaLink && (
           <CMSLink
@@ -93,11 +96,11 @@ export const Product_Block:React.FC<product_flux_block>=(props)=>{
 }
             const Icon = c.icon ? iconmap[c.icon as keyof typeof iconmap] : Sparkles
                         return (
-                          <div key={i} className="border border-border rounded-lg p-6 bg-white hover:bg-[#dbac2b] flex flex-col">
-                              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                          <div key={i} className="border border-border rounded-lg p-6 bg-white h-64 hover:bg-[#dbac2b] flex flex-col">
+                              <div className="w-10 h-10 rounded-full flex items-center justify-center mb-4">
                             {Icon && <Icon className="w-12 h-12 text-black" />}
                           </div>
-                           {c.stat && <p className="text-2xl font-bold text-black mt-auto">{c.stat}</p>}
+                           {c.stat && <p className="text-2xl font-[400] text-black mt-auto font-sans">{c.stat}</p>}
                            {c.label && <p className="text-sm text-muted-foreground">{c.label}</p>}
                          </div>
                         )

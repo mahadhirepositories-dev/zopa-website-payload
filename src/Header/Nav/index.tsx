@@ -58,7 +58,7 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
             onMouseEnter={() => hasChildren && openDropdown(i)}
             onMouseLeave={() => hasChildren && scheduleClose()}
           >
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 ml-4">
               <CMSLink
                 {...item.link}
                 appearance="link"

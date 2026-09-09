@@ -17,9 +17,11 @@ export const AboutSectionBlockComponent: React.FC<AboutSectionBlock> = ({
        Home
       </Link>
       <span className="text-black">{breadcrumb}</span>
+       <div className="border-t border-gray-700 mt-6"/>
     </nav>
+    
 )}
-        <div className="border-t border-gray-700"/>
+        {/* <div className="border-t border-gray-700"/> */}
         <h1 className="mt-5 text-[30px] font-[420] text-black md:text-5xl font-sans">{heading}</h1>
         {content && (
           <p className="mt-3 text-gray-800 max-w-xl text-[13px] whitespace-pre-line">

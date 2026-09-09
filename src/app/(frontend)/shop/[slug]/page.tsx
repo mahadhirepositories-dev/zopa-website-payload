@@ -40,7 +40,7 @@ export default async function ProductPage({ params: paramsPromise }: Args) {
   return (
   <>
     {product.layout && product.layout.length > 0 && (
-      <div className="mt-16">
+      <div>
         <RenderBlocks blocks={product.layout} />
       </div>
     )}
