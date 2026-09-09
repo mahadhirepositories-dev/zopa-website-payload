@@ -47,7 +47,7 @@ export const OutcomeSection: Block = {
             { label:'Chartline' , value:'FaChartLine'},
             { label:'Leaf', value:'FaLeaf'},
             { label:'Clipboard', value:'FaClipboard'},
-            { label:'Squareplay' , value:'FaRegSquare'},
+            { label: 'Square Play', value: 'SquarePlayIcon' },
             { label:'Medal',value:'FaMedal'},
           ],
         },
@@ -65,25 +65,31 @@ export const OutcomeSection: Block = {
         },
       ],
     },
+{
+  name: 'ctaCard',
+  type: 'group',
+  label: 'CTA Card',
+  fields: [
     {
-      name: 'ctaCard',
-      type: 'group',
-      label: 'CTA Card',
-      fields: [
-        {
-          name: 'heading',
-          type: 'text',
-          label: 'CTA Heading',
-          defaultValue: 'Call Us Today to Schedule to understand more!',
-        },
-        link({
-          appearances: ['default'],
-          overrides: {
-            name: 'ctaLink',
-            label: 'CTA Button Link',
-          },
-        }),
-      ],
+      name: 'heading',
+      type: 'text',
+      label: 'CTA Heading',
+      defaultValue: 'Call Us Today to Schedule to understand more!',
     },
+    {
+      name: 'backgroundImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'CTA Background Image',
+    },
+    link({
+      appearances: ['default'],
+      overrides: {
+        name: 'ctaLink',
+        label: 'CTA Button Link',
+      },
+    }),
+  ],
+},
   ],
 }

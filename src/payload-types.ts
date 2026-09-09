@@ -1395,7 +1395,7 @@ export interface OutcomeSectionBlock {
               | 'FaChartLine'
               | 'FaLeaf'
               | 'FaClipboard'
-              | 'FaRegSquare'
+              | 'SquarePlayIcon'
               | 'FaMedal'
             )
           | null;
@@ -1406,6 +1406,7 @@ export interface OutcomeSectionBlock {
     | null;
   ctaCard?: {
     heading?: string | null;
+    backgroundImage?: (number | null) | Media;
     ctaLink?: {
       type?: ('reference' | 'custom') | null;
       newTab?: boolean | null;
@@ -2862,6 +2863,7 @@ export interface OutcomeSectionBlockSelect<T extends boolean = true> {
     | T
     | {
         heading?: T;
+        backgroundImage?: T;
         ctaLink?:
           | T
           | {
