@@ -9,6 +9,7 @@ import * as migration_20260814_064419 from './20260814_064419';
 import * as migration_20260818_064111 from './20260818_064111';
 import * as migration_20260909_133040_add_ecommerce_and_new_collections from './20260909_133040_add_ecommerce_and_new_collections';
 import * as migration_20260910_200000_drop_not_null_block_columns from './20260910_200000_drop_not_null_block_columns';
+import * as migration_20260910_210000_fix_block_enum_types from './20260910_210000_fix_block_enum_types';
 
 export const migrations = [
   {
@@ -65,5 +66,10 @@ export const migrations = [
     up: migration_20260910_200000_drop_not_null_block_columns.up,
     down: migration_20260910_200000_drop_not_null_block_columns.down,
     name: '20260910_200000_drop_not_null_block_columns',
+  },
+  {
+    up: migration_20260910_210000_fix_block_enum_types.up,
+    down: migration_20260910_210000_fix_block_enum_types.down,
+    name: '20260910_210000_fix_block_enum_types',
   },
 ];
