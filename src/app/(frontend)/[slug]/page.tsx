@@ -57,9 +57,13 @@ export default async function Page({ params: paramsPromise }: Args) {
   const url = '/' + decodedSlug
   let page: RequiredDataFromCollectionSlug<'pages'> | null
 
-  page = await queryPageBySlug({
-    slug: decodedSlug,
-  })
+  try {
+    page = await queryPageBySlug({
+      slug: decodedSlug,
+    })
+  } catch {
+    page = null
+  }
 
   // Remove this code once your website is seeded
   if (!page && slug === 'home') {
@@ -67,46 +71,49 @@ export default async function Page({ params: paramsPromise }: Args) {
   }
 
   if (!page) {
-  // Check if a product with this slug exists
-  const payload = await getPayload({ config: configPromise })
-  const productResult = await payload.find({
-    collection: 'products',
-    draft,
-    limit: 1,
-    depth: 3,
-    where: { slug: { equals: decodedSlug } },
-  })
+    // Check if a product with this slug exists
+    let product = null
+    try {
+      const payload = await getPayload({ config: configPromise })
+      const productResult = await payload.find({
+        collection: 'products',
+        draft,
+        limit: 1,
+        depth: 3,
+        where: { slug: { equals: decodedSlug } },
+      })
+      product = productResult.docs[0]
+    } catch {
+      product = null
+    }
 
-  const product = productResult.docs[0]
+    if (product) {
+      const hasDetailBlock = product.layout?.some(
+        (b) => (b as any).blockType === 'productDetail',
+      )
 
-if (product) {
-    const hasDetailBlock = product.layout?.some(
-      (b) => (b as any).blockType === 'productDetail',
-    )
+      const detailBlock = hasDetailBlock
+        ? (product.layout?.find((b) => (b as any).blockType === 'productDetail') ?? {})
+        : { showBreadcrumb: true, showGallery: true }
 
-    const detailBlock = hasDetailBlock
-      ? (product.layout?.find((b) => (b as any).blockType === 'productDetail') ??
-        {})
-      : { showBreadcrumb: true, showGallery: true }
+      return (
+        <ProductDetailBlockComponent
+          blockType="productDetail"
+          {...(detailBlock as Record<string, unknown>)}
+          product={product as any}
+          layoutBlocks={
+            product.layout && product.layout.length > 0 ? (
+              <div className="mt-16">
+                <RenderBlocks blocks={product.layout} />
+              </div>
+            ) : null
+          }
+        />
+      )
+    }
 
-    return (
-      <ProductDetailBlockComponent
-        blockType="productDetail"
-        {...(detailBlock as Record<string, unknown>)}
-        product={product as any}
-        layoutBlocks={
-          product.layout && product.layout.length > 0 ? (
-            <div className="mt-16">
-              <RenderBlocks blocks={product.layout} />
-            </div>
-          ) : null
-        }
-      />
-    )
+    return <PayloadRedirects url={url} />
   }
-
-  return <PayloadRedirects url={url} />
-}
 
   const { hero, layout } = page
 
@@ -128,9 +135,14 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const { slug = 'home' } = await paramsPromise
   // Decode to support slugs with special characters
   const decodedSlug = decodeURIComponent(slug)
-  const page = await queryPageBySlug({
-    slug: decodedSlug,
-  })
+  let page = null
+  try {
+    page = await queryPageBySlug({
+      slug: decodedSlug,
+    })
+  } catch {
+    page = null
+  }
 
   return generateMeta({ doc: page })
 }

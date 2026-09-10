@@ -12,19 +12,25 @@ export const metadata: Metadata = {
 }
 
 export default async function CartPage() {
-  const { isEnabled: draft } = await draftMode()
-  const payload = await getPayload({ config: configPromise })
+  let layout: any[] = []
 
-  const result = await payload.find({
-    collection: 'pages',
-    draft,
-    limit: 1,
-    depth: 4,
-    where: { slug: { equals: 'cart' } },
-  })
+  try {
+    const { isEnabled: draft } = await draftMode()
+    const payload = await getPayload({ config: configPromise })
 
-  const page = result.docs?.[0]
-  const layout = page?.layout ?? []
+    const result = await payload.find({
+      collection: 'pages',
+      draft,
+      limit: 1,
+      depth: 4,
+      where: { slug: { equals: 'cart' } },
+    })
+
+    const page = result.docs?.[0]
+    layout = page?.layout ?? []
+  } catch {
+    layout = []
+  }
 
   return (
     <>

@@ -63,7 +63,7 @@ export default buildConfig({
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
 
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: process.env.PAYLOAD_SECRET || 'build_time_payload_secret_fallback_7a9f',
   db: postgresAdapter({
     pool: {
       connectionString: (() => {
