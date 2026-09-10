@@ -13,14 +13,11 @@ export const RecentClients: Block = {
       name: 'clients',
       type: 'array',
       label: 'Client Logos (8)',
-      minRows: 8,
-      maxRows: 8,
       fields: [
         {
           name: 'logo',
           type: 'upload',
           relationTo: 'media',
-          required: true,
         },
       ],
     },

@@ -23,7 +23,6 @@ export const PricingCards: Block = {
     {
       name: 'cards',
       type: 'array',
-      minRows: 1,
       maxRows: 4,
       labels: { singular: 'Card', plural: 'Cards' },
       fields: [
@@ -40,7 +39,6 @@ export const PricingCards: Block = {
         {
           name: 'name',
           type: 'text',
-          required: true,
           label: 'Card Name',
         },
         {
@@ -76,7 +74,6 @@ export const PricingCards: Block = {
             {
               name: 'feature',
               type: 'text',
-              required: true,
             },
           ],
         },

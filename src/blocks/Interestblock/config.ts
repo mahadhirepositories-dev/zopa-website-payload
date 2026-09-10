@@ -13,7 +13,6 @@ export const InterestForm: Block = {
       name: 'heading',
       type: 'text',
       label: 'Heading',
-      required: true,
     },
     {
       name: 'description',
@@ -55,7 +54,6 @@ export const InterestForm: Block = {
       name: 'form',
       type: 'relationship',
       relationTo: 'forms',
-      required: true,
       label: 'Form',
     },
     {

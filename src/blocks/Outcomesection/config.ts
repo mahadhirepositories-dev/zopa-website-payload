@@ -16,13 +16,11 @@ export const OutcomeSection: Block = {
       name: 'heading',
       type: 'text',
       label: 'Heading',
-      required: true,
     },
     {
       name: 'cards',
       type: 'array',
       label: 'Benefit Cards',
-      minRows: 1,
       maxRows: 8,
       fields: [
         {
@@ -54,13 +52,11 @@ export const OutcomeSection: Block = {
         {
           name: 'title',
           type: 'text',
-          required: true,
           label: 'Card Title',
         },
         {
           name: 'description',
           type: 'textarea',
-          required: true,
           label: 'Card Description',
         },
       ],

@@ -12,7 +12,7 @@ export const WhoCanBenefit: Block = {
     {
       name: 'items',
       type: 'array',
-      fields: [{ name: 'text', type: 'text', required: true }],
+      fields: [{ name: 'text', type: 'text' }],
     },
   ],
 }

@@ -11,7 +11,6 @@ export const ServiceDetailSection: Block = {
       type: 'array',
       dbName: 'svc',
       label: 'Services',
-      minRows: 1,
       maxRows: 4,
       fields: [
         {
@@ -32,7 +31,6 @@ export const ServiceDetailSection: Block = {
         {
           name: 'title',
           type: 'text',
-          required: true,
           label: 'Title',
         },
          {
@@ -47,7 +45,6 @@ export const ServiceDetailSection: Block = {
         {
           name: 'description',
           type: 'textarea',
-          required: true,
           label: 'Description',
         },
         {
@@ -73,7 +70,7 @@ export const ServiceDetailSection: Block = {
             condition: (_, siblingData) => siblingData?.displayType === 'item',
           },
           fields: [
-            { name: 'item', type: 'text', required: true, label: 'Item' },
+            { name: 'item', type: 'text', label: 'Item' },
           ],
         },
         {
@@ -84,8 +81,8 @@ export const ServiceDetailSection: Block = {
             condition: (_, siblingData) => siblingData?.displayType === 'feature',
           },
           fields: [
-            { name: 'title', type: 'text', required: true, label: 'Title' },
-            { name: 'description', type: 'textarea', required: true, label: 'Description' },
+            { name: 'title', type: 'text', label: 'Title' },
+            { name: 'description', type: 'textarea', label: 'Description' },
           ],
         },
         {

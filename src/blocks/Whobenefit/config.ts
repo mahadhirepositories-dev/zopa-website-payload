@@ -15,18 +15,16 @@ export const WhoBenefitDetail: Block = {
       name: 'heading',
       type: 'text',
       label: 'Heading',
-      required: true,
       defaultValue: 'PROCUREMENT AS A SERVICE (PaaS)',
     },
     {
       name: 'sections',
       type: 'array',
       label: 'Content Sections',
-      minRows: 1,
       maxRows: 4,
       fields: [
-        { name: 'title', type: 'text', required: true, label: 'Section Title' },
-        { name: 'description', type: 'textarea', required: true, label: 'Description' },
+        { name: 'title', type: 'text', label: 'Section Title' },
+        { name: 'description', type: 'textarea', label: 'Description' },
       ],
     },
     {

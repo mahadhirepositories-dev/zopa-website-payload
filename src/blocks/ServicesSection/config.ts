@@ -10,13 +10,11 @@ export const ServicesSection: Block = {
       name: 'services',
       type: 'array',
       label: 'Service Titles',
-      minRows: 1,
       maxRows: 4,
       fields: [
         {
           name: 'title',
           type: 'text',
-          required: true,
           label: 'Service Title',
         },
         link({

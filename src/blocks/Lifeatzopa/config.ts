@@ -14,7 +14,6 @@ export const LifeAtZopa: Block = {
       name: 'heading',
       type: 'text',
       label: 'Heading',
-      required: true,
     },
     {
       name: 'description',
@@ -25,7 +24,6 @@ export const LifeAtZopa: Block = {
       name: 'items',
       type: 'array',
       label: 'Cards',
-      minRows: 1,
       maxRows: 6,
       fields: [
         {
@@ -43,7 +41,6 @@ export const LifeAtZopa: Block = {
           name: 'title',
           type: 'text',
           label: 'Card Title',
-          required: true,
         },
         {
           name: 'description',
@@ -58,7 +55,6 @@ export const LifeAtZopa: Block = {
             {
               name: 'point',
               type: 'text',
-              required: true,
             },
           ],
         },

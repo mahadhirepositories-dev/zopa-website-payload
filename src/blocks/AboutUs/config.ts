@@ -17,25 +17,21 @@ export const AboutUs: Block = {
       name: 'image',
       type: 'upload',
       relationTo: 'media',
-      required: true,
       label: 'Image',
     },
     {
       name: 'label',
       type: 'text',
-      required: true,
       label: 'Label (e.g. Who We Are)',
     },
     {
       name: 'heading',
       type: 'text',
-      required: true,
       label: 'Heading',
     },
     {
       name: 'content',
       type: 'richText',
-      required: true,
       label: 'Content',
       editor: lexicalEditor({
         features: ({ rootFeatures }) => [
@@ -54,7 +50,6 @@ export const AboutUs: Block = {
         {
           name: 'feature',
           type: 'text',
-          required: true,
         },
       ],
     },
@@ -71,7 +66,6 @@ export const AboutUs: Block = {
         {
           name: 'point',
           type: 'text',
-          required: true,
         },
       ],
     },

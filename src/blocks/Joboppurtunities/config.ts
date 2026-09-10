@@ -17,7 +17,6 @@ export const JobOpportunities: Block = {
       name: 'heading',
       type: 'text',
       label: 'Heading',
-      required: true,
       defaultValue: 'Current Openings',
     },
     {
@@ -29,19 +28,16 @@ export const JobOpportunities: Block = {
       name: 'jobs',
       type: 'array',
       label: 'Openings',
-      minRows: 1,
       fields: [
         {
           name: 'position',
           type: 'text',
           label: 'Position',
-          required: true,
         },
         {
           name: 'city',
           type: 'text',
           label: 'City',
-          required: true,
         },
         {
           name: 'locationType',

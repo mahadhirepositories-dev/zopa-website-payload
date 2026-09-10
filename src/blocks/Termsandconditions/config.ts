@@ -14,7 +14,6 @@ const headingBlock: Block = {
       name: 'heading',
       type: 'text',
       label: 'Heading',
-      required: true,
     },
   ],
 }
@@ -26,7 +25,6 @@ const subHeadingBlock: Block = {
       name: 'subHeading',
       type: 'text',
       label: 'Sub Heading',
-      required: true,
     },
   ],
 }

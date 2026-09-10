@@ -30,6 +30,7 @@ import { ProductDetailBlockComponent } from './Productdetail/Component'
 import { LifeAtZopaBlockComponent } from './Lifeatzopa/Component'
 import { JobOpportunitiesBlockComponent } from './Joboppurtunities/Component'
 import { TermsAndConditionsBlock } from './Termsandconditions/Component'
+import { BlockErrorBoundary } from './BlockErrorBoundary'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -82,14 +83,15 @@ export const RenderBlocks: React.FC<{
 
             if (Block) {
               return (
-                <div key={index}>
-
-                   <Block
-                   {...block}
-                   {...(blockType === 'productDetail' ? { product } : {})}
-                   disableInnerContainer
-                   />
-                </div>
+                <BlockErrorBoundary key={index} blockType={blockType}>
+                  <div>
+                    <Block
+                      {...block}
+                      {...(blockType === 'productDetail' ? { product } : {})}
+                      disableInnerContainer
+                    />
+                  </div>
+                </BlockErrorBoundary>
               )
             }
           }

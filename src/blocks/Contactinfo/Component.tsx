@@ -34,8 +34,8 @@ export const ContactInfoBlockComponent: React.FC<ContactInfoBlock> = (props) => 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {items?.map((item, index) => {
             const Icon = item.icon ? iconMap[item.icon as keyof typeof iconMap] : null
-            const href = item.link || getAutoLink(item.icon || '', item.value)
-            const isExternal = href.startsWith('https')
+            const href = item.link || getAutoLink(item.icon || '', item.value || '')
+            const isExternal = typeof href === 'string' && href.startsWith('https')
 
             return (
               <a

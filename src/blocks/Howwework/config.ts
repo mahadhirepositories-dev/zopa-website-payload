@@ -13,7 +13,6 @@ export const HowWeWork: Block = {
     {
       name: 'heading',
       type: 'textarea',
-      required: true,
       label: 'Heading',
       admin: {
         description:
@@ -29,13 +28,11 @@ export const HowWeWork: Block = {
       name: 'steps',
       type: 'array',
       label: 'Process Steps',
-      minRows: 1,
       maxRows: 8,
       fields: [
         {
           name: 'title',
           type: 'text',
-          required: true,
           label: 'Step Title',
         },
         {

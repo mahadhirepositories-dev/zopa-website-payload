@@ -10,8 +10,8 @@ export const VisionMission: Block = {
       type: 'group',
       label: 'Vision Card',
       fields: [
-        { name: 'title', type: 'text', required: true },
-        { name: 'description', type: 'textarea', required: true },
+        { name: 'title', type: 'text' },
+        { name: 'description', type: 'textarea' },
       ],
     },
     {
@@ -19,8 +19,8 @@ export const VisionMission: Block = {
       type: 'group',
       label: 'Mission Card',
       fields: [
-        { name: 'title', type: 'text', required: true },
-        { name: 'description', type: 'textarea', required: true },
+        { name: 'title', type: 'text' },
+        { name: 'description', type: 'textarea' },
       ],
     },
     {
@@ -40,8 +40,8 @@ export const VisionMission: Block = {
             { label: 'HandCoins (Accountability)', value: 'HandCoins' },
           ],
         },
-        { name: 'title', type: 'text', required: true },
-        { name: 'description', type: 'textarea', required: true },
+        { name: 'title', type: 'text' },
+        { name: 'description', type: 'textarea' },
       ],
     },
   ],

@@ -7,14 +7,12 @@ export const ContactInfo: Block = {
     {
       name: 'items',
       type: 'array',
-      minRows: 1,
       maxRows: 6,
       fields: [
         {
           name: 'icon',
           type: 'select',
           label: 'Icon',
-          required: true,
           options: [
             { label: 'Phone', value: 'Phone' },
             { label: 'WhatsApp', value: 'FaWhatsapp' },
@@ -25,13 +23,11 @@ export const ContactInfo: Block = {
           name: 'label',
           type: 'text',
           label: 'Label',
-          required: true,
         },
         {
           name: 'value',
           type: 'text',
           label: 'Value',
-          required: true,
         },
         {
           name: 'link',

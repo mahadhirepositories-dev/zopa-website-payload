@@ -9,7 +9,6 @@ export const FullWidthBanner: Block = {
       name: 'media',
       type: 'upload',
       relationTo: 'media',
-      required: true,
     },
     {
       name: 'logo',
@@ -19,7 +18,6 @@ export const FullWidthBanner: Block = {
     {
       name: 'heading',
       type: 'text',
-      required: true,
     },
     linkGroup({
       appearances: ['default', 'outline'],

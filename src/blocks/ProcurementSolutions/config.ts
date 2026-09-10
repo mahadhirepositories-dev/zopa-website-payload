@@ -9,7 +9,6 @@ export const ProcurementSolutions: Block = {
     {
       name: 'title',
       type: 'text',
-      required: true,
       label: 'Left Title',
     },
     {
@@ -20,14 +19,12 @@ export const ProcurementSolutions: Block = {
     {
       name: 'description',
       type: 'textarea',
-      required: true,
       label: 'Right Description (press Enter for a new paragraph)',
     },
     {
       name: 'media',
       type: 'upload',
       relationTo: 'media',
-      required: true,
       label: 'Hero Procurement Image',
     },
     link({

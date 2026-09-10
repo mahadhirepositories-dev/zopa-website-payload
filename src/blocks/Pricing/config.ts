@@ -24,14 +24,11 @@ export const PricingComparison: Block = {
     {
       name: 'cards',
       type: 'array',
-      minRows: 2,
-      maxRows: 2,
       labels: { singular: 'Card', plural: 'Cards' },
       fields: [
         {
           name: 'name',
           type: 'text',
-          required: true,
           label: 'Card Name',
         },
         {
@@ -52,7 +49,6 @@ export const PricingComparison: Block = {
             {
               name: 'feature',
               type: 'text',
-              required: true,
             },
           ],
         },

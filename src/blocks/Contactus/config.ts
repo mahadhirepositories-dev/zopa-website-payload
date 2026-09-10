@@ -26,14 +26,12 @@ export const ContactUs: Block = {
       name: 'contactCards',
       type: 'array',
       label: 'Contact Cards',
-      minRows: 1,
       maxRows: 6,
       fields: [
         {
           name: 'icon',
           type: 'select',
           label: 'Icon',
-          required: true,
           options: [
             { label: 'Career', value: 'FaBriefcase' },
             { label: 'Info', value: 'FaInfo' },
@@ -47,13 +45,11 @@ export const ContactUs: Block = {
           name: 'label',
           type: 'text',
           label: 'Title',
-          required: true,
         },
         {
           name: 'value',
           type: 'textarea',
           label: 'Value',
-          required: true,
         },
         {
           name: 'linkedinUrl',
@@ -76,7 +72,6 @@ export const ContactUs: Block = {
       name: 'form',
       type: 'relationship',
       relationTo: 'forms',
-      required: true,
       label: 'Contact Form',
     },
     {
