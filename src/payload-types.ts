@@ -931,13 +931,13 @@ export interface PricingCardsBlock {
   cards?:
     | {
         cardType?: ('pricing' | 'services') | null;
-        name: string;
+        name?: string | null;
         tagline?: string | null;
         description?: string | null;
         backgroundImage?: (number | null) | Media;
         features?:
           | {
-              feature: string;
+              feature?: string | null;
               id?: string | null;
             }[]
           | null;
@@ -975,7 +975,7 @@ export interface RecentClientsBlock {
   heading?: string | null;
   clients?:
     | {
-        logo: number | Media;
+        logo?: (number | null) | Media;
         id?: string | null;
       }[]
     | null;
@@ -1019,9 +1019,9 @@ export interface BlogSectionBlock {
  * via the `definition` "FullWidthBannerBlock".
  */
 export interface FullWidthBannerBlock {
-  media: number | Media;
+  media?: (number | null) | Media;
   logo?: (number | null) | Media;
-  heading: string;
+  heading?: string | null;
   links?:
     | {
         link?: {
@@ -1067,10 +1067,10 @@ export interface AboutSectionBlock {
  * via the `definition` "AboutUsBlock".
  */
 export interface AboutUsBlock {
-  image: number | Media;
-  label: string;
-  heading: string;
-  content: {
+  image?: (number | null) | Media;
+  label?: string | null;
+  heading?: string | null;
+  content?: {
     root: {
       type: string;
       children: {
@@ -1084,17 +1084,17 @@ export interface AboutUsBlock {
       version: number;
     };
     [k: string]: unknown;
-  };
+  } | null;
   features?:
     | {
-        feature: string;
+        feature?: string | null;
         id?: string | null;
       }[]
     | null;
   cardTitle?: string | null;
   cardPoints?:
     | {
-        point: string;
+        point?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1126,19 +1126,19 @@ export interface AboutUsBlock {
  * via the `definition` "VisionMissionBlock".
  */
 export interface VisionMissionBlock {
-  vision: {
-    title: string;
-    description: string;
+  vision?: {
+    title?: string | null;
+    description?: string | null;
   };
-  mission: {
-    title: string;
-    description: string;
+  mission?: {
+    title?: string | null;
+    description?: string | null;
   };
   values?:
     | {
         icon?: ('Bot' | 'ShieldCheck' | 'Shield' | 'PiggyBank' | 'HandCoins') | null;
-        title: string;
-        description: string;
+        title?: string | null;
+        description?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1151,10 +1151,10 @@ export interface VisionMissionBlock {
  * via the `definition` "ProcurementSolutionsBlock".
  */
 export interface ProcurementSolutionsBlock {
-  title: string;
+  title?: string | null;
   subtitle?: string | null;
-  description: string;
-  media: number | Media;
+  description?: string | null;
+  media?: (number | null) | Media;
   ctaLink?: {
     type?: ('reference' | 'custom') | null;
     newTab?: boolean | null;
@@ -1185,7 +1185,7 @@ export interface ProcurementSolutionsBlock {
 export interface ServicesSectionBlock {
   services?:
     | {
-        title: string;
+        title?: string | null;
         link?: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
@@ -1216,24 +1216,24 @@ export interface ServiceDetailSectionBlock {
     | {
         layout?: ('imageLeft' | 'imageRight') | null;
         badge?: string | null;
-        title: string;
+        title?: string | null;
         /**
          * Must match the Anchor ID on the corresponding Services Section item.
          */
         sectionId?: string | null;
-        description: string;
+        description?: string | null;
         subHeading?: string | null;
         displayType?: ('item' | 'feature') | null;
         items?:
           | {
-              item: string;
+              item?: string | null;
               id?: string | null;
             }[]
           | null;
         features?:
           | {
-              title: string;
-              description: string;
+              title?: string | null;
+              description?: string | null;
               id?: string | null;
             }[]
           | null;
@@ -1273,11 +1273,11 @@ export interface HowWeWorkBlock {
   /**
    * One line per row, e.g. Transparent. / Collaborative. / Results-Driven.
    */
-  heading: string;
+  heading?: string | null;
   description?: string | null;
   steps?:
     | {
-        title: string;
+        title?: string | null;
         description?: string | null;
         id?: string | null;
       }[]
@@ -1292,7 +1292,7 @@ export interface HowWeWorkBlock {
  */
 export interface InterestFormBlock {
   label?: string | null;
-  heading: string;
+  heading?: string | null;
   description?: string | null;
   backgroundImage?: (number | null) | Media;
   overlayHeading?: string | null;
@@ -1300,7 +1300,7 @@ export interface InterestFormBlock {
   contactPhone?: string | null;
   contactEmail?: string | null;
   formHeading?: string | null;
-  form: number | Form;
+  form?: (number | null) | Form;
   formLogo?: (number | null) | Media;
   id?: string | null;
   blockName?: string | null;
@@ -1316,12 +1316,12 @@ export interface PricingComparisonBlock {
   description?: string | null;
   cards?:
     | {
-        name: string;
+        name?: string | null;
         tagline?: string | null;
         description?: string | null;
         features?:
           | {
-              feature: string;
+              feature?: string | null;
               id?: string | null;
             }[]
           | null;
@@ -1359,7 +1359,7 @@ export interface WhoCanBenefitBlock {
   label?: string | null;
   items?:
     | {
-        text: string;
+        text?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1373,7 +1373,7 @@ export interface WhoCanBenefitBlock {
  */
 export interface OutcomeSectionBlock {
   badge?: string | null;
-  heading: string;
+  heading?: string | null;
   cards?:
     | {
         icon?:
@@ -1399,8 +1399,8 @@ export interface OutcomeSectionBlock {
               | 'FaMedal'
             )
           | null;
-        title: string;
-        description: string;
+        title?: string | null;
+        description?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1437,11 +1437,11 @@ export interface OutcomeSectionBlock {
  */
 export interface WhoBenefitDetailBlock {
   badge?: string | null;
-  heading: string;
+  heading?: string | null;
   sections?:
     | {
-        title: string;
-        description: string;
+        title?: string | null;
+        description?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1457,9 +1457,9 @@ export interface WhoBenefitDetailBlock {
 export interface ContactInfoBlock {
   items?:
     | {
-        icon: 'Phone' | 'FaWhatsapp' | 'Mail';
-        label: string;
-        value: string;
+        icon?: ('Phone' | 'FaWhatsapp' | 'Mail') | null;
+        label?: string | null;
+        value?: string | null;
         /**
          * Leave empty to auto-generate from value (tel:, mailto:, https://wa.me/)
          */
@@ -1481,9 +1481,9 @@ export interface ContactUsBlock {
   description?: string | null;
   contactCards?:
     | {
-        icon: 'FaBriefcase' | 'FaInfo' | 'FaLinkedin' | 'FaAddressBook' | 'FiMail' | 'FiPhone';
-        label: string;
-        value: string;
+        icon?: ('FaBriefcase' | 'FaInfo' | 'FaLinkedin' | 'FaAddressBook' | 'FiMail' | 'FiPhone') | null;
+        label?: string | null;
+        value?: string | null;
         /**
          * Only applicable when icon is LinkedIn
          */
@@ -1492,7 +1492,7 @@ export interface ContactUsBlock {
       }[]
     | null;
   formHeading?: string | null;
-  form: number | Form;
+  form?: (number | null) | Form;
   formLogo?: (number | null) | Media;
   id?: string | null;
   blockName?: string | null;
@@ -1517,16 +1517,16 @@ export interface ProductDetailBlock {
  */
 export interface LifeAtZopaBlock {
   badge?: string | null;
-  heading: string;
+  heading?: string | null;
   description?: string | null;
   items?:
     | {
         icon?: ('FaBuilding' | 'FaHandshake' | 'FaMedal') | null;
-        title: string;
+        title?: string | null;
         description?: string | null;
         points?:
           | {
-              point: string;
+              point?: string | null;
               id?: string | null;
             }[]
           | null;
@@ -1543,12 +1543,12 @@ export interface LifeAtZopaBlock {
  */
 export interface JobOpportunitiesBlock {
   badge?: string | null;
-  heading: string;
+  heading?: string | null;
   description?: string | null;
   jobs?:
     | {
-        position: string;
-        city: string;
+        position?: string | null;
+        city?: string | null;
         locationType?: ('On-site' | 'Hybrid' | 'Remote') | null;
         applyLink?: {
           type?: ('reference' | 'custom') | null;
@@ -1584,13 +1584,13 @@ export interface TermsAndConditionsBlock {
   fields?:
     | (
         | {
-            heading: string;
+            heading?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'heading';
           }
         | {
-            subHeading: string;
+            subHeading?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'subHeading';
