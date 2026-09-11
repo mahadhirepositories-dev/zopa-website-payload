@@ -11,6 +11,7 @@ import * as migration_20260909_133040_add_ecommerce_and_new_collections from './
 import * as migration_20260910_200000_drop_not_null_block_columns from './20260910_200000_drop_not_null_block_columns';
 import * as migration_20260910_210000_fix_block_enum_types from './20260910_210000_fix_block_enum_types';
 import * as migration_20260911_020000_add_version_table_id_defaults from './20260911_020000_add_version_table_id_defaults';
+import * as migration_20260911_070000_add_vision_mission_enums from './20260911_070000_add_vision_mission_enums';
 
 export const migrations = [
   {
@@ -77,5 +78,10 @@ export const migrations = [
     up: migration_20260911_020000_add_version_table_id_defaults.up,
     down: migration_20260911_020000_add_version_table_id_defaults.down,
     name: '20260911_020000_add_version_table_id_defaults',
+  },
+  {
+    up: migration_20260911_070000_add_vision_mission_enums.up,
+    down: migration_20260911_070000_add_vision_mission_enums.down,
+    name: '20260911_070000_add_vision_mission_enums',
   },
 ];

@@ -85,6 +85,11 @@ export default buildConfig({
           : {
               rejectUnauthorized: false, // Required for Supabase in production/build environments
             },
+      max: 4,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 30000,
+      keepAlive: true,
+      keepAliveInitialDelayMillis: 10000,
     },
     prodMigrations: migrations,
     push: false,
