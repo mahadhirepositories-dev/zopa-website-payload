@@ -15,8 +15,14 @@ const nextConfig: NextConfig = {
   compress: false,
   output: 'standalone',
   transpilePackages: ['@swc/helpers'],
+  serverExternalPackages: ['pino', 'pino-std-serializers', 'pino-pretty'],
   outputFileTracingIncludes: {
-    '/**': ['./node_modules/@swc/helpers/**'],
+    '/**': [
+      './node_modules/@swc/helpers/**',
+      './node_modules/pino/**',
+      './node_modules/pino-std-serializers/**',
+      './node_modules/pino-pretty/**',
+    ],
   },
   // Temporarily required on Windows until Next.js fixes Turbopack Sass resolution.
   // See: https://github.com/vercel/next.js/issues/86431
