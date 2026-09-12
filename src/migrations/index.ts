@@ -12,6 +12,7 @@ import * as migration_20260910_200000_drop_not_null_block_columns from './202609
 import * as migration_20260910_210000_fix_block_enum_types from './20260910_210000_fix_block_enum_types';
 import * as migration_20260911_020000_add_version_table_id_defaults from './20260911_020000_add_version_table_id_defaults';
 import * as migration_20260911_070000_add_vision_mission_enums from './20260911_070000_add_vision_mission_enums';
+import * as migration_20260912_080000_fix_about_section_content_type from './20260912_080000_fix_about_section_content_type'
 
 export const migrations = [
   {
@@ -83,5 +84,10 @@ export const migrations = [
     up: migration_20260911_070000_add_vision_mission_enums.up,
     down: migration_20260911_070000_add_vision_mission_enums.down,
     name: '20260911_070000_add_vision_mission_enums',
+  },
+  {
+    up: migration_20260912_080000_fix_about_section_content_type.up,
+    down: migration_20260912_080000_fix_about_section_content_type.down,
+    name: '20260912_080000_fix_about_section_content_type',
   },
 ];
