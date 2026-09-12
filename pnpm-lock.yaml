@@ -59,6 +59,9 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.0.0
         version: 2.111.0
+      '@swc/helpers':
+        specifier: ^0.5.15
+        version: 0.5.15
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.1
