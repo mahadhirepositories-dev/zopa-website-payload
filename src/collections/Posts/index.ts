@@ -223,7 +223,7 @@ export const Posts: CollectionConfig<'posts'> = {
       },
       fields: [
         {
-          name: 'id',
+          name: 'authorId',
           type: 'text',
         },
         {
