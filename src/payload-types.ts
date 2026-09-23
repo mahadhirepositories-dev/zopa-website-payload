@@ -237,9 +237,17 @@ export interface Page {
               | ({
                   relationTo: 'posts';
                   value: number | Post;
+                } | null)
+              | ({
+                  relationTo: 'products';
+                  value: number | Product;
                 } | null);
             url?: string | null;
             label?: string | null;
+            /**
+             * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+             */
+            anchor?: string | null;
             /**
              * Choose how the link should be rendered.
              */
@@ -288,6 +296,7 @@ export interface Page {
     | LifeAtZopaBlock
     | JobOpportunitiesBlock
     | TermsAndConditionsBlock
+    | JobDetailBlock
   )[];
   meta?: {
     title?: string | null;
@@ -351,8 +360,9 @@ export interface Post {
   authors?: (number | User)[] | null;
   populatedAuthors?:
     | {
-        id?: string | null;
+        authorId?: string | null;
         name?: string | null;
+        id?: string | null;
       }[]
     | null;
   /**
@@ -536,10 +546,43 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CallToActionBlock".
+ * via the `definition` "products".
  */
-export interface CallToActionBlock {
-  richText?: {
+export interface Product {
+  id: number;
+  inventory?: number | null;
+  enableVariants?: boolean | null;
+  variantTypes?: (number | VariantType)[] | null;
+  variants?: {
+    docs?: (number | Variant)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  priceInINREnabled?: boolean | null;
+  priceInINR?: number | null;
+  title: string;
+  slug?: string | null;
+  description?: string | null;
+  /**
+   * Description shown in the Reviews tab on the product page
+   */
+  reviewDescription?: string | null;
+  image?: (number | null) | Media;
+  images?:
+    | {
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  categories?: (number | Category)[] | null;
+  /**
+   * Subtitle shown below the product title (e.g., "Get Listed on Zopa Vendor Page")
+   */
+  subtitle?: string | null;
+  /**
+   * Add headings, paragraphs, lists, links, etc. — as many sections as you need.
+   */
+  content?: {
     root: {
       type: string;
       children: {
@@ -554,33 +597,77 @@ export interface CallToActionBlock {
     };
     [k: string]: unknown;
   } | null;
-  links?:
-    | {
-        link?: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: number | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: number | Post;
-              } | null);
-          url?: string | null;
-          label?: string | null;
-          /**
-           * Choose how the link should be rendered.
-           */
-          appearance?: ('default' | 'outline') | null;
-        };
-        id?: string | null;
-      }[]
+  layout?:
+    | (
+        | ContentBlock
+        | CallToActionBlock
+        | MediaBlock
+        | FormBlock
+        | ContactUsBlock
+        | ContactInfoBlock
+        | PricingCardsBlock
+        | AboutSectionBlock
+        | ProductDetailBlock
+      )[]
     | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'cta';
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variantTypes".
+ */
+export interface VariantType {
+  id: number;
+  label: string;
+  name: string;
+  options?: {
+    docs?: (number | VariantOption)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variantOptions".
+ */
+export interface VariantOption {
+  id: number;
+  _variantOptions_options_order?: string | null;
+  variantType: number | VariantType;
+  label: string;
+  /**
+   * should be defaulted or dynamic based on label
+   */
+  value: string;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variants".
+ */
+export interface Variant {
+  id: number;
+  /**
+   * Used for administrative purposes, not shown to customers. This is populated by default.
+   */
+  title?: string | null;
+  product: number | Product;
+  options: (number | VariantOption)[];
+  inventory?: number | null;
+  priceInINREnabled?: boolean | null;
+  priceInINR?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -620,9 +707,17 @@ export interface ContentBlock {
             | ({
                 relationTo: 'posts';
                 value: number | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
               } | null);
           url?: string | null;
           label?: string | null;
+          /**
+           * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+           */
+          anchor?: string | null;
           /**
            * Choose how the link should be rendered.
            */
@@ -637,20 +732,10 @@ export interface ContentBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "MediaBlock".
+ * via the `definition` "CallToActionBlock".
  */
-export interface MediaBlock {
-  media: number | Media;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'mediaBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ArchiveBlock".
- */
-export interface ArchiveBlock {
-  introContent?: {
+export interface CallToActionBlock {
+  richText?: {
     root: {
       type: string;
       children: {
@@ -665,19 +750,51 @@ export interface ArchiveBlock {
     };
     [k: string]: unknown;
   } | null;
-  populateBy?: ('collection' | 'selection') | null;
-  relationTo?: 'posts' | null;
-  categories?: (number | Category)[] | null;
-  limit?: number | null;
-  selectedDocs?:
+  links?:
     | {
-        relationTo: 'posts';
-        value: number | Post;
+        link?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
+              } | null);
+          url?: string | null;
+          label?: string | null;
+          /**
+           * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+           */
+          anchor?: string | null;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
       }[]
     | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'archive';
+  blockType: 'cta';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaBlock".
+ */
+export interface MediaBlock {
+  media: number | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mediaBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -819,6 +936,24 @@ export interface Form {
             blockName?: string | null;
             blockType: 'textarea';
           }
+        | {
+            name: string;
+            label?: string | null;
+            uploadCollection: 'media';
+            mimeTypes?:
+              | {
+                  mimeType: string;
+                  id?: string | null;
+                }[]
+              | null;
+            width?: number | null;
+            maxFileSize?: number | null;
+            required?: boolean | null;
+            multiple?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'upload';
+          }
       )[]
     | null;
   submitButtonLabel?: string | null;
@@ -872,53 +1007,51 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "Product_flux".
+ * via the `definition` "ContactUsBlock".
  */
-export interface ProductFlux {
-  heading: string;
-  title: string;
-  description: string;
-  features?:
+export interface ContactUsBlock {
+  heading?: string | null;
+  subheading?: string | null;
+  description?: string | null;
+  contactCards?:
     | {
-        icon?: ('circleCheck' | 'sparkles') | null;
-        title: string;
-        description?: string | null;
+        icon?: ('FaBriefcase' | 'FaInfo' | 'FaLinkedin' | 'FaAddressBook' | 'FiMail' | 'FiPhone') | null;
+        label?: string | null;
+        value?: string | null;
+        /**
+         * Only applicable when icon is LinkedIn
+         */
+        linkedinUrl?: string | null;
         id?: string | null;
       }[]
     | null;
-  statcards?:
+  formHeading?: string | null;
+  form?: (number | null) | Form;
+  formLogo?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contactUs';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactInfoBlock".
+ */
+export interface ContactInfoBlock {
+  items?:
     | {
-        icon?: ('circleCheck' | 'sparkles') | null;
-        stat?: string | null;
+        icon?: ('Phone' | 'FaWhatsapp' | 'Mail') | null;
         label?: string | null;
-        type?: ('stat' | 'image' | 'cta') | null;
-        media?: (number | null) | Media;
-        ctaLink?: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: number | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: number | Post;
-              } | null);
-          url?: string | null;
-          label?: string | null;
-          /**
-           * Choose how the link should be rendered.
-           */
-          appearance?: ('default' | 'outline') | null;
-        };
-        backgroundImage?: (number | null) | Media;
+        value?: string | null;
+        /**
+         * Leave empty to auto-generate from value (tel:, mailto:, https://wa.me/)
+         */
+        link?: string | null;
         id?: string | null;
       }[]
     | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'product';
+  blockType: 'contactInfo';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -952,9 +1085,17 @@ export interface PricingCardsBlock {
             | ({
                 relationTo: 'posts';
                 value: number | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
               } | null);
           url?: string | null;
           label?: string | null;
+          /**
+           * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+           */
+          anchor?: string | null;
           /**
            * Choose how the link should be rendered.
            */
@@ -966,6 +1107,123 @@ export interface PricingCardsBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'pricingCards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutSectionBlock".
+ */
+export interface AboutSectionBlock {
+  breadcrumb?: string | null;
+  heading?: string | null;
+  content?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'aboutSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProductDetailBlock".
+ */
+export interface ProductDetailBlock {
+  showBreadcrumb?: boolean | null;
+  showGallery?: boolean | null;
+  headingOverride?: string | null;
+  subtitleOverride?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'productDetail';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ArchiveBlock".
+ */
+export interface ArchiveBlock {
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  populateBy?: ('collection' | 'selection') | null;
+  relationTo?: 'posts' | null;
+  categories?: (number | Category)[] | null;
+  limit?: number | null;
+  selectedDocs?:
+    | {
+        relationTo: 'posts';
+        value: number | Post;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'archive';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Product_flux".
+ */
+export interface ProductFlux {
+  heading: string;
+  title: string;
+  description: string;
+  features?:
+    | {
+        icon?: ('circleCheck' | 'sparkles') | null;
+        title: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  statcards?:
+    | {
+        icon?: ('circleCheck' | 'sparkles') | null;
+        stat?: string | null;
+        label?: string | null;
+        type?: ('stat' | 'image' | 'cta') | null;
+        media?: (number | null) | Media;
+        ctaLink?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
+              } | null);
+          url?: string | null;
+          label?: string | null;
+          /**
+           * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+           */
+          anchor?: string | null;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        backgroundImage?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'product';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1002,9 +1260,17 @@ export interface BlogSectionBlock {
       | ({
           relationTo: 'posts';
           value: number | Post;
+        } | null)
+      | ({
+          relationTo: 'products';
+          value: number | Product;
         } | null);
     url?: string | null;
     label?: string | null;
+    /**
+     * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+     */
+    anchor?: string | null;
     /**
      * Choose how the link should be rendered.
      */
@@ -1035,9 +1301,17 @@ export interface FullWidthBannerBlock {
             | ({
                 relationTo: 'posts';
                 value: number | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
               } | null);
           url?: string | null;
           label?: string | null;
+          /**
+           * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+           */
+          anchor?: string | null;
           /**
            * Choose how the link should be rendered.
            */
@@ -1049,18 +1323,6 @@ export interface FullWidthBannerBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'fullWidthBanner';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "AboutSectionBlock".
- */
-export interface AboutSectionBlock {
-  breadcrumb?: string | null;
-  heading?: string | null;
-  content?: string | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'aboutSection';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1109,9 +1371,17 @@ export interface AboutUsBlock {
       | ({
           relationTo: 'posts';
           value: number | Post;
+        } | null)
+      | ({
+          relationTo: 'products';
+          value: number | Product;
         } | null);
     url?: string | null;
     label?: string | null;
+    /**
+     * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+     */
+    anchor?: string | null;
     /**
      * Choose how the link should be rendered.
      */
@@ -1166,9 +1436,17 @@ export interface ProcurementSolutionsBlock {
       | ({
           relationTo: 'posts';
           value: number | Post;
+        } | null)
+      | ({
+          relationTo: 'products';
+          value: number | Product;
         } | null);
     url?: string | null;
     label?: string | null;
+    /**
+     * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+     */
+    anchor?: string | null;
     /**
      * Choose how the link should be rendered.
      */
@@ -1197,8 +1475,16 @@ export interface ServicesSectionBlock {
             | ({
                 relationTo: 'posts';
                 value: number | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
               } | null);
           url?: string | null;
+          /**
+           * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+           */
+          anchor?: string | null;
         };
         id?: string | null;
       }[]
@@ -1249,9 +1535,17 @@ export interface ServiceDetailSectionBlock {
             | ({
                 relationTo: 'posts';
                 value: number | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
               } | null);
           url?: string | null;
           label?: string | null;
+          /**
+           * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+           */
+          anchor?: string | null;
           /**
            * Choose how the link should be rendered.
            */
@@ -1291,13 +1585,19 @@ export interface HowWeWorkBlock {
  * via the `definition` "InterestFormBlock".
  */
 export interface InterestFormBlock {
+  /**
+   * Editors can scroll here from any link field by setting that link's "Anchor" to this value. Letters, numbers, hyphens only. Must be unique on the page.
+   */
+  anchorId?: string | null;
   label?: string | null;
   heading?: string | null;
   description?: string | null;
   backgroundImage?: (number | null) | Media;
   overlayHeading?: string | null;
   overlayDescription?: string | null;
+  contactPhoneLabel?: string | null;
   contactPhone?: string | null;
+  contactEmailLabel?: string | null;
   contactEmail?: string | null;
   formHeading?: string | null;
   form?: (number | null) | Form;
@@ -1336,9 +1636,17 @@ export interface PricingComparisonBlock {
             | ({
                 relationTo: 'posts';
                 value: number | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
               } | null);
           url?: string | null;
           label?: string | null;
+          /**
+           * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+           */
+          anchor?: string | null;
           /**
            * Choose how the link should be rendered.
            */
@@ -1418,9 +1726,17 @@ export interface OutcomeSectionBlock {
         | ({
             relationTo: 'posts';
             value: number | Post;
+          } | null)
+        | ({
+            relationTo: 'products';
+            value: number | Product;
           } | null);
       url?: string | null;
       label?: string | null;
+      /**
+       * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+       */
+      anchor?: string | null;
       /**
        * Choose how the link should be rendered.
        */
@@ -1449,67 +1765,6 @@ export interface WhoBenefitDetailBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'whoBenefitDetail';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ContactInfoBlock".
- */
-export interface ContactInfoBlock {
-  items?:
-    | {
-        icon?: ('Phone' | 'FaWhatsapp' | 'Mail') | null;
-        label?: string | null;
-        value?: string | null;
-        /**
-         * Leave empty to auto-generate from value (tel:, mailto:, https://wa.me/)
-         */
-        link?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'contactInfo';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ContactUsBlock".
- */
-export interface ContactUsBlock {
-  heading?: string | null;
-  subheading?: string | null;
-  description?: string | null;
-  contactCards?:
-    | {
-        icon?: ('FaBriefcase' | 'FaInfo' | 'FaLinkedin' | 'FaAddressBook' | 'FiMail' | 'FiPhone') | null;
-        label?: string | null;
-        value?: string | null;
-        /**
-         * Only applicable when icon is LinkedIn
-         */
-        linkedinUrl?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  formHeading?: string | null;
-  form?: (number | null) | Form;
-  formLogo?: (number | null) | Media;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'contactUs';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ProductDetailBlock".
- */
-export interface ProductDetailBlock {
-  showBreadcrumb?: boolean | null;
-  showGallery?: boolean | null;
-  headingOverride?: string | null;
-  subtitleOverride?: string | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'productDetail';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1561,9 +1816,17 @@ export interface JobOpportunitiesBlock {
             | ({
                 relationTo: 'posts';
                 value: number | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
               } | null);
           url?: string | null;
           label?: string | null;
+          /**
+           * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+           */
+          anchor?: string | null;
           /**
            * Choose how the link should be rendered.
            */
@@ -1581,56 +1844,57 @@ export interface JobOpportunitiesBlock {
  * via the `definition` "TermsAndConditionsBlock".
  */
 export interface TermsAndConditionsBlock {
-  fields?:
-    | (
-        | {
-            heading?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'heading';
-          }
-        | {
-            subHeading?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'subHeading';
-          }
-        | {
-            points?:
-              | {
-                  point?: string | null;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'points';
-          }
-        | {
-            description?: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            } | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'description';
-          }
-      )[]
-    | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'termsAndConditions';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "JobDetailBlock".
+ */
+export interface JobDetailBlock {
+  city: string;
+  locationType: 'On-site' | 'Hybrid' | 'Remote';
+  aboutRole?: string | null;
+  responsibilities?:
+    | {
+        type: 'point' | 'detailed';
+        text?: string | null;
+        heading?: string | null;
+        paragraph?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  minimumRequirements?:
+    | {
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  desiredRequirements?:
+    | {
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'jobDetail';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1646,131 +1910,6 @@ export interface Review {
   status?: ('pending' | 'approved' | 'rejected') | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "products".
- */
-export interface Product {
-  id: number;
-  inventory?: number | null;
-  enableVariants?: boolean | null;
-  variantTypes?: (number | VariantType)[] | null;
-  variants?: {
-    docs?: (number | Variant)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  priceInINREnabled?: boolean | null;
-  priceInINR?: number | null;
-  title: string;
-  slug: string;
-  description?: string | null;
-  /**
-   * Description shown in the Reviews tab on the product page
-   */
-  reviewDescription?: string | null;
-  image?: (number | null) | Media;
-  images?:
-    | {
-        image?: (number | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  categories?: (number | Category)[] | null;
-  /**
-   * Subtitle shown below the product title (e.g., "Get Listed on Zopa Vendor Page")
-   */
-  subtitle?: string | null;
-  whyRegister?:
-    | {
-        text: string;
-        id?: string | null;
-      }[]
-    | null;
-  howItWorks?:
-    | {
-        text: string;
-        id?: string | null;
-      }[]
-    | null;
-  afterApproval?:
-    | {
-        text: string;
-        id?: string | null;
-      }[]
-    | null;
-  layout?:
-    | (
-        | ContentBlock
-        | CallToActionBlock
-        | MediaBlock
-        | FormBlock
-        | ContactUsBlock
-        | ContactInfoBlock
-        | PricingCardsBlock
-        | AboutSectionBlock
-        | ProductDetailBlock
-      )[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "variantTypes".
- */
-export interface VariantType {
-  id: number;
-  label: string;
-  name: string;
-  options?: {
-    docs?: (number | VariantOption)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "variantOptions".
- */
-export interface VariantOption {
-  id: number;
-  _variantOptions_options_order?: string | null;
-  variantType: number | VariantType;
-  label: string;
-  /**
-   * should be defaulted or dynamic based on label
-   */
-  value: string;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "variants".
- */
-export interface Variant {
-  id: number;
-  /**
-   * Used for administrative purposes, not shown to customers. This is populated by default.
-   */
-  title?: string | null;
-  product: number | Product;
-  options: (number | VariantOption)[];
-  inventory?: number | null;
-  priceInINREnabled?: boolean | null;
-  priceInINR?: number | null;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1845,6 +1984,16 @@ export interface FormSubmission {
     | {
         field: string;
         value: string;
+        id?: string | null;
+      }[]
+    | null;
+  submissionUploads?:
+    | {
+        field: string;
+        value: {
+          relationTo: 'media';
+          value: number | Media;
+        }[];
         id?: string | null;
       }[]
     | null;
@@ -2308,6 +2457,7 @@ export interface PagesSelect<T extends boolean = true> {
                     reference?: T;
                     url?: T;
                     label?: T;
+                    anchor?: T;
                     appearance?: T;
                   };
               id?: T;
@@ -2354,6 +2504,7 @@ export interface PagesSelect<T extends boolean = true> {
         lifeAtZopa?: T | LifeAtZopaBlockSelect<T>;
         jobOpportunities?: T | JobOpportunitiesBlockSelect<T>;
         termsAndConditions?: T | TermsAndConditionsBlockSelect<T>;
+        jobDetail?: T | JobDetailBlockSelect<T>;
       };
   meta?:
     | T
@@ -2386,6 +2537,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+              anchor?: T;
               appearance?: T;
             };
         id?: T;
@@ -2415,6 +2567,7 @@ export interface ContentBlockSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+              anchor?: T;
               appearance?: T;
             };
         id?: T;
@@ -2488,6 +2641,7 @@ export interface ProductFluxSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+              anchor?: T;
               appearance?: T;
             };
         backgroundImage?: T;
@@ -2526,6 +2680,7 @@ export interface PricingCardsBlockSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+              anchor?: T;
               appearance?: T;
             };
         id?: T;
@@ -2564,6 +2719,7 @@ export interface BlogSectionBlockSelect<T extends boolean = true> {
         reference?: T;
         url?: T;
         label?: T;
+        anchor?: T;
         appearance?: T;
       };
   id?: T;
@@ -2588,6 +2744,7 @@ export interface FullWidthBannerBlockSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+              anchor?: T;
               appearance?: T;
             };
         id?: T;
@@ -2636,6 +2793,7 @@ export interface AboutUsBlockSelect<T extends boolean = true> {
         reference?: T;
         url?: T;
         label?: T;
+        anchor?: T;
         appearance?: T;
       };
   id?: T;
@@ -2686,6 +2844,7 @@ export interface ProcurementSolutionsBlockSelect<T extends boolean = true> {
         reference?: T;
         url?: T;
         label?: T;
+        anchor?: T;
         appearance?: T;
       };
   id?: T;
@@ -2707,6 +2866,7 @@ export interface ServicesSectionBlockSelect<T extends boolean = true> {
               newTab?: T;
               reference?: T;
               url?: T;
+              anchor?: T;
             };
         id?: T;
       };
@@ -2750,6 +2910,7 @@ export interface ServiceDetailSectionBlockSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+              anchor?: T;
               appearance?: T;
             };
         id?: T;
@@ -2780,13 +2941,16 @@ export interface HowWeWorkBlockSelect<T extends boolean = true> {
  * via the `definition` "InterestFormBlock_select".
  */
 export interface InterestFormBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   label?: T;
   heading?: T;
   description?: T;
   backgroundImage?: T;
   overlayHeading?: T;
   overlayDescription?: T;
+  contactPhoneLabel?: T;
   contactPhone?: T;
+  contactEmailLabel?: T;
   contactEmail?: T;
   formHeading?: T;
   form?: T;
@@ -2822,6 +2986,7 @@ export interface PricingComparisonBlockSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+              anchor?: T;
               appearance?: T;
             };
         id?: T;
@@ -2872,6 +3037,7 @@ export interface OutcomeSectionBlockSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+              anchor?: T;
               appearance?: T;
             };
       };
@@ -2995,6 +3161,7 @@ export interface JobOpportunitiesBlockSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+              anchor?: T;
               appearance?: T;
             };
         id?: T;
@@ -3007,42 +3174,38 @@ export interface JobOpportunitiesBlockSelect<T extends boolean = true> {
  * via the `definition` "TermsAndConditionsBlock_select".
  */
 export interface TermsAndConditionsBlockSelect<T extends boolean = true> {
-  fields?:
+  content?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "JobDetailBlock_select".
+ */
+export interface JobDetailBlockSelect<T extends boolean = true> {
+  city?: T;
+  locationType?: T;
+  aboutRole?: T;
+  responsibilities?:
     | T
     | {
-        heading?:
-          | T
-          | {
-              heading?: T;
-              id?: T;
-              blockName?: T;
-            };
-        subHeading?:
-          | T
-          | {
-              subHeading?: T;
-              id?: T;
-              blockName?: T;
-            };
-        points?:
-          | T
-          | {
-              points?:
-                | T
-                | {
-                    point?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        description?:
-          | T
-          | {
-              description?: T;
-              id?: T;
-              blockName?: T;
-            };
+        type?: T;
+        text?: T;
+        heading?: T;
+        paragraph?: T;
+        id?: T;
+      };
+  minimumRequirements?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  desiredRequirements?:
+    | T
+    | {
+        text?: T;
+        id?: T;
       };
   id?: T;
   blockName?: T;
@@ -3076,8 +3239,9 @@ export interface PostsSelect<T extends boolean = true> {
   populatedAuthors?:
     | T
     | {
-        id?: T;
+        authorId?: T;
         name?: T;
+        id?: T;
       };
   generateSlug?: T;
   slug?: T;
@@ -3393,6 +3557,25 @@ export interface FormsSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        upload?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              uploadCollection?: T;
+              mimeTypes?:
+                | T
+                | {
+                    mimeType?: T;
+                    id?: T;
+                  };
+              width?: T;
+              maxFileSize?: T;
+              required?: T;
+              multiple?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   submitButtonLabel?: T;
   confirmationType?: T;
@@ -3424,6 +3607,13 @@ export interface FormsSelect<T extends boolean = true> {
 export interface FormSubmissionsSelect<T extends boolean = true> {
   form?: T;
   submissionData?:
+    | T
+    | {
+        field?: T;
+        value?: T;
+        id?: T;
+      };
+  submissionUploads?:
     | T
     | {
         field?: T;
@@ -3545,24 +3735,7 @@ export interface ProductsSelect<T extends boolean = true> {
       };
   categories?: T;
   subtitle?: T;
-  whyRegister?:
-    | T
-    | {
-        text?: T;
-        id?: T;
-      };
-  howItWorks?:
-    | T
-    | {
-        text?: T;
-        id?: T;
-      };
-  afterApproval?:
-    | T
-    | {
-        text?: T;
-        id?: T;
-      };
+  content?: T;
   layout?:
     | T
     | {
@@ -3788,9 +3961,17 @@ export interface Header {
             | ({
                 relationTo: 'posts';
                 value: number | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
               } | null);
           url?: string | null;
           label?: string | null;
+          /**
+           * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+           */
+          anchor?: string | null;
         };
         /**
          * Add links here to show a dropdown when hovering or clicking this menu item.
@@ -3808,9 +3989,17 @@ export interface Header {
                   | ({
                       relationTo: 'posts';
                       value: number | Post;
+                    } | null)
+                  | ({
+                      relationTo: 'products';
+                      value: number | Product;
                     } | null);
                 url?: string | null;
                 label?: string | null;
+                /**
+                 * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+                 */
+                anchor?: string | null;
               };
               id?: string | null;
             }[]
@@ -3836,9 +4025,17 @@ export interface Header {
       | ({
           relationTo: 'posts';
           value: number | Post;
+        } | null)
+      | ({
+          relationTo: 'products';
+          value: number | Product;
         } | null);
     url?: string | null;
     label?: string | null;
+    /**
+     * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+     */
+    anchor?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -3862,9 +4059,17 @@ export interface Footer {
       | ({
           relationTo: 'posts';
           value: number | Post;
+        } | null)
+      | ({
+          relationTo: 'products';
+          value: number | Product;
         } | null);
     url?: string | null;
     label?: string | null;
+    /**
+     * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+     */
+    anchor?: string | null;
   };
   ctaLogo?: (number | null) | Media;
   columns?:
@@ -3883,9 +4088,17 @@ export interface Footer {
                   | ({
                       relationTo: 'posts';
                       value: number | Post;
+                    } | null)
+                  | ({
+                      relationTo: 'products';
+                      value: number | Product;
                     } | null);
                 url?: string | null;
                 label?: string | null;
+                /**
+                 * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+                 */
+                anchor?: string | null;
               };
               id?: string | null;
             }[]
@@ -3904,6 +4117,52 @@ export interface Footer {
       }[]
     | null;
   copyright?: string | null;
+  termsLink?: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null)
+      | ({
+          relationTo: 'products';
+          value: number | Product;
+        } | null);
+    url?: string | null;
+    label?: string | null;
+    /**
+     * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+     */
+    anchor?: string | null;
+  };
+  privacyLink?: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null)
+      | ({
+          relationTo: 'products';
+          value: number | Product;
+        } | null);
+    url?: string | null;
+    label?: string | null;
+    /**
+     * Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.
+     */
+    anchor?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -3924,6 +4183,7 @@ export interface HeaderSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+              anchor?: T;
             };
         children?:
           | T
@@ -3936,6 +4196,7 @@ export interface HeaderSelect<T extends boolean = true> {
                     reference?: T;
                     url?: T;
                     label?: T;
+                    anchor?: T;
                   };
               id?: T;
             };
@@ -3950,6 +4211,7 @@ export interface HeaderSelect<T extends boolean = true> {
         reference?: T;
         url?: T;
         label?: T;
+        anchor?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -3970,6 +4232,7 @@ export interface FooterSelect<T extends boolean = true> {
         reference?: T;
         url?: T;
         label?: T;
+        anchor?: T;
       };
   ctaLogo?: T;
   columns?:
@@ -3987,6 +4250,7 @@ export interface FooterSelect<T extends boolean = true> {
                     reference?: T;
                     url?: T;
                     label?: T;
+                    anchor?: T;
                   };
               id?: T;
             };
@@ -4003,6 +4267,26 @@ export interface FooterSelect<T extends boolean = true> {
         id?: T;
       };
   copyright?: T;
+  termsLink?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+        anchor?: T;
+      };
+  privacyLink?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+        anchor?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

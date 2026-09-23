@@ -4,6 +4,22 @@ export const InterestForm: Block = {
   slug: 'interestForm',
   interfaceName: 'InterestFormBlock',
   fields: [
+     {
+      name: 'anchorId',
+      type: 'text',
+      label: 'Anchor ID',
+      defaultValue: 'interest',
+      admin: {
+        description:
+          'Editors can scroll here from any link field by setting that link\'s "Anchor" to this value. Letters, numbers, hyphens only. Must be unique on the page.',
+      },
+      validate: (value: string | null | undefined) => {
+        if (!value) return true
+        return /^[a-zA-Z][a-zA-Z0-9_-]*$/.test(value)
+          ? true
+          : 'Use only letters, numbers, hyphens or underscores, starting with a letter.'
+      },
+    },
     {
       name: 'label',
       type: 'text',
@@ -36,10 +52,20 @@ export const InterestForm: Block = {
       label: 'Overlay Description',
     },
     {
+     name: 'contactPhoneLabel',
+     type: 'text',
+     label: 'Phone Label',
+    },
+    {
       name: 'contactPhone',
       type: 'text',
       label: 'Phone',
     },
+    {
+    name: 'contactEmailLabel',
+    type: 'text',
+    label: 'Email Label',
+   },
     {
       name: 'contactEmail',
       type: 'email',

@@ -73,23 +73,46 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
   reset,
   } = formMethods
 
-  const onSubmit = useCallback(
-    (data: Record<string, any>) => {
+   const onSubmit = useCallback(
+    (data: Record<string, any>, event?: any) => {
       let loadingTimerID: ReturnType<typeof setTimeout>
       const submitForm = async () => {
         setError(undefined)
-        const dataToSend = Object.entries(data).map(([name, value]) => ({
-          field: name,
-          value,
-        }))
+
+        const uploadFieldNames = new Set(
+          (formFromProps?.fields as any[])?.filter((f) => f.blockType === 'upload').map((f) => f.name) || [],
+        )
+
+        const dataToSend = Object.entries(data)
+          .filter(([name]) => !uploadFieldNames.has(name))
+          .map(([field, value]) => ({ field, value }))
+
+        const headers: Record<string, string> = {}
+        let body: BodyInit
+
+        if (uploadFieldNames.size > 0) {
+          const formData = new FormData()
+          formData.append(
+            '_payload',
+            JSON.stringify({ form: formFromProps?.id, submissionData: dataToSend }),
+          )
+          const formEl = event?.target as HTMLFormElement
+          if (formEl?.querySelectorAll) {
+            formEl.querySelectorAll<HTMLInputElement>('input[type="file"][name]').forEach((input) => {
+              if (input.files) Array.from(input.files).forEach((f) => formData.append(input.name, f))
+            })
+          }
+          body = formData
+        } else {
+          headers['Content-Type'] = 'application/json'
+          body = JSON.stringify({ form: formFromProps?.id, submissionData: dataToSend })
+        }
+
         loadingTimerID = setTimeout(() => setIsLoading(true), 1000)
         try {
           const req = await fetch(`${getClientSideURL()}/api/form-submissions`, {
-            body: JSON.stringify({
-              form: formFromProps?.id,
-              submissionData: dataToSend,
-            }),
-            headers: { 'Content-Type': 'application/json' },
+            body,
+            headers,
             method: 'POST',
           })
           const res = await req.json()

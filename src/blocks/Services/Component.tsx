@@ -63,9 +63,9 @@ export const ServiceDetailSectionBlockComponent: React.FC<ServiceDetailSectionBl
 
                   {/* Simple Items with rounded bullets */}
                   {service.displayType === 'item' && service.items && service.items.length > 0 && (
-                    <ul className="mt-4 space-y-3 list-disc list-inside">
+                    <ul className="mt-4 space-y-3">
                       {service.items.map((f, i) => (
-                        <li key={i} className="text-sm text-black marker:text-black">
+                        <li key={i} className="text-sm text-black">
                           <ArrowRight className="inline-block w-4 h-4 mr-2" />
                           {f.item}
                         </li>

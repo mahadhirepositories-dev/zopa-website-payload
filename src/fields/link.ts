@@ -75,7 +75,7 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
         condition: (_, siblingData) => siblingData?.type === 'reference',
       },
       label: 'Document to link to',
-      relationTo: ['pages', 'posts'],
+      relationTo: ['pages', 'posts', 'products'],   // <-- add 'products'
       required: false,
     },
     {
@@ -116,7 +116,17 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
   } else {
     linkResult.fields = [...linkResult.fields, ...linkTypes]
   }
-
+  
+    linkResult.fields.push({
+    name: 'anchor',
+    type: 'text',
+    label: 'Anchor (optional)',
+    admin: {
+      description:
+        'Section ID to scroll to on the target page — e.g. "interest" turns /about into /about#interest. Set the matching "Anchor ID" on the target block.',
+      width: '50%',
+    },
+  })
   if (appearances !== false) {
     let appearanceOptionsToUse = [appearanceOptions.default, appearanceOptions.outline]
 

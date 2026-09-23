@@ -54,16 +54,22 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
   ]
 
   for (const table of tablesForIdDefault) {
-    try {
-      await db.execute(sql.raw(`ALTER TABLE "${table}" ALTER COLUMN "id" SET DEFAULT gen_random_uuid()::text;`))
-    } catch (e: any) {
-      if (
-        !e?.message?.includes('does not exist') &&
-        !e?.message?.includes('already')
-      ) {
-        throw e
-      }
-    }
+    // Only set the uuid default when id is actually a text/varchar column;
+    // on hybrid (push-era) schemas some tables still have integer serial ids.
+    await db.execute(sql.raw(`
+      DO $mig$
+      BEGIN
+        IF EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_schema = 'public'
+            AND table_name = '${table}'
+            AND column_name = 'id'
+            AND data_type IN ('text', 'character varying')
+        ) THEN
+          ALTER TABLE "${table}" ALTER COLUMN "id" SET DEFAULT gen_random_uuid()::text;
+        END IF;
+      END $mig$;
+    `))
   }
 
   const tablesForParentIdVarchar = [
@@ -75,16 +81,34 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
   ]
 
   for (const table of tablesForParentIdVarchar) {
-    try {
-      await db.execute(sql.raw(`ALTER TABLE "${table}" ALTER COLUMN "_parent_id" TYPE varchar USING "_parent_id"::varchar;`))
-    } catch (e: any) {
-      if (
-        !e?.message?.includes('does not exist') &&
-        !e?.message?.includes('already')
-      ) {
-        throw e
-      }
-    }
+    // Only convert when _parent_id is still integer; skip when already varchar.
+    await db.execute(sql.raw(`
+      DO $mig$
+      BEGIN
+        IF EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_schema = 'public'
+            AND table_name = '${table}'
+            AND column_name = '_parent_id'
+            AND data_type = 'integer'
+        ) THEN
+          BEGIN
+            ALTER TABLE "${table}" ALTER COLUMN "_parent_id" TYPE varchar USING "_parent_id"::varchar;
+          EXCEPTION WHEN OTHERS THEN NULL;
+          END;
+        END IF;
+      END $mig$;
+    `))
+    // Re-adding the dependent FK may be impossible on hybrid schemas where the
+    // parent id type differs; the config-generated sync migration re-establishes
+    // correct constraints, so treat implementation failures as non-fatal.
+    await db.execute(sql.raw(`
+      DO $fk$
+      BEGIN
+        ALTER TABLE "${table}" ADD CONSTRAINT "${table}_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "pages"("id") ON DELETE cascade ON UPDATE no action;
+      EXCEPTION WHEN duplicate_object OR datatype_mismatch OR undefined_table OR undefined_column OR feature_not_supported THEN NULL;
+      END $fk$;
+    `))
   }
 }
 

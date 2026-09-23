@@ -60,6 +60,9 @@ const nextConfig: NextConfig = {
     loadPaths: ['./node_modules/@payloadcms/ui/dist/scss/'],
   },
   images: {
+    // Next.js 16 requires every used `quality` value to be whitelisted here.
+    // ImageMedia renders media at quality 100; 75 is the default used elsewhere.
+    qualities: [75, 100],
     localPatterns: [
       {
         pathname: '/api/media/file/**',

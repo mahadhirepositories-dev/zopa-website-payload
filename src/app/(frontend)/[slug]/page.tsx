@@ -14,6 +14,8 @@ import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { ProductDetailBlockComponent } from '@/blocks/Productdetail/Component'
 
+export const dynamic = 'force-dynamic'
+
 export async function generateStaticParams() {
   try {
     const payload = await getPayload({ config: configPromise })

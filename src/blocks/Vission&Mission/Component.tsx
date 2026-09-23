@@ -1,21 +1,25 @@
 import React from 'react'
-
+ 
 import type { VisionMissionBlock } from '@/payload-types'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-    Bot,
-    HandCoins,
-    PiggyBank, Shield, ShieldCheck,
-    Sparkles,
-} from 'lucide-react'
-
+  faRobot,
+  faUserShield,
+  faShieldHalved,
+  faPiggyBank,
+  faHandHoldingMedical,
+  faWandMagicSparkles,
+} from '@fortawesome/free-solid-svg-icons'
+ 
+// Keys MUST stay the same — they match the select field values stored in the DB.
 const iconMap = {
-  Bot: Bot,
-  ShieldCheck: ShieldCheck,
-  Shield: Shield,
-  PiggyBank: PiggyBank,
-  HandCoins: HandCoins,
+  Bot: faRobot,            // Autonomy
+  ShieldCheck: faUserShield, // Integrity
+  Shield: faShieldHalved,    // Trust
+  PiggyBank: faPiggyBank,    // Frugal
+  HandCoins: faHandHoldingMedical, // Accountability
 }
-
+ 
 export const VisionMissionBlockComponent: React.FC<VisionMissionBlock> = ({
   vision,
   mission,
@@ -32,22 +36,32 @@ export const VisionMissionBlockComponent: React.FC<VisionMissionBlock> = ({
             </div>
           ))}
         </div>
-
+ 
         {values && values.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 px-6">
             {values.map((value, i) => {
-              const Icon = value.icon ? iconMap[value.icon as keyof typeof iconMap] : Sparkles
+              const icon = value.icon
+                ? iconMap[value.icon as keyof typeof iconMap]
+                : faWandMagicSparkles
               return (
-             <div key={i} className="group border border-border rounded-lg p-6 text-center bg-white hover:bg-[#dbac2b] transition-colors">
-                
+                <div
+                  key={i}
+                  className="group border border-border rounded-lg p-6 text-center bg-white hover:bg-[#dbac2b] transition-colors"
+                >
                   <div className="mb-4 flex h-15 w-15 items-center justify-start">
-                    {Icon && <Icon className="h-14 w-14 text-[#dbac2b]  group-hover:text-black" />}
+                    <FontAwesomeIcon
+                      icon={icon}
+                      className="h-14 w-14 text-[#dbac2b] group-hover:text-black"
+                    />
                   </div>
-        
-                  <h4 className="text-[25px] font-[380] text-black text-left font-sans mt-3">{value.title}</h4>
-                  <p className="mt-2 text-sm text-gray-800 leading-relaxed text-left mt-5 mb-4">{value.description}</p>
-            
-            </div>
+ 
+                  <h4 className="text-[25px] font-[380] text-black text-left font-sans mt-3">
+                    {value.title}
+                  </h4>
+                  <p className="mt-2 text-sm text-gray-800 leading-relaxed text-left mt-5 mb-4">
+                    {value.description}
+                  </p>
+                </div>
               )
             })}
           </div>

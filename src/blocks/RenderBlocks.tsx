@@ -31,6 +31,7 @@ import { LifeAtZopaBlockComponent } from './Lifeatzopa/Component'
 import { JobOpportunitiesBlockComponent } from './Joboppurtunities/Component'
 import { TermsAndConditionsBlock } from './Termsandconditions/Component'
 import { BlockErrorBoundary } from './BlockErrorBoundary'
+import { JobDetailBlockComponent } from './Jobdetail/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -61,6 +62,7 @@ const blockComponents = {
   lifeAtZopa: LifeAtZopaBlockComponent,
   jobOpportunities: JobOpportunitiesBlockComponent,
   termsAndConditions:TermsAndConditionsBlock,
+  jobDetail: JobDetailBlockComponent,
 }
 
 export const RenderBlocks: React.FC<{

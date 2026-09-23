@@ -13,6 +13,7 @@ import { ArrowRight } from 'lucide-react'
 
 export const InterestFormBlockComponent: React.FC<InterestFormBlock> = (props) => {
   const {
+    anchorId,
     label,
     heading,
     description,
@@ -21,6 +22,8 @@ export const InterestFormBlockComponent: React.FC<InterestFormBlock> = (props) =
     overlayDescription,
     contactPhone,
     contactEmail,
+    contactPhoneLabel,
+    contactEmailLabel,
     formHeading,
     form,
     formLogo
@@ -59,25 +62,43 @@ export const InterestFormBlockComponent: React.FC<InterestFormBlock> = (props) =
 } = formMethods
 
   const onSubmit = useCallback(
-    async (data: Record<string, any>) => {
+    async (data: Record<string, any>, event?: any) => {
       if (!form || typeof form !== 'object') return
 
       setIsLoading(true)
       setError(null)
 
-      const dataToSend = Object.entries(data).map(([name, value]) => ({
-        field: name,
-        value,
-      }))
+      const uploadFieldNames = new Set(
+        (form.fields as any[])?.filter((f) => f.blockType === 'upload').map((f) => f.name) || [],
+      )
+
+      const dataToSend = Object.entries(data)
+        .filter(([name]) => !uploadFieldNames.has(name))
+        .map(([field, value]) => ({ field, value }))
+
+      const headers: Record<string, string> = {}
+      let body: BodyInit
+
+      if (uploadFieldNames.size > 0) {
+        const formData = new FormData()
+        formData.append('_payload', JSON.stringify({ form: form.id, submissionData: dataToSend }))
+        const formEl = event?.target as HTMLFormElement
+        if (formEl?.querySelectorAll) {
+          formEl.querySelectorAll<HTMLInputElement>('input[type="file"][name]').forEach((input) => {
+            if (input.files) Array.from(input.files).forEach((f) => formData.append(input.name, f))
+          })
+        }
+        body = formData
+      } else {
+        headers['Content-Type'] = 'application/json'
+        body = JSON.stringify({ form: form.id, submissionData: dataToSend })
+      }
 
       try {
         const req = await fetch(`${getClientSideURL()}/api/form-submissions`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            form: form.id,
-            submissionData: dataToSend,
-          }),
+          headers,
+          body,
         })
 
         if (req.status >= 400) {
@@ -94,17 +115,20 @@ export const InterestFormBlockComponent: React.FC<InterestFormBlock> = (props) =
           setHasSubmitted(false)
           setError(null)
           reset()
-        }, 7000) // show thank-you for 7s, then bring the form back
+        }, 7000)
       } catch (err) {
         setIsLoading(false)
         setError('Something went wrong. Please try again.')
       }
     },
-   [form, reset]
+    [form, reset],
   )
 
   return (
-    <section className="py-30 pb-45 bg-white">
+    <section
+      id={anchorId || 'interest'}
+      className="scroll-mt-28 py-40 pb-50 mb-20 bg-white"
+    >
       <div className="container">
         {/* Top: Label + Heading + Description */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-17">
@@ -144,9 +168,9 @@ export const InterestFormBlockComponent: React.FC<InterestFormBlock> = (props) =
 
           <div>
             {/* Left: Contact Card */}
-            <div className="backdrop-blur-xs bg-black/40 rounded-lg shadow-lg p-8 absolute z-10 top-117 left-5 w-[500px]">
+            <div className="backdrop-blur-xs bg/black/5 rounded-lg shadow-lg p-8 absolute z-10 top-117 left-5 w-[500px]">
               {overlayHeading && (
-                <h3 className="text-xl font-semibold text-white mb-3">{overlayHeading}</h3>
+                <h3 className="text-[18px] font-[400] text-white mb-3">{overlayHeading}</h3>
               )}
               {overlayDescription && (
                 <p className="text-white text-sm leading-relaxed mb-6">{overlayDescription}</p>
@@ -158,8 +182,8 @@ export const InterestFormBlockComponent: React.FC<InterestFormBlock> = (props) =
                     <Phone className="w-5 h-5 text-gray-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-800">Call us at:</p>
-                    <p className="font-semibold text-black">{contactPhone}</p>
+                    <p className="text-[15px] font-[400] text-black">{contactPhoneLabel}</p>
+                    <p className="text-[15px] font-[400]text-black">{contactPhone}</p>
                   </div>
                 </div>
               )}
@@ -169,8 +193,8 @@ export const InterestFormBlockComponent: React.FC<InterestFormBlock> = (props) =
                     <Mail className="w-5 h-5 text-gray-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-800">Mail us at:</p>
-                    <p className="font-semibold text-black">{contactEmail}</p>
+                    <p className="text-[15px] font-[400] text-black">{contactEmailLabel}</p>
+                    <p className="text-[15px] font-[400] text-black">{contactEmail}</p>
                   </div>
                 </div>
               )}

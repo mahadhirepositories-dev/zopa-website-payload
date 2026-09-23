@@ -48,69 +48,64 @@ export const FormBlock: React.FC<
   const router = useRouter()
 
   const onSubmit = useCallback(
-    (data: Record<string, any>) => {
-      let loadingTimerID: ReturnType<typeof setTimeout>
-      const submitForm = async () => {
-        setError(undefined)
+    async (data: Record<string, any>, event?: any) => {
+      if (!formFromProps || typeof formFromProps !== 'object') return
+      setIsLoading(true)
+      setError(undefined)
 
-        const dataToSend = Object.entries(data).map(([name, value]) => ({
-          field: name,
-          value,
-        }))
+      const uploadFieldNames = new Set(
+        (formFromProps.fields as any[])
+          .filter((f) => f.blockType === 'upload')
+          .map((f) => f.name),
+      )
 
-        loadingTimerID = setTimeout(() => {
-          setIsLoading(true)
-        }, 1000)
+      const dataToSend = Object.entries(data)
+        .filter(([name]) => !uploadFieldNames.has(name))
+        .map(([field, value]) => ({ field, value }))
 
-        try {
-          const req = await fetch(`${getClientSideURL()}/api/form-submissions`, {
-            body: JSON.stringify({
-              form: formID,
-              submissionData: dataToSend,
-            }),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            method: 'POST',
-          })
+      const hasUploads = uploadFieldNames.size > 0
+      const headers: Record<string, string> = {}
+      let body: BodyInit
 
-          const res = await req.json()
-
-          clearTimeout(loadingTimerID)
-
-          if (req.status >= 400) {
-            setIsLoading(false)
-
-            setError({
-              message: res.errors?.[0]?.message || 'Internal Server Error',
-              status: res.status,
-            })
-
-            return
-          }
-
-          setIsLoading(false)
-          setHasSubmitted(true)
-
-          if (confirmationType === 'redirect' && redirect) {
-            const { url } = redirect
-
-            const redirectUrl = url
-
-            if (redirectUrl) router.push(redirectUrl)
-          }
-        } catch (err) {
-          console.warn(err)
-          setIsLoading(false)
-          setError({
-            message: 'Something went wrong.',
+      if (hasUploads) {
+        const formData = new FormData()
+        formData.append('_payload', JSON.stringify({ form: formID, submissionData: dataToSend }))
+        const formEl = event?.target as HTMLFormElement
+        if (formEl?.querySelectorAll) {
+          formEl.querySelectorAll<HTMLInputElement>('input[type="file"][name]').forEach((input) => {
+            if (input.files) Array.from(input.files).forEach((f) => formData.append(input.name, f))
           })
         }
+        body = formData
+      } else {
+        headers['Content-Type'] = 'application/json'
+        body = JSON.stringify({ form: formID, submissionData: dataToSend })
       }
 
-      void submitForm()
+      try {
+        const req = await fetch(`${getClientSideURL()}/api/form-submissions`, {
+          method: 'POST',
+          headers,
+          body,
+        })
+        const res = await req.json()
+        if (req.status >= 400) {
+          setIsLoading(false)
+          setError({ message: res.errors?.[0]?.message || 'Internal Server Error', status: String(res.status) })
+          return
+        }
+        setIsLoading(false)
+        setHasSubmitted(true)
+        // restore any success handling the original had here (reset(), redirect)
+        if (confirmationType === 'redirect' && redirect) {
+          router.push(typeof redirect === 'object' ? redirect.url : redirect)
+        }
+      } catch {
+        setIsLoading(false)
+        setError({ message: 'Something went wrong' })
+      }
     },
-    [router, formID, redirect, confirmationType],
+    [formFromProps, formID, confirmationType, redirect, router],
   )
 
   return (

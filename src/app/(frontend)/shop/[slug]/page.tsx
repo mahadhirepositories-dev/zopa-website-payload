@@ -12,8 +12,11 @@ type Args = {
   params: Promise<{ slug: string }>
 }
 
+export const dynamic = 'force-dynamic'
+
 export default async function ProductPage({ params: paramsPromise }: Args) {
-  const { slug } = await paramsPromise
+  const { slug: rawSlug } = await paramsPromise
+  const slug = decodeURIComponent(rawSlug)
 
   const { isEnabled: draft } = await draftMode()
   const payload = await getPayload({ config: configPromise })
@@ -55,9 +58,9 @@ export default async function ProductPage({ params: paramsPromise }: Args) {
 }
 
 export async function generateMetadata({
-  params: paramsPromise,
-}: Args): Promise<Metadata> {
-  const { slug } = await paramsPromise
+  params: paramsPromise,}: Args): Promise<Metadata> {
+  const { slug: rawSlug } = await paramsPromise
+  const slug = decodeURIComponent(rawSlug)
   const payload = await getPayload({ config: configPromise })
 
   const result = await payload.find({

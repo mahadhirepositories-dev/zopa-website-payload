@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   title: 'Checkout | Zopa',
 }
 
+export const dynamic = 'force-dynamic'
+
 export default async function CheckoutPage() {
   let layout: any[] = []
 

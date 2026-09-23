@@ -15,7 +15,7 @@ const socialIcons: Record<string, React.ReactNode> = {
 export async function Footer() {
   const footerData = await getCachedGlobal('footer', 1)()
 
-  const {
+   const {
     ctaHeading,
     ctaDescription,
     ctaButton,
@@ -24,6 +24,8 @@ export async function Footer() {
     contactPhone,
     contactEmail,
     copyright,
+    termsLink,
+    privacyLink,
   } = footerData || {}
 
   const columns = footerData?.columns ?? []
@@ -142,16 +144,22 @@ export async function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="container py-6 border-t border-gray-600">
+       <div className="container py-6 border-t border-gray-600">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
           <p>{copyright}</p>
           <div className="flex items-center gap-6">
-            <Link href="/terms" className="hover:text-white transition-colors">
-              Terms &amp; Conditions
-            </Link>
-            <Link href="/privacy" className="hover:text-white transition-colors">
-              Privacy Policy
-            </Link>
+            {termsLink && (
+              <CMSLink
+                {...termsLink}
+                className="hover:text-white transition-colors"
+              />
+            )}
+            {privacyLink && (
+              <CMSLink
+                {...privacyLink}
+                className="hover:text-white transition-colors"
+              />
+            )}
           </div>
         </div>
       </div>

@@ -13,6 +13,41 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
       CREATE TYPE "public"."enum__svc_v_display_type" AS ENUM('item', 'feature');
     EXCEPTION WHEN duplicate_object THEN NULL; END $$;
   `)
+  // These four enum types are referenced below but were never created by any
+  // migration (they only existed in push-era schemas). Create them guarded so
+  // fresh databases don't fail on "type does not exist".
+  await db.execute(sql`
+    DO $$ BEGIN
+      CREATE TYPE "public"."enum_pages_blocks_pricing_cards_link_cards_cta_link_type" AS ENUM('reference', 'custom');
+    EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+  `)
+  await db.execute(sql`
+    DO $$ BEGIN
+      CREATE TYPE "public"."enum_pages_blocks_pricing_cards_link_cards_cta_link_appearance" AS ENUM('default', 'outline');
+    EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+  `)
+  await db.execute(sql`
+    DO $$ BEGIN
+      CREATE TYPE "public"."enum_pages_blocks_outcome_cta_link_cta_card_cta_link_type" AS ENUM('reference', 'custom');
+    EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+  `)
+  await db.execute(sql`
+    DO $$ BEGIN
+      CREATE TYPE "public"."enum_pages_blocks_outcome_cta_link_cta_card_cta_link_appearance" AS ENUM('default', 'outline');
+    EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+  `)
+  // Unprefixed variants used by the version-table columns; created only later by
+  // 0814, so guard-create them here too.
+  await db.execute(sql`
+    DO $$ BEGIN
+      CREATE TYPE "public"."enum_outcome_cta_link_cta_card_cta_link_type" AS ENUM('reference', 'custom');
+    EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+  `)
+  await db.execute(sql`
+    DO $$ BEGIN
+      CREATE TYPE "public"."enum_outcome_cta_link_cta_card_cta_link_appearance" AS ENUM('default', 'outline');
+    EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+  `)
   await db.execute(sql`ALTER TABLE "svc" ADD COLUMN IF NOT EXISTS "sub_heading" varchar;`)
   await db.execute(sql`ALTER TABLE "svc" ADD COLUMN IF NOT EXISTS "display_type" "enum_svc_display_type" DEFAULT 'item';`)
   await db.execute(sql`ALTER TABLE "_svc_v" ADD COLUMN IF NOT EXISTS "sub_heading" varchar;`)
@@ -48,49 +83,42 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`ALTER TABLE "pages_blocks_pricing_cards_cards_features" ALTER COLUMN "_parent_id" TYPE varchar USING "_parent_id"::varchar;`)
   await db.execute(sql`ALTER TABLE "pages_blocks_recent_clients_clients" ALTER COLUMN "_parent_id" TYPE varchar USING "_parent_id"::varchar;`)
 
-  await db.execute(sql`ALTER TABLE "pricing_cards_link" ALTER COLUMN "_parent_id" TYPE integer USING NULLIF("_parent_id", '')::integer;`)
-  await db.execute(sql`ALTER TABLE "outcome_cta_link" ALTER COLUMN "_parent_id" TYPE integer USING NULLIF("_parent_id", '')::integer;`)
-  await db.execute(sql`ALTER TABLE "_pricing_cards_link_v" ALTER COLUMN "_parent_id" TYPE integer USING NULLIF("_parent_id", '')::integer;`)
-  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ALTER COLUMN "_parent_id" TYPE integer USING NULLIF("_parent_id", '')::integer;`)
-  await db.execute(sql`ALTER TABLE "pricing_cards_link" ADD COLUMN IF NOT EXISTS "_path" text;`)
-  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "_path" text;`)
-  await db.execute(sql`ALTER TABLE "_pricing_cards_link_v" ADD COLUMN IF NOT EXISTS "_path" text;`)
-  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "_path" text;`)
-  await db.execute(sql`ALTER TABLE "_svc_v" ADD COLUMN IF NOT EXISTS "_path" text;`)
-  await db.execute(sql`ALTER TABLE "_pages_v_blocks_who_can_benefit" ADD COLUMN IF NOT EXISTS "_path" text;`)
-  await db.execute(sql`ALTER TABLE "pricing_cards_link" ADD COLUMN IF NOT EXISTS "badge" varchar;`)
-  await db.execute(sql`ALTER TABLE "pricing_cards_link" ADD COLUMN IF NOT EXISTS "heading" varchar;`)
-  await db.execute(sql`ALTER TABLE "pricing_cards_link" ADD COLUMN IF NOT EXISTS "description" varchar;`)
-  await db.execute(sql`ALTER TABLE "pricing_cards_link" ADD COLUMN IF NOT EXISTS "block_name" varchar;`)
-  await db.execute(sql`ALTER TABLE "_pricing_cards_link_v" ADD COLUMN IF NOT EXISTS "badge" varchar;`)
-  await db.execute(sql`ALTER TABLE "_pricing_cards_link_v" ADD COLUMN IF NOT EXISTS "heading" varchar;`)
-  await db.execute(sql`ALTER TABLE "_pricing_cards_link_v" ADD COLUMN IF NOT EXISTS "description" varchar;`)
-  await db.execute(sql`ALTER TABLE "_pricing_cards_link_v" ADD COLUMN IF NOT EXISTS "block_name" varchar;`)
-  await db.execute(sql`ALTER TABLE "_pricing_cards_link_v" ADD COLUMN IF NOT EXISTS "_uuid" varchar;`)
+  // These tables are created further down in this same migration; on a fresh DB
+  // they do not exist yet at this point, so guard the type change and let the
+  // guarded CREATE TABLE below establish them.
+  await db.execute(sql`DO $mig$ BEGIN
+    IF to_regclass('"pricing_cards_link"') IS NOT NULL THEN
+      ALTER TABLE "pricing_cards_link" ALTER COLUMN "_parent_id" TYPE integer USING NULLIF("_parent_id", '')::integer;
+    END IF;
+  END $mig$;`)
+  await db.execute(sql`DO $mig$ BEGIN
+    IF to_regclass('"outcome_cta_link"') IS NOT NULL THEN
+      ALTER TABLE "outcome_cta_link" ALTER COLUMN "_parent_id" TYPE integer USING NULLIF("_parent_id", '')::integer;
+    END IF;
+  END $mig$;`)
+  await db.execute(sql`DO $mig$ BEGIN
+    IF to_regclass('"_pricing_cards_link_v"') IS NOT NULL THEN
+      ALTER TABLE "_pricing_cards_link_v" ALTER COLUMN "_parent_id" TYPE integer USING NULLIF("_parent_id", '')::integer;
+    END IF;
+  END $mig$;`)
+  await db.execute(sql`DO $mig$ BEGIN
+    IF to_regclass('"_outcome_cta_link_v"') IS NOT NULL THEN
+      ALTER TABLE "_outcome_cta_link_v" ALTER COLUMN "_parent_id" TYPE integer USING NULLIF("_parent_id", '')::integer;
+    END IF;
+  END $mig$;`)
 
-  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "badge" varchar;`)
-  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "heading" varchar;`)
-  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "cta_card_heading" varchar;`)
-  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_type" "enum_pages_blocks_outcome_cta_link_cta_card_cta_link_type" DEFAULT 'reference';`)
-  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_new_tab" boolean;`)
-  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_url" varchar;`)
-  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_label" varchar;`)
-  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_appearance" "enum_pages_blocks_outcome_cta_link_cta_card_cta_link_appearance" DEFAULT 'default';`)
-  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "block_name" varchar;`)
-
-  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "badge" varchar;`)
-  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "heading" varchar;`)
-  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "cta_card_heading" varchar;`)
-  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_type" "enum_outcome_cta_link_cta_card_cta_link_type" DEFAULT 'reference';`)
-  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_new_tab" boolean;`)
-  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_url" varchar;`)
-  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_label" varchar;`)
-  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_appearance" "enum_outcome_cta_link_cta_card_cta_link_appearance" DEFAULT 'default';`)
-  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "block_name" varchar;`)
-  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "_uuid" varchar;`)
-
-  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v_cards" ALTER COLUMN "_parent_id" TYPE varchar USING "_parent_id"::varchar;`)
-  await db.execute(sql`ALTER TABLE "_pricing_cards_link_v_cards" ALTER COLUMN "_parent_id" TYPE varchar USING "_parent_id"::varchar;`)
+  // These two tables are only created later by 20260814_064419; on a fresh
+  // database they do not exist yet, so guard instead of failing.
+  await db.execute(sql`DO $mig$ BEGIN
+    IF to_regclass('"_outcome_cta_link_v_cards"') IS NOT NULL THEN
+      ALTER TABLE "_outcome_cta_link_v_cards" ALTER COLUMN "_parent_id" TYPE varchar USING "_parent_id"::varchar;
+    END IF;
+  END $mig$;`)
+  await db.execute(sql`DO $mig$ BEGIN
+    IF to_regclass('"_pricing_cards_link_v_cards"') IS NOT NULL THEN
+      ALTER TABLE "_pricing_cards_link_v_cards" ALTER COLUMN "_parent_id" TYPE varchar USING "_parent_id"::varchar;
+    END IF;
+  END $mig$;`)
 
   await db.execute(sql`ALTER TABLE "_pages_v_blocks_product_features" DROP CONSTRAINT IF EXISTS "_pages_v_blocks_product_features_parent_id_fk";`)
   await db.execute(sql`ALTER TABLE "_pages_v_blocks_product_features" ALTER COLUMN "_parent_id" TYPE varchar USING "_parent_id"::varchar;`)
@@ -314,6 +342,42 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
       );
     EXCEPTION WHEN duplicate_table OR duplicate_object THEN NULL; END $$;
   `)
+  await db.execute(sql`ALTER TABLE "pricing_cards_link" ADD COLUMN IF NOT EXISTS "_path" text;`)
+  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "_path" text;`)
+  await db.execute(sql`ALTER TABLE "_pricing_cards_link_v" ADD COLUMN IF NOT EXISTS "_path" text;`)
+  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "_path" text;`)
+  await db.execute(sql`ALTER TABLE "_svc_v" ADD COLUMN IF NOT EXISTS "_path" text;`)
+  await db.execute(sql`ALTER TABLE "_pages_v_blocks_who_can_benefit" ADD COLUMN IF NOT EXISTS "_path" text;`)
+  await db.execute(sql`ALTER TABLE "pricing_cards_link" ADD COLUMN IF NOT EXISTS "badge" varchar;`)
+  await db.execute(sql`ALTER TABLE "pricing_cards_link" ADD COLUMN IF NOT EXISTS "heading" varchar;`)
+  await db.execute(sql`ALTER TABLE "pricing_cards_link" ADD COLUMN IF NOT EXISTS "description" varchar;`)
+  await db.execute(sql`ALTER TABLE "pricing_cards_link" ADD COLUMN IF NOT EXISTS "block_name" varchar;`)
+  await db.execute(sql`ALTER TABLE "_pricing_cards_link_v" ADD COLUMN IF NOT EXISTS "badge" varchar;`)
+  await db.execute(sql`ALTER TABLE "_pricing_cards_link_v" ADD COLUMN IF NOT EXISTS "heading" varchar;`)
+  await db.execute(sql`ALTER TABLE "_pricing_cards_link_v" ADD COLUMN IF NOT EXISTS "description" varchar;`)
+  await db.execute(sql`ALTER TABLE "_pricing_cards_link_v" ADD COLUMN IF NOT EXISTS "block_name" varchar;`)
+  await db.execute(sql`ALTER TABLE "_pricing_cards_link_v" ADD COLUMN IF NOT EXISTS "_uuid" varchar;`)
+
+  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "badge" varchar;`)
+  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "heading" varchar;`)
+  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "cta_card_heading" varchar;`)
+  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_type" "enum_pages_blocks_outcome_cta_link_cta_card_cta_link_type" DEFAULT 'reference';`)
+  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_new_tab" boolean;`)
+  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_url" varchar;`)
+  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_label" varchar;`)
+  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_appearance" "enum_pages_blocks_outcome_cta_link_cta_card_cta_link_appearance" DEFAULT 'default';`)
+  await db.execute(sql`ALTER TABLE "outcome_cta_link" ADD COLUMN IF NOT EXISTS "block_name" varchar;`)
+
+  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "badge" varchar;`)
+  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "heading" varchar;`)
+  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "cta_card_heading" varchar;`)
+  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_type" "enum_outcome_cta_link_cta_card_cta_link_type" DEFAULT 'reference';`)
+  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_new_tab" boolean;`)
+  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_url" varchar;`)
+  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_label" varchar;`)
+  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "cta_card_cta_link_appearance" "enum_outcome_cta_link_cta_card_cta_link_appearance" DEFAULT 'default';`)
+  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "block_name" varchar;`)
+  await db.execute(sql`ALTER TABLE "_outcome_cta_link_v" ADD COLUMN IF NOT EXISTS "_uuid" varchar;`)
 }
 
 export async function down({ db }: MigrateDownArgs): Promise<void> {

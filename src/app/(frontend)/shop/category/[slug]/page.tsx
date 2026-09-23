@@ -14,6 +14,8 @@ type Args = {
   searchParams: Promise<{ sort?: string }>
 }
 
+export const dynamic = 'force-dynamic'
+
 export default async function CategoryPage({ params, searchParams }: Args) {
   const { slug } = await params
   const { sort } = await searchParams

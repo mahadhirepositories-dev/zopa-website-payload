@@ -35,6 +35,7 @@ import { ProductDetail } from '@/blocks/Productdetail/config'
 import { LifeAtZopa } from '@/blocks/Lifeatzopa/config'
 import { JobOpportunities } from '@/blocks/Joboppurtunities/config'
 import { TermsAndConditions } from '@/blocks/Termsandconditions/config'
+import { JobDetail } from '@/blocks/Jobdetail/config'
 
 import {
   MetaDescriptionField,
@@ -98,7 +99,7 @@ export const Pages: CollectionConfig<'pages'> = {
               blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock,Product,PricingCards,RecentClients,
                 BlogSection,FullWidthBanner,AboutSection,AboutUs,VisionMission,ProcurementSolutions,ServicesSection,ServiceDetailSection,
                 HowWeWork,InterestForm,PricingComparison,WhoCanBenefit,OutcomeSection,WhoBenefitDetail,ContactInfo,ContactUs,ProductDetail,
-              LifeAtZopa,JobOpportunities,TermsAndConditions],
+              LifeAtZopa,JobOpportunities,TermsAndConditions,JobDetail],
               required: true,
               admin: {
                 initCollapsed: true,

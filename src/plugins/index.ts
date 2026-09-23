@@ -6,7 +6,13 @@ import { searchPlugin } from '@payloadcms/plugin-search'
 import { Plugin } from 'payload'
 import { revalidateRedirects } from '@/hooks/revalidateRedirects'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
-import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
+import {
+  FixedToolbarFeature,
+  HeadingFeature,
+  OrderedListFeature,
+  UnorderedListFeature,
+  lexicalEditor,
+} from '@payloadcms/richtext-lexical'
 import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
 import { ecommercePlugin } from '@payloadcms/plugin-ecommerce'
@@ -42,10 +48,37 @@ import { OutcomeSection } from '@/blocks/Outcomesection/config'
 import { WhoBenefitDetail } from '@/blocks/Whobenefit/config'
 import { ContactInfo } from '@/blocks/Contactinfo/config'
 import { ContactUs } from '@/blocks/Contactus/config'
+import RichText from '@/components/RichText'
+import type { TextFieldSingleValidation } from 'payload'
+import { revalidateTag } from 'next/cache'
+import type { CollectionAfterChangeHook,CollectionAfterDeleteHook } from 'payload'
+
 
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
 import { ProductDetail } from '@/blocks/Productdetail/config'
+
+
+const revalidateHeaderCache = ({
+  doc,
+  req,
+}: {
+  doc: { id?: string | number } | undefined | null
+  req: { payload: { logger: { info: (msg: string) => void } }; context: { disableRevalidate?: boolean } }
+}) => {
+  if (!req.context.disableRevalidate) {
+    req.payload.logger.info(`Revalidating header (product ${doc?.id} changed)`)
+    try {
+      revalidateTag('global_header', 'max')
+    } catch {
+      // safe fallback outside Next.js request context
+    }
+  }
+  return doc
+}
+
+const revalidateHeaderOnProductChange: CollectionAfterChangeHook = (args) => revalidateHeaderCache(args)
+const revalidateHeaderOnProductDelete: CollectionAfterDeleteHook = (args) => revalidateHeaderCache(args)
 
 const razorpayAdapter: PaymentAdapter = {
   name: 'razorpay',
@@ -121,7 +154,9 @@ export const plugins: Plugin[] = [
   formBuilderPlugin({
     fields: {
       payment: false,
+      upload:true,
     },
+    uploadCollections: ['media'],
     formOverrides: {
       fields: ({ defaultFields }) => {
         return defaultFields.map((field) => {
@@ -170,6 +205,12 @@ export const plugins: Plugin[] = [
     admin: {
       ...defaultCollection.admin,
       useAsTitle: 'title',
+      defaultColumns: ['title', 'priceInINR', 'inventory', '_status'],
+    },
+    hooks: {
+      ...(defaultCollection.hooks ?? {}),
+      afterChange: [...(defaultCollection.hooks?.afterChange ?? []), revalidateHeaderOnProductChange],
+      afterDelete: [...(defaultCollection.hooks?.afterDelete ?? []), revalidateHeaderOnProductDelete],
     },
     fields: [
       ...defaultCollection.fields,
@@ -181,8 +222,14 @@ export const plugins: Plugin[] = [
       {
         name: 'slug',
         type: 'text',
-        required: true,
+        required: false,
         unique: true,
+        validate: ((value) => {
+          const slug = (value || '').toString()
+          if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug))
+            return 'Slug must be lowercase; use hyphens instead of spaces (e.g. vendor-registration)'
+          return true
+        }) as TextFieldSingleValidation,
       },
       {
         name: 'description',
@@ -226,44 +273,23 @@ export const plugins: Plugin[] = [
         },
       },
       {
-        name: 'whyRegister',
-        type: 'array',
-        label: 'Why Register?',
-        maxRows: 10,
-        fields: [
-          {
-            name: 'text',
-            type: 'text',
-            required: true,
-          },
+        name: 'content',
+        type: 'richText',
+        label: 'Product Content',
+        admin: {
+          description:
+            'Add headings, paragraphs, lists, links, etc. — as many sections as you need.',
+           },
+        editor: lexicalEditor({
+          features: ({ rootFeatures }) => [
+          ...rootFeatures,
+          FixedToolbarFeature(),
+          HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+          UnorderedListFeature(),
+          OrderedListFeature(),
         ],
-      },
-      {
-        name: 'howItWorks',
-        type: 'array',
-        label: 'How it Works',
-        maxRows: 10,
-        fields: [
-          {
-            name: 'text',
-            type: 'text',
-            required: true,
-          },
-        ],
-      },
-      {
-        name: 'afterApproval',
-        type: 'array',
-        label: 'After Approval',
-        maxRows: 10,
-        fields: [
-          {
-            name: 'text',
-            type: 'text',
-            required: true,
-          },
-        ],
-      },
+       }),
+       },
       {
   type: 'tabs',
   tabs: [

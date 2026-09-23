@@ -1007,7 +1007,24 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "_pages_v_blocks_product_statcards" ADD COLUMN "background_image_id" integer;
   ALTER TABLE "_outcome_cta_link_v" ADD COLUMN "cta_card_background_image_id" integer;
   ALTER TABLE "_pages_v_blocks_contact_us" ADD COLUMN "form_heading" varchar DEFAULT 'Contact Us';
-  ALTER TABLE "users" ADD COLUMN "role" "enum_users_role" DEFAULT 'customer' NOT NULL;
+  `);
+  // Idempotent guard: on databases where the standalone 20261001_000001_add_users_role
+  // migration ran earlier (adding role as varchar), skip instead of failing with
+  // "column role of relation users already exists".
+  await db.execute(sql`
+  DO $$
+  BEGIN
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = 'users'
+        AND column_name = 'role'
+    ) THEN
+      ALTER TABLE "users" ADD COLUMN "role" "enum_users_role" DEFAULT 'customer' NOT NULL;
+    END IF;
+  END $$;
+  `);
+  await db.execute(sql`
   ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "reviews_id" integer;
   ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "comments_id" integer;
   ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "emails_id" integer;

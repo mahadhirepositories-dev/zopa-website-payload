@@ -5,6 +5,7 @@ import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import type { Product, ProductDetailBlock } from '@/payload-types'
 import { ProductReviews } from '@/components/ProductReviews'
+import RichText from '@/components/RichText'
 
 function extractText(node: Record<string, any>): string {
   if (node.text) return node.text
@@ -165,40 +166,15 @@ export const ProductDetailBlockComponent = ({
             <p className="text-black/80 text-[20px] mb-6">{product.description}</p>
           )}
 
-          {product.whyRegister && product.whyRegister.length > 0 && (
+          {product.content && (
             <div className="mb-6">
-              <h3 className="text-black/80 font-[700] text-[20px] mb-3">Why Register?</h3>
-              <ul className="space-y-2 text-black/80 text-[20px]">
-                {product.whyRegister.map((item, index) => (
-                  <li key={item.id ?? index}>• {item.text}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {product.howItWorks && product.howItWorks.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-black/80 font-[700] text-[20px] mb-3">How it Works:</h3>
-              <ul className="space-y-2 text-black/80 text-[20px]">
-                {product.howItWorks.map((item, index) => (
-                  <li key={item.id ?? index}>
-                     • {item.text}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {product.afterApproval && product.afterApproval.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-black/80 font-[700] text-[20px] mb-3">After approval:</h3>
-              <ul className="space-y-2 text-black/80 text-[20px]">
-                {product.afterApproval.map((item, index) => (
-                  <li key={item.id ?? index}>• {item.text}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+            <RichText
+              data={product.content}
+              enableGutter={false}
+              className="text-black/80 text-[18px] [&_h2]:text-[24px] [&_h3]:text-[20px] [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1"
+            />
+           </div>
+           )}
 
           <p className="text-3xl font-bold mb-6">{formattedPrice}</p>
 

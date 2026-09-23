@@ -104,6 +104,31 @@ export const Footer: GlobalConfig = {
       label: 'Copyright Text',
       defaultValue: '2026 © ZOPA. All rights reserved.',
     },
+    link({
+      appearances: false,
+      overrides: {
+        name: 'termsLink',
+        label: 'Terms & Conditions Link',
+        // Keeps current behaviour until an editor picks a real page
+        defaultValue: {
+          type: 'custom',
+          label: 'Terms & Conditions',
+          url: '/terms',
+        },
+      },
+    }),
+    link({
+      appearances: false,
+      overrides: {
+        name: 'privacyLink',
+        label: 'Privacy Policy Link',
+        defaultValue: {
+          type: 'custom',
+          label: 'Privacy Policy',
+          url: '/privacy',
+        },
+      },
+    }),
   ],
   hooks: {
     afterChange: [revalidateFooter],

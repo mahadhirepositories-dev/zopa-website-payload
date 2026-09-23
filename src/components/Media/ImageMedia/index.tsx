@@ -87,7 +87,11 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
   if (!src) return null
 
   return (
-    <picture className={cn(pictureClassName)}>
+    // When `fill` is used, the direct parent of <NextImage> must have a position
+    // other than static, otherwise Next.js logs a console error and the image can
+    // size against the wrong ancestor. Positioning the <picture> wrapper itself
+    // satisfies that requirement for every <Media fill ... /> call site.
+    <picture className={cn(fill && 'absolute inset-0', pictureClassName)}>
       <NextImage
         alt={alt || ''}
         className={cn(imgClassName)}
