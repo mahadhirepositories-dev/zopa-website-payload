@@ -4,18 +4,19 @@ import { CMSLink } from '@/components/Link'
 import { Media } from '@/components/Media'
 import { ArrowRight } from 'lucide-react'
 import { cn } from '@/utilities/ui'
+import { RevealGroup, RevealItem } from '@/components/Reveal'
 
 export const ServiceDetailSectionBlockComponent: React.FC<ServiceDetailSectionBlock> = ({
   services,
 }) => {
   return (
     <section className="py-16 px-10 bg-white">
-      <div className="container mx-auto max-w-6xl space-y-20">
+      <RevealGroup className="container mx-auto max-w-6xl space-y-20">
         {services && services.length > 0 &&
           services.map((service, index) => {
             const imageRight = service.layout === 'imageRight'
             return (
-               <div
+               <RevealItem
                 key={index}
                 id={service.sectionId || undefined}
                 className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center scroll-mt-24"
@@ -95,10 +96,10 @@ export const ServiceDetailSectionBlockComponent: React.FC<ServiceDetailSectionBl
                     </div>
                   )}
                 </div>
-              </div>
+              </RevealItem>
             )
           })}
-      </div>
+      </RevealGroup>
     </section>
   )
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import { Phone, Mail, MapPin, Clock, Globe } from 'lucide-react'
 import { FaWhatsapp } from 'react-icons/fa6'
 import type { ContactInfoBlock } from '@/payload-types'
+import { RevealGroup, RevealItem } from '@/components/Reveal'
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Phone,
@@ -31,15 +32,16 @@ export const ContactInfoBlockComponent: React.FC<ContactInfoBlock> = (props) => 
   return (
     <section className="py-16 bg-white">
       <div className="container">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <RevealGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {items?.map((item, index) => {
             const Icon = item.icon ? iconMap[item.icon as keyof typeof iconMap] : null
             const href = item.link || getAutoLink(item.icon || '', item.value || '')
             const isExternal = typeof href === 'string' && href.startsWith('https')
 
             return (
-              <a
+              <RevealItem
                 key={index}
+                as="a"
                 href={href}
                 target={isExternal ? '_blank' : undefined}
                 rel={isExternal ? 'noopener noreferrer' : undefined}
@@ -52,10 +54,10 @@ export const ContactInfoBlockComponent: React.FC<ContactInfoBlock> = (props) => 
                   <p className="text-sm text-gray-800 font-sans">{item.label}</p>
                   <p className="mt-1 text-gray-900 font-sans">{item.value}</p>
                 </div>
-              </a>
+              </RevealItem>
             )
           })}
-        </div>
+        </RevealGroup>
       </div>
     </section>
   )

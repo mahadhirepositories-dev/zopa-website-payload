@@ -26,6 +26,7 @@ import {
 } from 'react-icons/fa6'
 import { ArrowRight } from 'lucide-react'
 import { Media } from '@/components/Media'
+import { RevealGroup, RevealItem } from '@/components/Reveal'
 
 const SquarePlayIcon = ({ className = '' }: { className?: string }) => (
   <span className={`relative inline-block ${className}`}>
@@ -83,7 +84,7 @@ export const OutcomeSectionBlockComponent: React.FC<OutcomeSectionBlock> = ({
         {totalItems > 0 && (
   <>
     {/* Cards + CTA in one flex-wrap row */}
-    <div className="flex flex-wrap gap-6">
+    <RevealGroup className="flex flex-wrap gap-6">
       {/* Regular Cards - fixed 25% / 50% / 100% width */}
       {cards?.map((card, i) => {
         const Icon =
@@ -91,7 +92,7 @@ export const OutcomeSectionBlockComponent: React.FC<OutcomeSectionBlock> = ({
             ? iconMap[card.icon]
             : null
         return (
-          <div
+          <RevealItem
             key={i}
             className="w-full sm:w-[calc(50%-12px)] sm:shrink-0 lg:w-[calc(25%-18px)] border border-gray-200 rounded-lg p-6 hover:bg-[#dbac2b] transition-color"
           >
@@ -106,13 +107,13 @@ export const OutcomeSectionBlockComponent: React.FC<OutcomeSectionBlock> = ({
             <p className="text-gray-900 text-sm leading-relaxed">
               {card.description}
             </p>
-          </div>
+          </RevealItem>
         )
       })}
 
       {/* CTA Card - same base width, but grows to fill the rest of its line */}
       {ctaCard && (
-        <div className="grow w-full sm:w-[calc(50%-12px)] sm:shrink-0 lg:w-[calc(25%-18px)] rounded-lg p-8 flex flex-col justify-between min-h-[280px] overflow-hidden relative">
+        <RevealItem className="grow w-full sm:w-[calc(50%-12px)] sm:shrink-0 lg:w-[calc(25%-18px)] rounded-lg p-8 flex flex-col justify-between min-h-[280px] overflow-hidden relative">
           {/* Your existing background / overlay code */}
           {ctaCard.backgroundImage &&
           typeof ctaCard.backgroundImage === 'object' ? (
@@ -141,9 +142,9 @@ export const OutcomeSectionBlockComponent: React.FC<OutcomeSectionBlock> = ({
               </CMSLink>
             )}
           </div>
-        </div>
+        </RevealItem>
       )}
-    </div>
+    </RevealGroup>
   </>
 )}
       </div>

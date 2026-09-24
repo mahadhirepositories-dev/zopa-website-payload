@@ -32,6 +32,7 @@ import { JobOpportunitiesBlockComponent } from './Joboppurtunities/Component'
 import { TermsAndConditionsBlock } from './Termsandconditions/Component'
 import { BlockErrorBoundary } from './BlockErrorBoundary'
 import { JobDetailBlockComponent } from './Jobdetail/Component'
+import { Reveal } from '@/components/Reveal'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -86,14 +87,14 @@ export const RenderBlocks: React.FC<{
             if (Block) {
               return (
                 <BlockErrorBoundary key={index} blockType={blockType}>
-                  <div>
-                    <Block
-                      {...block}
-                      {...(blockType === 'productDetail' ? { product } : {})}
-                      disableInnerContainer
+                 <Reveal>
+                   <Block
+                       {...block}
+                       {...(blockType === 'productDetail' ? { product } : {})}
+                       disableInnerContainer
                     />
-                  </div>
-                </BlockErrorBoundary>
+                 </Reveal>
+               </BlockErrorBoundary>
               )
             }
           }

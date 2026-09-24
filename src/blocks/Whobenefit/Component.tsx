@@ -2,6 +2,7 @@
 import React from "react"
 import type { WhoBenefitDetailBlock } from '@/payload-types'
 import { Media } from '@/components/Media'
+import { RevealGroup, RevealItem } from '@/components/Reveal'
 
 export const WhoBenefitDetailBlockComponent: React.FC<WhoBenefitDetailBlock> = ({
   badge,
@@ -25,16 +26,18 @@ export const WhoBenefitDetailBlockComponent: React.FC<WhoBenefitDetailBlock> = (
               {heading}
             </h2>
           )}
-          {sections?.map((section, i) => (
-            <div key={i} className="mb-6 border-l-4 border-[#dbac2b] pl-4">
-              <h3 className="text-[25px] font-[400] text-gray-900 mb-2 font-sans">
-                {section.title}
-              </h3>
-              <p className="text-gray-600 text-[17px] leading-relaxed">
-                {section.description}
-              </p>
-            </div>
-          ))}
+          <RevealGroup>
+            {sections?.map((section, i) => (
+              <RevealItem key={i} className="mb-6 border-l-4 border-[#dbac2b] pl-4">
+                <h3 className="text-[25px] font-[400] text-gray-900 mb-2 font-sans">
+                  {section.title}
+                </h3>
+                <p className="text-gray-600 text-[17px] leading-relaxed">
+                  {section.description}
+                </p>
+              </RevealItem>
+            ))}
+          </RevealGroup>
         </div>
 
         {/* Right Image */}

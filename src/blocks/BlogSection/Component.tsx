@@ -5,6 +5,7 @@ import type { BlogSectionBlock } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
 import { ArrowRight } from 'lucide-react'
 import { Card, CardPostData } from '@/components/Card'
+import { RevealGroup, RevealItem } from '@/components/Reveal'
 
 export const BlogSectionBlockComponent: React.FC<BlogSectionBlock> = async (props) => {
   const { heading, title, limit, viewMoreLink } = props
@@ -37,11 +38,13 @@ export const BlogSectionBlockComponent: React.FC<BlogSectionBlock> = async (prop
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <RevealGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {posts.map((post, idx) => (
-            <Card key={post.slug || idx} doc={post} relationTo="posts" showCategories />
+            <RevealItem key={post.slug || idx} className="h-full">
+              <Card doc={post} relationTo="posts" showCategories className="h-full" />
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       </div>
 
       {viewMoreLink && (viewMoreLink.url || (viewMoreLink.type === 'reference' && viewMoreLink.reference)) && (

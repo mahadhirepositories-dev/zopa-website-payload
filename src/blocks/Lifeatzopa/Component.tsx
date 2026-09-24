@@ -2,6 +2,7 @@
 import React from 'react'
 import type { LifeAtZopaBlock } from '@/payload-types'
 import { FaBuilding, FaHandshake, FaMedal } from 'react-icons/fa6'
+import { RevealGroup, RevealItem } from '@/components/Reveal'
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   FaBuilding, FaHandshake, FaMedal
@@ -39,12 +40,12 @@ export const LifeAtZopaBlockComponent: React.FC<LifeAtZopaBlock> = ({
 
         {/* Cards */}
         {items && items.length > 0 && (
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+          <RevealGroup className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
             {items.map((item, i) => {
               const Icon =
                 item.icon && typeof item.icon === 'string' ? iconMap[item.icon] : null
               return (
-                <div
+                <RevealItem
                   key={i}
                   className="group border border-gray-200 rounded-lg p-8 hover:bg-[#dbac2b] transition-colors"
                 >
@@ -69,10 +70,10 @@ export const LifeAtZopaBlockComponent: React.FC<LifeAtZopaBlock> = ({
                       ))}
                     </ul>
                   )}
-                </div>
+                </RevealItem>
               )
             })}
-          </div>
+          </RevealGroup>
         )}
       </div>
     </section>

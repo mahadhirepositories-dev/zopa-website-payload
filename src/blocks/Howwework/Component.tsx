@@ -1,5 +1,6 @@
 import React from 'react';
 import type { HowWeWorkBlock } from '@/payload-types'
+import { RevealGroup, RevealItem } from '@/components/Reveal'
 
 export const HowWeWorkBlockComponent: React.FC<HowWeWorkBlock> = ({
   badge,
@@ -30,9 +31,9 @@ export const HowWeWorkBlockComponent: React.FC<HowWeWorkBlock> = ({
           </div>
 
           {steps && steps.length > 0 && (
-            <div className="space-y-0">
+            <RevealGroup className="space-y-0">
               {steps.map((step, index) => (
-                <div
+                <RevealItem
                   key={index}
                   className="border border-border rounded-lg p-6"
                 >
@@ -51,9 +52,9 @@ export const HowWeWorkBlockComponent: React.FC<HowWeWorkBlock> = ({
                       )}
                     </div>
                   </div>
-                </div>
+                </RevealItem>
               ))}
-            </div>
+            </RevealGroup>
           )}
         </div>
       </div>

@@ -3,6 +3,7 @@ import React from 'react'
 import type { RecentClientsBlock } from '@/payload-types'
 
 import {Media} from '@/components/Media'
+import { RevealGroup, RevealItem } from '@/components/Reveal'
 
 export const RecentClientsBlockComponent: React.FC<RecentClientsBlock> = (props) => {
   const { heading, clients } = props
@@ -16,16 +17,16 @@ export const RecentClientsBlockComponent: React.FC<RecentClientsBlock> = (props)
         </div>
         </div>
       
-      <div className="grid grid-cols-8 items-center gap-6 mt-10">
+      <RevealGroup className="grid grid-cols-8 items-center gap-6 mt-10">
         {clients?.map((client) => (
-          <div key={client.id} className="flex items-center justify-center">
+          <RevealItem key={client.id} className="flex items-center justify-center">
             <Media
               resource={client.logo}
               imgClassName="max-h-16 w-auto"
             />
-          </div>
+          </RevealItem>
         ))}
-      </div>
+      </RevealGroup>
     </div>
     </section>
   )

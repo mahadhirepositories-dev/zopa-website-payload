@@ -10,6 +10,7 @@ import {
   faHandHoldingMedical,
   faWandMagicSparkles,
 } from '@fortawesome/free-solid-svg-icons'
+import { RevealGroup, RevealItem } from '@/components/Reveal'
  
 // Keys MUST stay the same — they match the select field values stored in the DB.
 const iconMap = {
@@ -38,13 +39,13 @@ export const VisionMissionBlockComponent: React.FC<VisionMissionBlock> = ({
         </div>
  
         {values && values.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 px-6">
+          <RevealGroup className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 px-6">
             {values.map((value, i) => {
               const icon = value.icon
                 ? iconMap[value.icon as keyof typeof iconMap]
                 : faWandMagicSparkles
               return (
-                <div
+                <RevealItem
                   key={i}
                   className="group border border-border rounded-lg p-6 text-center bg-white hover:bg-[#dbac2b] transition-colors"
                 >
@@ -61,10 +62,10 @@ export const VisionMissionBlockComponent: React.FC<VisionMissionBlock> = ({
                   <p className="mt-2 text-sm text-gray-800 leading-relaxed text-left mt-5 mb-4">
                     {value.description}
                   </p>
-                </div>
+                </RevealItem>
               )
             })}
-          </div>
+          </RevealGroup>
         )}
       </div>
     </section>

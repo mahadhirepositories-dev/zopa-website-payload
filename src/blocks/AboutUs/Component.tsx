@@ -4,6 +4,7 @@ import RichText from '@/components/RichText'
 import { Media } from '@/components/Media'
 import { CMSLink } from '@/components/Link'
 import { ArrowRight, Check } from 'lucide-react'
+import { RevealGroup, RevealItem } from '@/components/Reveal'
 
 export const AboutUsBlockComponent: React.FC<AboutUsBlock> = ({
   image,
@@ -79,14 +80,14 @@ export const AboutUsBlockComponent: React.FC<AboutUsBlock> = ({
               </div>
             )}
             {features && features.length > 0 && (
-              <ul className="mt-8 space-y-3">
+              <RevealGroup as="ul" className="mt-8 space-y-3">
                 {features.map((item, i) => (
-                  <li key={i} className="flex items-center gap-2">    
+                  <RevealItem as="li" key={i} className="flex items-center gap-2">    
                       <ArrowRight className="w-5 h-5 text-black" />
                     <span className="text-black">{item.feature}</span>
-                  </li>
+                  </RevealItem>
                 ))}
-              </ul>
+              </RevealGroup>
             )}
           </div>
         </div>

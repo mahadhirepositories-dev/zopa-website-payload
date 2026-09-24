@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button'
 import { getClientSideURL } from '@/utilities/getURL'
 import { FiMail } from 'react-icons/fi'
 import { FiPhone } from 'react-icons/fi'
+import { RevealGroup, RevealItem } from '@/components/Reveal'
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   FaBriefcase,
@@ -164,7 +165,7 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
               )}
             </div>
 
-            <div className="flex flex-col gap-0 overflow-hidden rounded-xl">
+            <RevealGroup className="flex flex-col gap-0 overflow-hidden rounded-xl">
               {contactCards?.map((card, index) => {
                 const Icon = card.icon ? iconMap[card.icon] || FaBriefcase : FaBriefcase
                 const isLinkedin = card.icon === 'FaLinkedin'
@@ -196,21 +197,22 @@ export const ContactUsBlockComponent: React.FC<ContactUsBlock> = (props) => {
 
                 if (isLinkedin && (card as any).linkedinUrl) {
                   return (
-                    <a
+                    <RevealItem
                       key={index}
+                      as="a"
                       href={(card as any).linkedinUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block"
                     >
                       {cardContent}
-                    </a>
+                    </RevealItem>
                   )
                 }
 
-                return <div key={index}>{cardContent}</div>
+                return <RevealItem key={index}>{cardContent}</RevealItem>
               })}
-            </div>
+            </RevealGroup>
           </div>
 
           {/* Right Column — Form Card */}

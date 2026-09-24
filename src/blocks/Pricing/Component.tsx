@@ -2,6 +2,7 @@ import React from 'react';
 import type { PricingComparisonBlock } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
 import {ArrowRight} from 'lucide-react'
+import { RevealGroup, RevealItem } from '@/components/Reveal'
 
 export const PricingComparisonBlockComponent: React.FC<PricingComparisonBlock> = (props) => {
   const { badge, heading, description, cards } = props
@@ -31,9 +32,9 @@ export const PricingComparisonBlockComponent: React.FC<PricingComparisonBlock> =
 
         {/* Cards */}
         {cards && cards.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <RevealGroup className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {cards.map((card, index) => (
-              <div
+              <RevealItem
                 key={index}
                 className="group border border-border rounded-lg bg-white hover:border-[#dbac2b] flex flex-col"
               >
@@ -71,9 +72,9 @@ export const PricingComparisonBlockComponent: React.FC<PricingComparisonBlock> =
                     </div>
                   )}
                 </div>
-              </div>
+              </RevealItem>
             ))}
-          </div>
+          </RevealGroup>
         )}
       </div>
     </section>
