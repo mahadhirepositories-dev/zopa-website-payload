@@ -45,7 +45,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     ? getHref(reference.relationTo, reference.value.slug)
     : url
  
-  const normalizedAnchor = anchor?.trim().replace(/^#/, '')
+  const normalizedAnchor = anchor?.trim().replace(/^#/, '').toLowerCase()
   const href =
     baseHref && normalizedAnchor && !baseHref.includes('#')
       ? `${baseHref}#${normalizedAnchor}`
@@ -55,8 +55,8 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
   if (!href) return null
 
   const size = appearance === 'link' ? 'clear' : sizeFromProps
-   const isExternal = /^(https?:\/\/|mailto:|tel:)/i.test(href || '')
-   const newTabProps = newTab && isExternal ? { rel: 'noopener noreferrer', target: '_blank' } : {}
+  const isExternal = /^(https?:\/\/|mailto:|tel:)/i.test(href || '')
+  const newTabProps = newTab && isExternal ? { rel: 'noopener noreferrer', target: '_blank' } : {}
   /* Ensure we don't break any styles set by richText */
   if (appearance === 'inline') {
     return (

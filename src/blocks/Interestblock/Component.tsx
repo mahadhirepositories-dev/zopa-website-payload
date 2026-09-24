@@ -126,8 +126,8 @@ export const InterestFormBlockComponent: React.FC<InterestFormBlock> = (props) =
 
   return (
     <section
-      id={anchorId || 'interest'}
-      className="scroll-mt-28 py-40 pb-50 mb-20 bg-white"
+     id={(anchorId || 'interest').trim().toLowerCase()}
+     className="scroll-mt-28 py-40 pb-50 mb-20 bg-white"
     >
       <div className="container">
         {/* Top: Label + Heading + Description */}

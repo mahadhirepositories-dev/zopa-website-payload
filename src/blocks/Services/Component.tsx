@@ -78,7 +78,7 @@ export const ServiceDetailSectionBlockComponent: React.FC<ServiceDetailSectionBl
                     <ul className="mt-6 space-y-4 list-disc list-inside">
                       {service.features.map((f, i) => (
                         <li key={i} className="text-sm text-black marker:text-black">
-                          <strong>{f.title}:</strong> {f.description}
+                          <strong>{f.title}</strong> {f.description}
                         </li>
                       ))}
                     </ul>

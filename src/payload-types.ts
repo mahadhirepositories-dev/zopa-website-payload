@@ -1797,6 +1797,10 @@ export interface LifeAtZopaBlock {
  * via the `definition` "JobOpportunitiesBlock".
  */
 export interface JobOpportunitiesBlock {
+  /**
+   * Editors can scroll here from any link field by setting that link's "Anchor" to this value (e.g. "#job-opportunities"). Letters, numbers, hyphens, underscores only. Must be unique on the page.
+   */
+  anchorId?: string | null;
   badge?: string | null;
   heading?: string | null;
   description?: string | null;
@@ -3144,6 +3148,7 @@ export interface LifeAtZopaBlockSelect<T extends boolean = true> {
  * via the `definition` "JobOpportunitiesBlock_select".
  */
 export interface JobOpportunitiesBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   badge?: T;
   heading?: T;
   description?: T;

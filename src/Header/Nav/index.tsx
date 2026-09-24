@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useCallback, useRef, useState } from 'react'
 
 import type { Header as HeaderType } from '@/payload-types'
@@ -7,7 +5,7 @@ import type { Header as HeaderType } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
 import { Media } from '@/components/Media'
 import Link from 'next/link'
-import { ChevronDown, Phone } from 'lucide-react'
+import { Phone } from 'lucide-react'
 import { cn } from '@/utilities/ui'
 
 const HOVER_DELAY = 250 // ms before the dropdown closes after leaving
@@ -40,9 +38,9 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
   )
 
   return (
-    <nav className="flex justify-center items-center gap-6">
+    <nav className="flex justify-center items-center gap-2">
       {logo && typeof logo === 'object' && (
-        <Link href="/" className="shrink-0 mr-8">
+        <Link href="/" className="shrink-0 mr-17 ml-20">
           <Media resource={logo} imgClassName="h-10 w-auto" loading="eager" priority />
         </Link>
       )}
@@ -54,28 +52,16 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
         return (
           <div
             key={i}
-            className="relative"
+            className="relative rounded-md"
             onMouseEnter={() => hasChildren && openDropdown(i)}
             onMouseLeave={() => hasChildren && scheduleClose()}
           >
-            <div className="flex items-center gap-1 ml-4">
+            <div className="flex items-center gap-1">
               <CMSLink
                 {...item.link}
                 appearance="link"
-                className="text-sm font-medium text-black"
+                className="text-[15px] p-2 font-medium text-black hover:bg-[#DCDCDC] hover:no-underline"
               />
-              {hasChildren && (
-                <button
-                  type="button"
-                  aria-label="Toggle dropdown"
-                  onClick={() => setOpenIndex(isOpen ? null : i)}
-                  className="text-black focus:outline-none"
-                >
-                  <ChevronDown
-                    className={cn('size-4 transition-transform', isOpen && 'rotate-180')}
-                  />
-                </button>
-              )}
             </div>
 
             {hasChildren && (
@@ -94,7 +80,7 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
                     <CMSLink
                       {...child.link}
                       appearance="link"
-                      className="block px-4 py-2 text-sm text-black hover:bg-[#DCDCDC] transition-colors"
+                      className="block px-4 py-2 text-sm text-black hover:bg-[#dbac2b] hover:no-underline transition-colors"
                     />
                   </li>
                 ))}
@@ -103,16 +89,17 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
           </div>
         )
       })}
-
+      <div className="ml-4">
       {phone && (
         <a
           href={`tel:${phone.replace(/\s/g, '')}`}
           className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <Phone className="size-4 text-black" />
-          <span className="text-black">{phone}</span>
+          <span className="text-black text-[15px]">{phone}</span>
         </a>
       )}
+      </div>
     </nav>
   )
 }

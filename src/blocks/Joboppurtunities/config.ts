@@ -8,6 +8,21 @@ export const JobOpportunities: Block = {
   dbName: 'job_ops',
   fields: [
     {
+  name: 'anchorId',
+  type: 'text',
+  label: 'Anchor ID',
+  admin: {
+    description:
+      'Editors can scroll here from any link field by setting that link\'s "Anchor" to this value (e.g. "#job-opportunities"). Letters, numbers, hyphens, underscores only. Must be unique on the page.',
+  },
+  validate: (value: string | null | undefined) => {
+    if (!value) return true
+    return /^[a-zA-Z][a-zA-Z0-9_-]*$/.test(value)
+      ? true
+      : 'Use only letters, numbers, hyphens or underscores, starting with a letter.'
+  },
+},
+    {
       name: 'badge',
       type: 'text',
       label: 'Badge',

@@ -6,10 +6,12 @@ export const JobOpportunitiesBlockComponent: React.FC<JobOpportunitiesBlock> = (
   badge,
   heading,
   description,
+  anchorId,
   jobs,
 }) => {
   return (
-    <section className="px-10 py-16 bg-white">
+    <section id={anchorId?.trim().toLowerCase() || undefined}
+     className="px-10 py-16 bg-white">
       <div className="container mx-auto max-w-7xl px-4">
         {badge && (
           <span className="inline-block px-3 py-1 bg-[#DCDCDC] text-[13px] border border-border rounded-xs text-black mb-8">
